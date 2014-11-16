@@ -73,9 +73,10 @@ public class MainActivity extends ListActivity {
 	}
 	
 	//Check, ob schon ein User besteht
-	public static void checkUser() {
+	public void checkUser() {
 		if (user==null) {
-			//Start LogInActivity
+			Intent in = new Intent(MainActivity.this,LogInActivity.class);
+			startActivity(in);
 		}
 	}
 	
@@ -86,8 +87,9 @@ public class MainActivity extends ListActivity {
 		setContentView(R.layout.activity_main);
 
 		eventList = new ArrayList<HashMap<String, String>>();
-
 		ListView lv = getListView();
+		
+		checkUser();
 		
 		Intent in = getIntent();
 		Boolean autoSync = in.getBooleanExtra("SYNC", false);
@@ -181,7 +183,7 @@ public class MainActivity extends ListActivity {
 			// Creating service handler class instance
 			ServiceHandler sh = new ServiceHandler();
 
-			// Making a request to url and getting response
+			// URL Request
 			String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
 
 			Log.d("Response: ", "> " + jsonStr);
