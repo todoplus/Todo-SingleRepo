@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ToDo+</string>
+    <string name="hello_world">+</string>
+    <string name="action_settings">Settings</string>
+    <string name="plus">+</string>
+    <string name="finish">Fertig</string>
+    <string name="addevent_new">Event hinzufügen</string>
+    <string name="name">Name</string>
+    <string name="Beschreibung">Beschreibung</string>
+
+</resources>
