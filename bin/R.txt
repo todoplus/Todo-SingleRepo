@@ -251,8 +251,13 @@ int id activity_chooser_view_content 0x7f050025
 int id always 0x7f05000b
 int id beginning 0x7f050011
 <<<<<<< HEAD
+<<<<<<< HEAD
 int id button1 0x7f050040
 int id button2 0x7f05003f
+=======
+int id button1 0x7f050041
+int id button2 0x7f050042
+>>>>>>> FETCH_HEAD
 =======
 int id button1 0x7f050041
 int id button2 0x7f050042
@@ -266,9 +271,16 @@ int id dialog 0x7f05000e
 int id disableHome 0x7f050008
 int id dropdown 0x7f05000f
 <<<<<<< HEAD
+<<<<<<< HEAD
 int id editText1 0x7f05003e
 int id editText2 0x7f050042
 int id edit_query 0x7f050030
+=======
+int id editText1 0x7f05003d
+int id editText2 0x7f05003e
+int id edit_query 0x7f050030
+int id email_label 0x7f050044
+>>>>>>> FETCH_HEAD
 =======
 int id editText1 0x7f05003d
 int id editText2 0x7f05003e
@@ -289,6 +301,10 @@ int id listMode 0x7f050001
 int id list_item 0x7f050029
 int id middle 0x7f050012
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+int id mobile_label 0x7f050045
+>>>>>>> FETCH_HEAD
 =======
 int id mobile_label 0x7f050045
 >>>>>>> FETCH_HEAD
@@ -319,8 +335,13 @@ int id submit_area 0x7f050039
 int id tabMode 0x7f050002
 int id textView1 0x7f05003c
 <<<<<<< HEAD
+<<<<<<< HEAD
 int id textView2 0x7f05003d
 int id textView3 0x7f050041
+=======
+int id textView2 0x7f05003f
+int id textView3 0x7f050040
+>>>>>>> FETCH_HEAD
 =======
 int id textView2 0x7f05003f
 int id textView3 0x7f050040

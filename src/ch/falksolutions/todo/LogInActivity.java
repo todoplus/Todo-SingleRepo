@@ -39,8 +39,13 @@ public class LogInActivity extends Activity {
 		tryUserLogin();
 		if (response == true) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		DataHandler.setUser(user);
 		DataHandler.setPassword(password);
+=======
+		MainActivity.setUser(user);
+		MainActivity.setPassword(password);
+>>>>>>> FETCH_HEAD
 =======
 		MainActivity.setUser(user);
 		MainActivity.setPassword(password);

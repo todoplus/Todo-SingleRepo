@@ -1096,8 +1096,13 @@ containing a value of this type.
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
 <<<<<<< HEAD
+<<<<<<< HEAD
         public static final int button1=0x7f050040;
         public static final int button2=0x7f05003f;
+=======
+        public static final int button1=0x7f050041;
+        public static final int button2=0x7f050042;
+>>>>>>> FETCH_HEAD
 =======
         public static final int button1=0x7f050041;
         public static final int button2=0x7f050042;
@@ -1111,9 +1116,16 @@ containing a value of this type.
         public static final int disableHome=0x7f050008;
         public static final int dropdown=0x7f05000f;
 <<<<<<< HEAD
+<<<<<<< HEAD
         public static final int editText1=0x7f05003e;
         public static final int editText2=0x7f050042;
         public static final int edit_query=0x7f050030;
+=======
+        public static final int editText1=0x7f05003d;
+        public static final int editText2=0x7f05003e;
+        public static final int edit_query=0x7f050030;
+        public static final int email_label=0x7f050044;
+>>>>>>> FETCH_HEAD
 =======
         public static final int editText1=0x7f05003d;
         public static final int editText2=0x7f05003e;
@@ -1134,6 +1146,10 @@ containing a value of this type.
         public static final int list_item=0x7f050029;
         public static final int middle=0x7f050012;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        public static final int mobile_label=0x7f050045;
+>>>>>>> FETCH_HEAD
 =======
         public static final int mobile_label=0x7f050045;
 >>>>>>> FETCH_HEAD
@@ -1164,8 +1180,13 @@ containing a value of this type.
         public static final int tabMode=0x7f050002;
         public static final int textView1=0x7f05003c;
 <<<<<<< HEAD
+<<<<<<< HEAD
         public static final int textView2=0x7f05003d;
         public static final int textView3=0x7f050041;
+=======
+        public static final int textView2=0x7f05003f;
+        public static final int textView3=0x7f050040;
+>>>>>>> FETCH_HEAD
 =======
         public static final int textView2=0x7f05003f;
         public static final int textView3=0x7f050040;
