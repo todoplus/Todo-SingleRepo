@@ -38,8 +38,13 @@ public class LogInActivity extends Activity {
 	public void onUserLogin(View view) {
 		tryUserLogin();
 		if (response == true) {
+<<<<<<< HEAD
 		DataHandler.setUser(user);
 		DataHandler.setPassword(password);
+=======
+		MainActivity.setUser(user);
+		MainActivity.setPassword(password);
+>>>>>>> FETCH_HEAD
 		
 		Intent in = new Intent(LogInActivity.this,MainActivity.class);
 		startActivity(in);
