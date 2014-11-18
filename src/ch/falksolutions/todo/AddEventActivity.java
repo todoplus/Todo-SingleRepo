@@ -18,11 +18,7 @@ public class AddEventActivity extends ActionBarActivity {
 	EditText inputName;
 	EditText inputBeschreibung;
 
-	private static String url = MainActivity.getUrl();
-	private static String user = MainActivity.getUser();
-	private static String password = MainActivity.getPassword();
 	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d("AddEvent Activity", "Started");
@@ -38,13 +34,7 @@ public class AddEventActivity extends ActionBarActivity {
 	}
 	public void onButtonFinishClick(View view) {
 		Log.d("AddEventAc", "Finish Button betaetigt");
-		putData(url,user,inputName.getText().toString());		
-		
-	}
-	
-	public void putData(String url, String user, String name) {
-		url += "put?usr="  + user + "&pass=" + password + "&text=" + name;
-		MainActivity.setUrl(url);
+		DataHandler.putData(inputName.getText().toString());
 		
 		Context context = getApplicationContext();
 		CharSequence text = "ToDo: '" + inputName.getText().toString() + "' wird hochgeladen!";
@@ -58,8 +48,8 @@ public class AddEventActivity extends ActionBarActivity {
 				goToMainActivity.putExtra("SYNC", true);
 		startActivity(goToMainActivity);
 		
-		
 	}
+	
 	
 
 }
