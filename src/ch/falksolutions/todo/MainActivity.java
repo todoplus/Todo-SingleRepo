@@ -31,10 +31,8 @@ import android.widget.Toast;
 public class MainActivity extends ListActivity {
 
 	//URL + user & pass
-	private static String StanUrl = "http://192.168.1.220:8080/";
-	private static String url = StanUrl;
-	private static String user = "testuser";
-	private static String password = "md5hash";
+	private static String url = DataHandler.getUrl();
+	private static String user = DataHandler.getUser();
 	
 	// JSON Node names
 	private static final String TAG_ID = "_id";
@@ -47,35 +45,13 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	ArrayList<HashMap<String, String>> eventList;
 	
-	// Getters and Setters
-	public static String getUrl() {
-		return StanUrl;
-	}
-
-	public static void setUrl(String pUrl) {
-		MainActivity.url = pUrl;
-	}
-
-	public static String getUser() {
-		return user;
-	}
-
-	public static void setUser(String user) {
-		MainActivity.user = user;
-	}
-
-	public static String getPassword() {
-		return password;
-	}
-
-	public static void setPassword(String password) {
-		MainActivity.password = password;
-	}
 	
 	//Check, ob schon ein User besteht
-	public static void checkUser() {
+	public void checkUser() {
+		user = DataHandler.getUser();
 		if (user==null) {
-			//Start LogInActivity
+			Intent in = new Intent(MainActivity.this,LogInActivity.class);
+			startActivity(in);
 		}
 	}
 	
@@ -86,15 +62,18 @@ public class MainActivity extends ListActivity {
 		setContentView(R.layout.activity_main);
 
 		eventList = new ArrayList<HashMap<String, String>>();
-
 		ListView lv = getListView();
+		
+		checkUser();
 		
 		Intent in = getIntent();
 		Boolean autoSync = in.getBooleanExtra("SYNC", false);
-		Log.d("Main AC", "autoSync B= " + autoSync);
+		Log.d("Main AC", "autoSync= " + autoSync);
 		
 		if (autoSync == true) {
 			Log.d("MainAC","processRemove/Put= " + url);
+			url = DataHandler.getUrl();
+			Log.d("MainAC","autoSyncURL= " + url);
 			new PutContent().execute();
 			
 		}
@@ -137,8 +116,8 @@ public class MainActivity extends ListActivity {
 	}
 	
 	public void onGET(View view) {
-		String pUrl = StanUrl;
-		pUrl += "get?usr=testuser";
+		DataHandler.getData();
+		url = DataHandler.getUrl();
 		
 		Context context = getApplicationContext();
 		CharSequence text = "Synchronisation gestartet!";
@@ -146,15 +125,14 @@ public class MainActivity extends ListActivity {
 
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
-	
-		setUrl(pUrl);
+
 		new GetContent().execute();
 	}
 	public void autoGET() {
-		String pUrl = StanUrl;
+		String pUrl = DataHandler.getUrl();
 		pUrl += "get?usr=testuser";
 		Log.d("Main AC", "autoGet= " + pUrl);
-		setUrl(pUrl);
+		DataHandler.setUrl(pUrl);
 		new GetContent().execute();
 	}
 	
@@ -168,7 +146,7 @@ public class MainActivity extends ListActivity {
 			super.onPreExecute();
 			
 			Context context = getApplicationContext();
-			CharSequence text = "ToDo wird geloescht!";
+			CharSequence text = "Synchronisation gestartet!";
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
@@ -181,7 +159,7 @@ public class MainActivity extends ListActivity {
 			// Creating service handler class instance
 			ServiceHandler sh = new ServiceHandler();
 
-			// Making a request to url and getting response
+			// URL Request
 			String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
 
 			Log.d("Response: ", "> " + jsonStr);

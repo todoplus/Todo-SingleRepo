@@ -15,12 +15,12 @@
             android:paddingBottom="10dip"
             android:textColor="#43bd00"/>
   <!-- Email Label -->
-  <TextView android:id="@+id/email_label"
+  <TextView android:id="@+id/id_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="#acacac"/>
   <!-- Mobile Label -->
-  <TextView android:id="@+id/mobile_label"
+  <TextView android:id="@+id/date_label"
       		android:layout_width="fill_parent"
       		android:layout_height="wrap_content"
       		android:textStyle="bold"/>

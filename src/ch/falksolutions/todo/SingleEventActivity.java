@@ -16,15 +16,12 @@ import ch.falksolutions.todo.R;
 
 public class SingleEventActivity  extends Activity {
 	
-	// Basic Info
-	private static String url = MainActivity.getUrl();
-	private static String user = MainActivity.getUser();
-	private static String password = MainActivity.getPassword();
-	
 	// JSON node keys
 	private static final String TAG_NAME = "name";
 	private static final String TAG_ID = "_id";
 	private static final String TAG_DATE = "date";
+	
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +39,12 @@ public class SingleEventActivity  extends Activity {
         
         // Displaying all values on the screen
         TextView lblName = (TextView) findViewById(R.id.name_label);
-        TextView lblEmail = (TextView) findViewById(R.id.email_label);
-        TextView lblMobile = (TextView) findViewById(R.id.mobile_label);
+        TextView lblID = (TextView) findViewById(R.id.id_label);
+        TextView lblDate = (TextView) findViewById(R.id.date_label);
         
         lblName.setText(name);
-        lblEmail.setText(id);
-        lblMobile.setText(date);
+        lblID.setText(id);
+        lblDate.setText(date);
         
         
     }
@@ -55,14 +52,7 @@ public class SingleEventActivity  extends Activity {
 	public void onDelete(View v) {
 		Intent in = getIntent();
 		String id = in.getStringExtra(TAG_ID);
-		removeData(url, id);
-	}
-	public void removeData(String url, String id) {
-		url = MainActivity.getUrl();
-		url += "rmv?usr=" + user + "&pass=" + password + "id="  + id;
-		MainActivity.setUrl(url);
-		Log.d("SingleEvent AC", "rmvid= " +id);
-		
+		DataHandler.removeData(id);
 		
 		Context context = getApplicationContext();
 		CharSequence text = "ToDo wird geloescht!";
@@ -75,7 +65,6 @@ public class SingleEventActivity  extends Activity {
 				(SingleEventActivity.this,MainActivity.class);
 				goToMainActivity.putExtra("SYNC",true);
 		startActivity(goToMainActivity);
-		
-		
 	}
+	
 }
