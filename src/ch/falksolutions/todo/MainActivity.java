@@ -48,7 +48,10 @@ public class MainActivity extends ListActivity {
 	
 	//Check, ob schon ein User besteht
 	public void checkUser() {
+<<<<<<< HEAD
 		user = DataHandler.getUser();
+=======
+>>>>>>> FETCH_HEAD
 		if (user==null) {
 			Intent in = new Intent(MainActivity.this,LogInActivity.class);
 			startActivity(in);
@@ -116,8 +119,13 @@ public class MainActivity extends ListActivity {
 	}
 	
 	public void onGET(View view) {
+<<<<<<< HEAD
 		DataHandler.getData();
 		url = DataHandler.getUrl();
+=======
+		String pUrl = DataHandler.getUrl();
+		pUrl += "get?usr=testuser";
+>>>>>>> FETCH_HEAD
 		
 		Context context = getApplicationContext();
 		CharSequence text = "Synchronisation gestartet!";
@@ -125,7 +133,12 @@ public class MainActivity extends ListActivity {
 
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
+<<<<<<< HEAD
 
+=======
+	
+		DataHandler.setUrl(pUrl);
+>>>>>>> FETCH_HEAD
 		new GetContent().execute();
 	}
 	public void autoGET() {
