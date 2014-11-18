@@ -7,7 +7,11 @@ public class DataHandler {
 	private static String password = "md5hash";
 	
 	public static String getUrl() {
+<<<<<<< HEAD
 		return url;
+=======
+		return STANURL;
+>>>>>>> FETCH_HEAD
 	}
 	public static void setUrl(String url) {
 		DataHandler.url = url;
@@ -36,13 +40,18 @@ public class DataHandler {
 		url = STANURL;
 		url += "rmv";
 		url+= "?usr=" + user + "&pass=" + password + "&id=" + id;
+<<<<<<< HEAD
 		setUrl(url);
 		}
+=======
+	}
+>>>>>>> FETCH_HEAD
 	
 	public static void getData() {
 		url = STANURL;
 		url+= "get";
 		url+= "?usr=" + user + "&pass=" + password;
+<<<<<<< HEAD
 		setUrl(url);
 	}
 
@@ -55,3 +64,8 @@ public class DataHandler {
 }
 
 
+=======
+		
+	}
+}
+>>>>>>> FETCH_HEAD
