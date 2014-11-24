@@ -49,9 +49,24 @@ public class SingleEventActivity  extends Activity {
         
     }
 	
+	public void onUpdate(View v) {
+		Intent in = getIntent();
+		String id = in.getStringExtra(TAG_ID);
+<<<<<<< Updated upstream
+=======
+		String name = in.getStringExtra(TAG_NAME);
+		
+		Intent in2 = new Intent(SingleEventActivity.this, AddEventActivity.class);
+		in2.putExtra("id", id);
+		in2.putExtra("content", name);
+		in2.putExtra("update", true);
+		startActivity(in2);
+	}
+	
 	public void onDelete(View v) {
 		Intent in = getIntent();
 		String id = in.getStringExtra(TAG_ID);
+>>>>>>> Stashed changes
 		DataHandler.removeData(id);
 		
 		Context context = getApplicationContext();

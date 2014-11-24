@@ -26,13 +26,23 @@
       		android:textStyle="bold"/>
 
   <Button
+      android:id="@+id/button2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignBaseline="@+id/button1"
+      android:layout_alignBottom="@+id/button1"
+      android:layout_alignLeft="@+id/name_label"
+      android:onClick="onUpdate"
+      android:text="Bearbeiten" />
+
+  <Button
       android:id="@+id/button1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
       android:layout_below="@+id/name_label"
-      android:layout_centerHorizontal="true"
       android:layout_marginTop="30dp"
-      android:onClick = "onDelete"
+      android:onClick="onDelete"
       android:text="Löschen" />
 
 </RelativeLayout>

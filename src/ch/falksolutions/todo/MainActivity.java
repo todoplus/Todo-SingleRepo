@@ -33,6 +33,13 @@ public class MainActivity extends ListActivity {
 	//URL + user & pass
 	private static String url = DataHandler.getUrl();
 	private static String user = DataHandler.getUser();
+<<<<<<< Updated upstream
+=======
+	
+	public static void setUrl(String url) {
+		MainActivity.url = url;
+	}
+>>>>>>> Stashed changes
 	
 	// JSON Node names
 	private static final String TAG_ID = "_id";
@@ -48,10 +55,14 @@ public class MainActivity extends ListActivity {
 	
 	//Check, ob schon ein User besteht
 	public void checkUser() {
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 		user = DataHandler.getUser();
 =======
 >>>>>>> FETCH_HEAD
+=======
+		user = DataHandler.getUser();
+>>>>>>> Stashed changes
 		if (user==null) {
 			Intent in = new Intent(MainActivity.this,LogInActivity.class);
 			startActivity(in);
@@ -74,8 +85,11 @@ public class MainActivity extends ListActivity {
 		Log.d("Main AC", "autoSync= " + autoSync);
 		
 		if (autoSync == true) {
+<<<<<<< Updated upstream
 			Log.d("MainAC","processRemove/Put= " + url);
 			url = DataHandler.getUrl();
+=======
+>>>>>>> Stashed changes
 			Log.d("MainAC","autoSyncURL= " + url);
 			new PutContent().execute();
 			
@@ -117,8 +131,8 @@ public class MainActivity extends ListActivity {
 		Intent in = new Intent(MainActivity.this, AddEventActivity.class);
 		startActivity(in);
 	}
-	
 	public void onGET(View view) {
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 		DataHandler.getData();
 		url = DataHandler.getUrl();
@@ -126,6 +140,9 @@ public class MainActivity extends ListActivity {
 		String pUrl = DataHandler.getUrl();
 		pUrl += "get?usr=testuser";
 >>>>>>> FETCH_HEAD
+=======
+		DataHandler.getData();
+>>>>>>> Stashed changes
 		
 		Context context = getApplicationContext();
 		CharSequence text = "Synchronisation gestartet!";
@@ -133,6 +150,7 @@ public class MainActivity extends ListActivity {
 
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 
 =======
@@ -146,6 +164,13 @@ public class MainActivity extends ListActivity {
 		pUrl += "get?usr=testuser";
 		Log.d("Main AC", "autoGet= " + pUrl);
 		DataHandler.setUrl(pUrl);
+=======
+
+		new GetContent().execute();
+	}
+	public void autoGET() {
+		Log.d("Main AC", "autoGet= " + url);
+>>>>>>> Stashed changes
 		new GetContent().execute();
 	}
 	
@@ -182,7 +207,7 @@ public class MainActivity extends ListActivity {
 					JSONArray content = new JSONArray(jsonStr);
 					
 
-					// looping through All Contacts
+					// looping through content
 					for (int i = 0; i < content.length(); i++) {
 						JSONObject c = content.getJSONObject(i);
 						

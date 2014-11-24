@@ -1095,6 +1095,7 @@ containing a value of this type.
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
+<<<<<<< Updated upstream
 <<<<<<< HEAD
         public static final int button1=0x7f050040;
         public static final int button2=0x7f05003f;
@@ -1117,6 +1118,10 @@ containing a value of this type.
 >>>>>>> FETCH_HEAD
 >>>>>>> FETCH_HEAD
 >>>>>>> FETCH_HEAD
+=======
+        public static final int button1=0x7f050040;
+        public static final int button2=0x7f05003f;
+>>>>>>> Stashed changes
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int date_label=0x7f050045;
@@ -1125,6 +1130,7 @@ containing a value of this type.
         public static final int dialog=0x7f05000e;
         public static final int disableHome=0x7f050008;
         public static final int dropdown=0x7f05000f;
+<<<<<<< Updated upstream
 <<<<<<< HEAD
         public static final int editText1=0x7f05003e;
         public static final int editText2=0x7f050042;
@@ -1154,6 +1160,11 @@ containing a value of this type.
 >>>>>>> FETCH_HEAD
 >>>>>>> FETCH_HEAD
 >>>>>>> FETCH_HEAD
+=======
+        public static final int editText1=0x7f05003e;
+        public static final int editText2=0x7f050042;
+        public static final int edit_query=0x7f050030;
+>>>>>>> Stashed changes
         public static final int end=0x7f050013;
         public static final int expand_activities_button=0x7f050026;
         public static final int expanded_menu=0x7f05002c;
@@ -1167,6 +1178,7 @@ containing a value of this type.
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
         public static final int middle=0x7f050012;
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 =======
 <<<<<<< HEAD
@@ -1181,6 +1193,8 @@ containing a value of this type.
 >>>>>>> FETCH_HEAD
 >>>>>>> FETCH_HEAD
 >>>>>>> FETCH_HEAD
+=======
+>>>>>>> Stashed changes
         public static final int name=0x7f050046;
         public static final int name_label=0x7f050043;
         public static final int never=0x7f050009;
@@ -1207,6 +1221,7 @@ containing a value of this type.
         public static final int submit_area=0x7f050039;
         public static final int tabMode=0x7f050002;
         public static final int textView1=0x7f05003c;
+<<<<<<< Updated upstream
 <<<<<<< HEAD
         public static final int textView2=0x7f05003d;
         public static final int textView3=0x7f050041;
@@ -1229,6 +1244,10 @@ containing a value of this type.
 >>>>>>> FETCH_HEAD
 >>>>>>> FETCH_HEAD
 >>>>>>> FETCH_HEAD
+=======
+        public static final int textView2=0x7f05003d;
+        public static final int textView3=0x7f050041;
+>>>>>>> Stashed changes
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
