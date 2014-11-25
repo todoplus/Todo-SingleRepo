@@ -48,17 +48,15 @@ public class AddEventActivity extends Activity {
 	}
 	public void onButtonFinishClick(View view) {
 		Log.d("AddEventAc", "Finish Button betaetigt");
-<<<<<<< Updated upstream
-		DataHandler.putData(inputName.getText().toString());
-=======
+
 		if (update == false) {
 		DataHandler.putData(inputName.getText().toString());
 		}
 		if (update == true) {
-		DataHandler.updateData(updateID);
+		DataHandler.updateData(updateID, inputName.getText().toString());
 		update = false;
 		}
->>>>>>> Stashed changes
+
 		
 		Context context = getApplicationContext();
 		CharSequence text = "ToDo: '" + inputName.getText().toString() + "' wird hochgeladen!";
