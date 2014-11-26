@@ -51,18 +51,6 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	ArrayList<HashMap<String, String>> eventList;
 	
-	
-	//Check, ob schon ein User besteht
-	public void checkUser() {
-		user = DataHandler.getUser();
-
-		if (user==null) {
-			Intent in = new Intent(MainActivity.this,LogInActivity.class);
-			startActivity(in);
-		}
-	}
-	
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,8 +74,7 @@ public class MainActivity extends ListActivity {
 		
 		
 		
-		// ListView on item click listener
-		lv.setOnItemClickListener(new OnItemClickListener() {
+		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on item click listener
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -139,7 +126,14 @@ public class MainActivity extends ListActivity {
 
 		new GetContent().execute();
 	}
+	public void checkUser() { //Check, ob schon ein User besteht
+		user = DataHandler.getUser();
 
+		if (user==null) {
+			Intent in = new Intent(MainActivity.this,LogInActivity.class);
+			startActivity(in);
+		}
+	}
 	
 	/**
 	 * Async task class to get json by making HTTP call
@@ -261,8 +255,6 @@ public class MainActivity extends ListActivity {
 			return null;
 		}
 
-	
-		
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
@@ -278,3 +270,5 @@ public class MainActivity extends ListActivity {
 
 	}
 }
+
+

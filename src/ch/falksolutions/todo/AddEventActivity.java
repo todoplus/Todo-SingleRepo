@@ -52,7 +52,7 @@ public class AddEventActivity extends Activity {
 		if (update == false) {
 		DataHandler.putData(inputName.getText().toString());
 		}
-		if (update == true) {
+		else if (update == true) {
 		DataHandler.updateData(updateID, inputName.getText().toString());
 		update = false;
 		}

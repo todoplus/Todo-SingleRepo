@@ -6,17 +6,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LogInActivity extends Activity {
 	String user;
 	String password;
 	String url;
+	
 
 	private static final String TAG_ID = "_id";
 	private static final String TAG_USERNAME = "username";
@@ -66,6 +69,15 @@ public class LogInActivity extends Activity {
 			
 	}
 	
+	public void makeToast(String toastText) {
+		Context context = getApplicationContext();
+		CharSequence text = toastText;
+		int duration = Toast.LENGTH_SHORT;
+		
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+	}
+	
 	public class userLogin extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -98,6 +110,7 @@ public class LogInActivity extends Activity {
 				}
 			} else {
 				Log.e("ServiceHandler", "Couldn't get any data from the url");
+				
 			}
 			return null;
 		}

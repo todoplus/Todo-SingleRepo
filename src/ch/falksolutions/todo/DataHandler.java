@@ -5,7 +5,9 @@
 
 package ch.falksolutions.todo;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 public class DataHandler {
 	private static final String STANURL = "http://192.168.178.162:8080/";
@@ -73,7 +75,11 @@ public class DataHandler {
 		setUrl(url);
 		Log.d("DataHandler", "loginURL= " + url);
 		}
+
 }
+
+
+
 
 
 
