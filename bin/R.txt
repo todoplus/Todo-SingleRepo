@@ -234,7 +234,8 @@ int drawable abc_textfield_searchview_holo_dark 0x7f020053
 int drawable abc_textfield_searchview_holo_light 0x7f020054
 int drawable abc_textfield_searchview_right_holo_dark 0x7f020055
 int drawable abc_textfield_searchview_right_holo_light 0x7f020056
-int drawable ic_launcher 0x7f020057
+int drawable app_icon 0x7f020057
+int drawable ic_launcher 0x7f020058
 int id action_bar 0x7f09001c
 int id action_bar_activity_content 0x7f090001
 int id action_bar_container 0x7f09001b
@@ -243,10 +244,12 @@ int id action_bar_root 0x7f09001a
 int id action_bar_subtitle 0x7f090023
 int id action_bar_title 0x7f090022
 int id action_context_bar 0x7f09001d
+int id action_hinzufuegen 0x7f09004b
 int id action_menu_divider 0x7f090002
 int id action_menu_presenter 0x7f090003
 int id action_mode_close_button 0x7f090024
 int id action_settings 0x7f090049
+int id action_synchronisieren 0x7f09004a
 int id activity_chooser_view_content 0x7f090025
 int id always 0x7f09000f
 int id beginning 0x7f090016
@@ -360,9 +363,11 @@ int string addevent_new 0x7f0a0012
 int string app_name 0x7f0a000d
 int string finish 0x7f0a0011
 int string hello_world 0x7f0a000e
+int string hinzufuegen 0x7f0a0017
 int string login 0x7f0a0015
 int string name 0x7f0a0013
 int string plus 0x7f0a0010
+int string synchronisieren 0x7f0a0016
 int style AppBaseTheme 0x7f0b008b
 int style AppTheme 0x7f0b008c
 int style TextAppearance_AppCompat_Base_CompactMenu_Dialog 0x7f0b0063

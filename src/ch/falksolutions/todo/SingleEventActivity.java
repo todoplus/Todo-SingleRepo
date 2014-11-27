@@ -32,7 +32,7 @@ public class SingleEventActivity  extends Activity {
         
         // Get JSON values from previous intent
         String name = in.getStringExtra(TAG_NAME);
-        Log.d("SingleE AC","tagname: " + TAG_NAME);
+        Log.d("SingleE AC","tagname: " + name);
         String id = in.getStringExtra(TAG_ID);
         String date = in.getStringExtra(TAG_DATE);
         Log.d("SingleEvent AC", "tagid= " + id);

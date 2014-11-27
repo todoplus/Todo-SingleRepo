@@ -63,7 +63,7 @@ public class DataHandler {
 	public static void updateData(String id, String text) {
 		url = STANURL;
 		url += "update";
-		url += "?id=" + id + "&usr=" + user + "&pass=" + password + "&text=" + text;
+		url += "?id=" + id + "&usr=" + user + "&pass=" + password + "&new=" + text;
 		setUrl(url);
 		MainActivity.setUrl(url);
 	}
@@ -75,6 +75,14 @@ public class DataHandler {
 		setUrl(url);
 		Log.d("DataHandler", "loginURL= " + url);
 		}
+	
+	public static void createUser(String user, String passwort) {
+		url = STANURL;
+		url += "createuser";
+		url += "?usr=" + user + "&pass=" + passwort;
+		setUrl(url);
+		Log.d("DataHandler", "createURL= " + url);
+	}
 
 }
 

@@ -19,6 +19,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,7 +37,7 @@ public class MainActivity extends ListActivity {
 	private static String url = DataHandler.getUrl();
 	private static String user = DataHandler.getUser();
 
-	
+	//Setzten der Url mit den notwendigen Parametern, für die Synchronisation
 	public static void setUrl(String url) {
 		MainActivity.url = url;
 	}
@@ -55,8 +58,9 @@ public class MainActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+	
 		eventList = new ArrayList<HashMap<String, String>>();
+	
 		ListView lv = getListView();
 		
 		checkUser();
@@ -101,6 +105,36 @@ public class MainActivity extends ListActivity {
     });
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.action_synchronisieren:
+	            DataHandler.getData();
+	            new GetContent().execute();
+	            
+	            return true;
+	            
+	        case R.id.action_settings:
+	            //Todo
+	            return true;
+	            
+	        case R.id.action_hinzufuegen:
+	        	Intent in = new Intent(MainActivity.this,AddEventActivity.class);
+	        	startActivity(in);
+	            
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 	
 	public void onButtonPlusClick(View view) {
 
@@ -213,6 +247,7 @@ public class MainActivity extends ListActivity {
 							R.id.description, R.id.id });
 
 			setListAdapter(adapter);
+			
 		}
 
 	}

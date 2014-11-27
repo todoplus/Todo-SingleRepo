@@ -10,5 +10,7 @@
     <string name="name">Name</string>
     <string name="Beschreibung">Beschreibung</string>
     <string name="login">Login/Create User</string>
+    <string name="synchronisieren">Synchronisieren</string>
+    <string name="hinzufuegen">ToDo hinzufügen</string>
 
 </resources>

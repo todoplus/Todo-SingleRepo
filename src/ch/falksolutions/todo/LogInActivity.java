@@ -32,7 +32,7 @@ public class LogInActivity extends Activity {
 		setContentView(R.layout.activity_login);
 	}
 	
-	public void tryUserLogin() {
+	public void userHandler(int method) { // 1 = login, 2 = create
 
 		EditText userET = (EditText) findViewById(R.id.editText1);
 		EditText passwordET = (EditText) findViewById(R.id.editText2);
@@ -40,8 +40,12 @@ public class LogInActivity extends Activity {
 		user = userET.getText().toString();
 		password = passwordET.getText().toString();
 
+		if (method == 1) {
+			DataHandler.userLogin(user, password);
+		} else if (method == 2) {
+			DataHandler.createUser(user, password);
+		}
 		
-		DataHandler.userLogin(user, password);
 		url = DataHandler.getUrl();
 		new userLogin().execute();
 		
@@ -49,12 +53,12 @@ public class LogInActivity extends Activity {
 	}
 		
 	public void onUserCreate(View view) {
-		
+		userHandler(2);
 		
 	}
 	
 	public void onUserLogin(View view) {
-		tryUserLogin();
+		userHandler(1);
 		
 	}
 	

@@ -8,5 +8,16 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
+    
+    <item 
+        android:id="@+id/action_synchronisieren" 
+        android:title="@string/synchronisieren"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_hinzufuegen"
+        android:title="@string/hinzufuegen"
+        app:showAsAction="never" />
+   
+    
 
 </menu>

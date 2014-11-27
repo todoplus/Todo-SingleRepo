@@ -1077,7 +1077,8 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int ic_launcher=0x7f020057;
+        public static final int app_icon=0x7f020057;
+        public static final int ic_launcher=0x7f020058;
     }
     public static final class id {
         public static final int action_bar=0x7f09001c;
@@ -1088,10 +1089,12 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f090023;
         public static final int action_bar_title=0x7f090022;
         public static final int action_context_bar=0x7f09001d;
+        public static final int action_hinzufuegen=0x7f09004b;
         public static final int action_menu_divider=0x7f090002;
         public static final int action_menu_presenter=0x7f090003;
         public static final int action_mode_close_button=0x7f090024;
         public static final int action_settings=0x7f090049;
+        public static final int action_synchronisieren=0x7f09004a;
         public static final int activity_chooser_view_content=0x7f090025;
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f090016;
@@ -1262,9 +1265,11 @@ containing a value of this type.
         public static final int app_name=0x7f0a000d;
         public static final int finish=0x7f0a0011;
         public static final int hello_world=0x7f0a000e;
+        public static final int hinzufuegen=0x7f0a0017;
         public static final int login=0x7f0a0015;
         public static final int name=0x7f0a0013;
         public static final int plus=0x7f0a0010;
+        public static final int synchronisieren=0x7f0a0016;
     }
     public static final class style {
         /** 
