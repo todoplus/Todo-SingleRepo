@@ -12,10 +12,17 @@
     <item 
         android:id="@+id/action_synchronisieren" 
         android:title="@string/synchronisieren"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_action_refresh"
+        android:showAsAction="always" />
+    	
     <item
         android:id="@+id/action_hinzufuegen"
         android:title="@string/hinzufuegen"
+        android:icon="@drawable/ic_action_new"
+        android:showAsAction="always" />
+    <item
+        android:id="@+id/action_logOut"
+        android:title="@string/logout"
         app:showAsAction="never" />
    
     

@@ -12,5 +12,6 @@
     <string name="login">Login/Create User</string>
     <string name="synchronisieren">Synchronisieren</string>
     <string name="hinzufuegen">ToDo hinzufügen</string>
+    <string name="logout">Log Out</string>
 
 </resources>

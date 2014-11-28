@@ -14,6 +14,8 @@ public class DataHandler {
 	private static String url = STANURL;
 	private static String user = null;
 	private static String password = null;
+	private static String[] sonderzeichen = {"&","?","%"};
+	private static boolean enthaeltSonderzeichen;
 	
 	public static String getUrl() {
 		return url;
@@ -83,7 +85,25 @@ public class DataHandler {
 		setUrl(url);
 		Log.d("DataHandler", "createURL= " + url);
 	}
-
+	
+	public static void logOutUser() {
+		setUser(null);
+		setPassword(null);
+	}
+	
+	public static boolean analyzeString(String input) {
+		String inputString =  new String(input);
+		enthaeltSonderzeichen = false; //Standardwert
+		
+		for (int i=0; i<3; i++) {
+			if (inputString.contains(sonderzeichen[i])) {
+			Log.d("DataHandler","String contains " + sonderzeichen[i]);
+			enthaeltSonderzeichen = true;
+			} 
+		}
+		return enthaeltSonderzeichen;	
+	}
+	
 }
 
 

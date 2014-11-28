@@ -36,6 +36,7 @@ public class MainActivity extends ListActivity {
 	//URL + user & pass
 	private static String url = DataHandler.getUrl();
 	private static String user = DataHandler.getUser();
+	boolean firstStart = true;
 
 	//Setzten der Url mit den notwendigen Parametern, für die Synchronisation
 	public static void setUrl(String url) {
@@ -74,6 +75,13 @@ public class MainActivity extends ListActivity {
 			Log.d("MainAC","processRemove/Put= " + url);
 			new PutContent().execute();
 			
+		}
+		if (firstStart == true) {
+			if (user != null) {
+			DataHandler.getData();
+			new GetContent().execute();
+			firstStart = false;
+			}
 		}
 		
 		
@@ -121,6 +129,13 @@ public class MainActivity extends ListActivity {
 	            DataHandler.getData();
 	            new GetContent().execute();
 	            
+	            Context context = getApplicationContext();
+	    		CharSequence text = "Synchronisation gestartet!";
+	    		int duration = Toast.LENGTH_SHORT;
+
+	    		Toast toast = Toast.makeText(context, text, duration);
+	    		toast.show();
+	            
 	            return true;
 	            
 	        case R.id.action_settings:
@@ -130,30 +145,22 @@ public class MainActivity extends ListActivity {
 	        case R.id.action_hinzufuegen:
 	        	Intent in = new Intent(MainActivity.this,AddEventActivity.class);
 	        	startActivity(in);
+	        	
+	        	return true;
+	        	
+	        case R.id.action_logOut:
+	        	DataHandler.logOutUser();
+	        	Intent logOut = new Intent(MainActivity.this,LogInActivity.class);
+	        	startActivity(logOut);
+	        	
+	        	return true;
+	        	
 	            
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	
-	public void onButtonPlusClick(View view) {
 
-		Intent in = new Intent(MainActivity.this, AddEventActivity.class);
-		startActivity(in);
-	}
-	public void onGET(View view) {
-		DataHandler.getData();
-		
-
-		Context context = getApplicationContext();
-		CharSequence text = "Synchronisation gestartet!";
-		int duration = Toast.LENGTH_SHORT;
-
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
-
-		new GetContent().execute();
-	}
 	public void autoGET() {
 		DataHandler.getData();
 		Log.d("Main AC", "autoGet= " + url);

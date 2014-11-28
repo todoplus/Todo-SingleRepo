@@ -19,7 +19,8 @@ public class AddEventActivity extends Activity {
 	EditText inputBeschreibung;
 	String updateID;
 	String updateContent;
-	Boolean update = false;
+	boolean update = false;
+	boolean enthaeltSonderZeichen = false;
 
 	
 	@Override
@@ -50,25 +51,41 @@ public class AddEventActivity extends Activity {
 		Log.d("AddEventAc", "Finish Button betaetigt");
 
 		if (update == false) {
-		DataHandler.putData(inputName.getText().toString());
+			DataHandler.putData(inputName.getText().toString());
+		
 		}
 		else if (update == true) {
-		DataHandler.updateData(updateID, inputName.getText().toString());
-		update = false;
+			DataHandler.updateData(updateID, inputName.getText().toString());
+			update = false;
+		
 		}
 
+		if (DataHandler.analyzeString(inputName.getText().toString()) == false) {
+			
+			Context context = getApplicationContext();
+			CharSequence text = "ToDo: '" + inputName.getText().toString() + "' wird hochgeladen!";
+			int duration = Toast.LENGTH_SHORT;
+			
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+			
+			Intent goToMainActivity = new Intent
+					(AddEventActivity.this,MainActivity.class);
+					goToMainActivity.putExtra("SYNC", true);
+			startActivity(goToMainActivity);
+			} 
 		
-		Context context = getApplicationContext();
-		CharSequence text = "ToDo: '" + inputName.getText().toString() + "' wird hochgeladen!";
-		int duration = Toast.LENGTH_SHORT;
+		else {
+			
+			Context context = getApplicationContext();
+			CharSequence text = "Der Text darf die folgenden Zeichen nicht enthalten: % & ?";
+			int duration = Toast.LENGTH_LONG;
+			
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+			
+		}
 		
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
-		
-		Intent goToMainActivity = new Intent
-				(AddEventActivity.this,MainActivity.class);
-				goToMainActivity.putExtra("SYNC", true);
-		startActivity(goToMainActivity);
 		
 	}
 	
