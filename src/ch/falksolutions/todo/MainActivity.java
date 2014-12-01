@@ -36,8 +36,8 @@ public class MainActivity extends ListActivity {
 	//URL + user & pass
 	private static String url = DataHandler.getUrl();
 	private static String user = DataHandler.getUser();
-	boolean firstStart = true;
-
+	private static boolean firstStart = true;
+	
 	//Setzten der Url mit den notwendigen Parametern, für die Synchronisation
 	public static void setUrl(String url) {
 		MainActivity.url = url;
@@ -68,15 +68,15 @@ public class MainActivity extends ListActivity {
 		
 		Intent in = getIntent();
 		Boolean autoSync = in.getBooleanExtra("SYNC", false);
-		Log.d("Main AC", "autoSync= " + autoSync);
+		Log.d("MainAC", "autoSync = " + autoSync);
+		Log.d("MainAC", "firstStart = " + firstStart);
 		
 		if (autoSync == true) {
-
 			Log.d("MainAC","processRemove/Put= " + url);
 			new PutContent().execute();
 			
 		}
-		if (firstStart == true) {
+		if (firstStart != false) {
 			if (user != null) {
 			DataHandler.getData();
 			new GetContent().execute();
@@ -286,7 +286,7 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_ID, _id);
 						singleEvent.put(TAG_DATE, date);
 						
-						eventList.add(singleEvent);
+						//eventList.add(singleEvent);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -300,14 +300,16 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+			DataHandler.getData();
+			new GetContent().execute();
 			
-			ListAdapter adapter = new SimpleAdapter(
+			/* ListAdapter adapter = new SimpleAdapter(
 					MainActivity.this, eventList,
 					R.layout.list_item, new String[] { TAG_NAME, TAG_DATE,
 							TAG_ID }, new int[] { R.id.name,
 							R.id.description, R.id.id });
 
-			setListAdapter(adapter);
+			setListAdapter(adapter); */
 		}
 
 	}

@@ -1091,6 +1091,7 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f090023;
         public static final int action_bar_title=0x7f090022;
         public static final int action_context_bar=0x7f09001d;
+        public static final int action_finish=0x7f09004d;
         public static final int action_hinzufuegen=0x7f09004b;
         public static final int action_logOut=0x7f09004c;
         public static final int action_menu_divider=0x7f090002;
@@ -1220,6 +1221,7 @@ containing a value of this type.
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
+        public static final int menu_addevent=0x7f0c0001;
     }
     public static final class string {
         public static final int Beschreibung=0x7f0a0014;
@@ -1274,6 +1276,7 @@ containing a value of this type.
         public static final int name=0x7f0a0013;
         public static final int plus=0x7f0a0010;
         public static final int synchronisieren=0x7f0a0016;
+        public static final int todohinzufuegen=0x7f0a0019;
     }
     public static final class style {
         /** 

@@ -4,23 +4,31 @@
 
 package ch.falksolutions.todo;
 
+import ch.falksolutions.todo.MainActivity.GetContent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 
 public class AddEventActivity extends Activity {
-	EditText inputName;
-	EditText inputBeschreibung;
-	String updateID;
-	String updateContent;
-	boolean update = false;
-	boolean enthaeltSonderZeichen = false;
+	private static EditText inputName;
+	private static EditText inputBeschreibung;
+	private static String updateID;
+	private static String updateContent;
+	private static boolean update = false;
+	private static boolean enthaeltSonderZeichen = false;
+	
+	public static void setInputName(EditText pInputName) {
+		inputName = pInputName;
+	}
 
 	
 	@Override
@@ -47,20 +55,41 @@ public class AddEventActivity extends Activity {
 		
 		
 	}
-	public void onButtonFinishClick(View view) {
-		Log.d("AddEventAc", "Finish Button betaetigt");
-
-		if (update == false) {
-			DataHandler.putData(inputName.getText().toString());
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu_addevent, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+     
+	        case R.id.action_settings:
+	            //Todo
+	            return true;
+	            
+	        case R.id.action_finish:
+	        	uploadToDo();
+	        	
+	        	return true;
+	                     
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 		
-		}
-		else if (update == true) {
-			DataHandler.updateData(updateID, inputName.getText().toString());
-			update = false;
+	public void uploadToDo() {
 		
-		}
+		Log.d("AddEventAc", "ActionBar finish");
+		String analyzedString = inputName.getText().toString();
+		analyzedString = DataHandler.replaceOutPut(analyzedString);
 
-		if (DataHandler.analyzeString(inputName.getText().toString()) == false) {
+		if (DataHandler.analyzeString(analyzedString) == false) {
 			
 			Context context = getApplicationContext();
 			CharSequence text = "ToDo: '" + inputName.getText().toString() + "' wird hochgeladen!";
@@ -86,7 +115,15 @@ public class AddEventActivity extends Activity {
 			
 		}
 		
+		if (update == false) {
+			DataHandler.putData(analyzedString);
 		
+		}
+		else if (update == true) {
+			DataHandler.updateData(updateID, analyzedString);
+			update = false;
+		
+		}
 	}
 	
 	

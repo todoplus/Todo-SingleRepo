@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:padding="10dp">
-  <!-- Name Label -->
+
   <TextView android:id="@+id/name_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -13,13 +13,13 @@
             android:textStyle="bold"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
-            android:textColor="#43bd00"/>
-  <!-- Email Label -->
+            android:textColor="#08088A"/>
+
   <TextView android:id="@+id/id_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="#acacac"/>
-  <!-- Mobile Label -->
+
   <TextView android:id="@+id/date_label"
       		android:layout_width="fill_parent"
       		android:layout_height="wrap_content"

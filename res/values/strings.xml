@@ -13,5 +13,6 @@
     <string name="synchronisieren">Synchronisieren</string>
     <string name="hinzufuegen">ToDo hinzufügen</string>
     <string name="logout">Log Out</string>
+    <string name="todohinzufuegen">Fertig</string>
 
 </resources>

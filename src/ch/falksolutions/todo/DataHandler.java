@@ -5,9 +5,7 @@
 
 package ch.falksolutions.todo;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 public class DataHandler {
 	private static final String STANURL = "http://192.168.178.162:8080/";
@@ -59,7 +57,7 @@ public class DataHandler {
 		url+= "?usr=" + user + "&pass=" + password;
 		setUrl(url);
 		MainActivity.setUrl(url);
-		Log.d("DataHanlder", "getURL= " + url);
+		Log.d("DataHandler", "getURL= " + url);
 	}
 	
 	public static void updateData(String id, String text) {
@@ -97,12 +95,23 @@ public class DataHandler {
 		
 		for (int i=0; i<3; i++) {
 			if (inputString.contains(sonderzeichen[i])) {
-			Log.d("DataHandler","String contains " + sonderzeichen[i]);
-			enthaeltSonderzeichen = true;
+				Log.d("DataHandler","String contains " + sonderzeichen[i]);
+				enthaeltSonderzeichen = true;
 			} 
 		}
 		return enthaeltSonderzeichen;	
 	}
+	public static String replaceOutPut(String input) {
+		String inputString = new String(input);
+		
+		if (inputString.contains(" ")) {
+			Log.d("DataHandler","oldString: " + inputString);
+			inputString = inputString.replace(" ", "+");
+			Log.d("DataHandler","newString: " + inputString);
+			
+			
+		} return inputString;
+	} 
 	
 }
 
