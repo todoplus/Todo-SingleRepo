@@ -5,15 +5,42 @@
 
 package ch.falksolutions.todo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.util.Log;
 
 public class DataHandler {
-	private static final String STANURL = "http://192.168.178.162:8080/";
+	
+	private static String STANURL = "http://192.168.178.162:8080/";
 	private static String url = STANURL;
 	private static String user = null;
 	private static String password = null;
-	private static String[] sonderzeichen = {"&","?","%"};
+	private static String[] sonderzeichen = {"&","?","%","+"};
 	private static boolean enthaeltSonderzeichen;
+	
+	private static ArrayList<HashMap<String, String>> eventList = new ArrayList<HashMap<String, String>>();
+	
+	public static ArrayList<HashMap<String, String>> getEventList() {
+		return eventList;
+	}
+	
+	public static void addToEventList(HashMap<String, String> singleEvent) {
+		eventList.add(singleEvent);
+	}
+	public static void deleteFromEventList(long id) {
+		int intID = (int) id;
+		eventList.remove(intID);
+		Log.d("DataHandler", "eventList removed id" + id);
+	}
+	
+	
+	public static void setStanUrl(String pUrl) {
+		String mUrl = "http://";
+		mUrl+= pUrl;
+		mUrl+= ":8080/";
+		DataHandler.STANURL = mUrl;
+	}
 	
 	public static String getUrl() {
 		return url;
@@ -93,7 +120,7 @@ public class DataHandler {
 		String inputString =  new String(input);
 		enthaeltSonderzeichen = false; //Standardwert
 		
-		for (int i=0; i<3; i++) {
+		for (int i=0; i<4; i++) {
 			if (inputString.contains(sonderzeichen[i])) {
 				Log.d("DataHandler","String contains " + sonderzeichen[i]);
 				enthaeltSonderzeichen = true;

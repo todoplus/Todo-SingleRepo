@@ -36,6 +36,9 @@ public class SingleEventActivity  extends Activity {
         String id = in.getStringExtra(TAG_ID);
         String date = in.getStringExtra(TAG_DATE);
         Log.d("SingleEvent AC", "tagid= " + id);
+        String listid = in.getStringExtra("list_id");
+        Log.d("SingleE AC", "listid1: " + listid);
+        
         
         // Displaying all values on the screen
         TextView lblName = (TextView) findViewById(R.id.name_label);
@@ -53,18 +56,23 @@ public class SingleEventActivity  extends Activity {
 		Intent in = getIntent();
 		String id = in.getStringExtra(TAG_ID);
 		String name = in.getStringExtra(TAG_NAME);
+		String listid = in.getStringExtra("list_id");
 		
 		Intent in2 = new Intent(SingleEventActivity.this, AddEventActivity.class);
 		in2.putExtra("id", id);
 		in2.putExtra("content", name);
 		in2.putExtra("update", true);
+		in2.putExtra("list_id", listid);
 		startActivity(in2);
 	}
 	
 	public void onDelete(View v) {
 		Intent in = getIntent();
 		String id = in.getStringExtra(TAG_ID);
+		String StringListID = in.getStringExtra("list_id");
+		Log.d("SingleE AC", "listid: " + StringListID);
 		DataHandler.removeData(id);
+		DataHandler.deleteFromEventList(Long.valueOf(StringListID));
 		
 		Context context = getApplicationContext();
 		CharSequence text = "ToDo wird geloescht!";

@@ -25,6 +25,7 @@ public class AddEventActivity extends Activity {
 	private static String updateContent;
 	private static boolean update = false;
 	private static boolean enthaeltSonderZeichen = false;
+	private static String listID;
 	
 	public static void setInputName(EditText pInputName) {
 		inputName = pInputName;
@@ -46,6 +47,7 @@ public class AddEventActivity extends Activity {
 		if (update == true) {
 			updateContent = in.getStringExtra("content");
 			updateID = in.getStringExtra("id");
+			listID = in.getStringExtra("list_id");
 			Log.d("AddEventAC", "updID= " + updateID);
 			
 			inputName.setText(updateContent);
@@ -87,10 +89,11 @@ public class AddEventActivity extends Activity {
 		
 		Log.d("AddEventAc", "ActionBar finish");
 		String analyzedString = inputName.getText().toString();
-		analyzedString = DataHandler.replaceOutPut(analyzedString);
+		
 
 		if (DataHandler.analyzeString(analyzedString) == false) {
 			
+			analyzedString = DataHandler.replaceOutPut(analyzedString);
 			Context context = getApplicationContext();
 			CharSequence text = "ToDo: '" + inputName.getText().toString() + "' wird hochgeladen!";
 			int duration = Toast.LENGTH_SHORT;
@@ -107,7 +110,7 @@ public class AddEventActivity extends Activity {
 		else {
 			
 			Context context = getApplicationContext();
-			CharSequence text = "Der Text darf die folgenden Zeichen nicht enthalten: % & ?";
+			CharSequence text = "Der Text darf die folgenden Zeichen nicht enthalten: % & ? +";
 			int duration = Toast.LENGTH_LONG;
 			
 			Toast toast = Toast.makeText(context, text, duration);
@@ -121,6 +124,7 @@ public class AddEventActivity extends Activity {
 		}
 		else if (update == true) {
 			DataHandler.updateData(updateID, analyzedString);
+			DataHandler.deleteFromEventList(Long.valueOf(listID));
 			update = false;
 		
 		}

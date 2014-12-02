@@ -20,6 +20,8 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.util.Log;
+
 public class ServiceHandler {
 
 	static String response = null;
@@ -62,7 +64,7 @@ public class ServiceHandler {
 			if (params != null) {
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
 				}
-
+				Log.d("ServiceHandler", "url= " + url);
 				httpResponse = httpClient.execute(httpPost);
 			
 

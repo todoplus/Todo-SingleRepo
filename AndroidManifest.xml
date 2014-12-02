@@ -26,6 +26,7 @@
         <activity android:name="SingleEventActivity"></activity>
         <activity android:name="AddEventActivity"></activity>
         <activity android:name="LogInActivity"></activity>
+        <activity android:name="ServerUrlSet_Debug"></activity>
     </application>
 
 </manifest>

@@ -60,8 +60,8 @@ public class MainActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	
-		eventList = new ArrayList<HashMap<String, String>>();
-	
+		eventList = DataHandler.getEventList();
+		
 		ListView lv = getListView();
 		
 		checkUser();
@@ -76,6 +76,7 @@ public class MainActivity extends ListActivity {
 			new PutContent().execute();
 			
 		}
+		
 		if (firstStart != false) {
 			if (user != null) {
 			DataHandler.getData();
@@ -92,6 +93,7 @@ public class MainActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Log.d("MAIN AC", "ListID" + id);
+				String stringID = Long.toString(id);
 				
 				String name = ((TextView) view.findViewById(R.id.name))
 						.getText().toString();
@@ -100,12 +102,14 @@ public class MainActivity extends ListActivity {
 				String _id = ((TextView) view.findViewById(R.id.id))
 						.getText().toString();
 
-				// Starting single contact activity
+				// Starting single event activity
 				Intent in = new Intent(getApplicationContext(),
 						SingleEventActivity.class);
 				in.putExtra(TAG_NAME, name);
 				in.putExtra(TAG_DATE, date);
 				in.putExtra(TAG_ID, _id);
+				in.putExtra("list_id", stringID);
+				Log.d("MainAC", "list_id" + stringID);
 				startActivity(in);
 
 			
@@ -127,6 +131,7 @@ public class MainActivity extends ListActivity {
 	    switch (item.getItemId()) {
 	        case R.id.action_synchronisieren:
 	            DataHandler.getData();
+	            Log.d("MainAC", "updatedURL= " + url);
 	            new GetContent().execute();
 	            
 	            Context context = getApplicationContext();
@@ -154,6 +159,10 @@ public class MainActivity extends ListActivity {
 	        	startActivity(logOut);
 	        	
 	        	return true;
+	        	
+	        case R.id.action_seturl:
+	        	Intent setUrl = new Intent(MainActivity.this,ServerUrlSet_Debug.class);
+	        	startActivity(setUrl);
 	        	
 	            
 	        default:
@@ -225,8 +234,13 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_ID, _id);
 						singleEvent.put(TAG_DATE, date);
 
-						// adding contact to contact list
-						eventList.add(singleEvent);
+						// adding contact to event list
+						if (eventList.contains(singleEvent) == true) {
+							Log.d("MainAC","eventList contains: " + singleEvent);
+						}
+						else if (eventList.contains(singleEvent) != true) {
+						DataHandler.addToEventList(singleEvent);
+						}
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -286,7 +300,12 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_ID, _id);
 						singleEvent.put(TAG_DATE, date);
 						
-						//eventList.add(singleEvent);
+						if (eventList.contains(singleEvent) == true) {
+							Log.d("MainAC","eventList contains: " + singleEvent);
+						}
+						else if (eventList.contains(singleEvent) != true) {
+						DataHandler.addToEventList(singleEvent);
+						}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -300,16 +319,14 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			DataHandler.getData();
-			new GetContent().execute();
 			
-			/* ListAdapter adapter = new SimpleAdapter(
+			ListAdapter adapter = new SimpleAdapter(
 					MainActivity.this, eventList,
 					R.layout.list_item, new String[] { TAG_NAME, TAG_DATE,
 							TAG_ID }, new int[] { R.id.name,
 							R.id.description, R.id.id });
 
-			setListAdapter(adapter); */
+			setListAdapter(adapter); 
 		}
 
 	}
