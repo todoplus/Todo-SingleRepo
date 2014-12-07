@@ -89,7 +89,7 @@ public class LogInActivity extends Activity {
 			
 			
 			ServiceHandler sh = new ServiceHandler();
-			String jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,DataHandler.getParamList());
+			String jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,ListHandler.getParamList());
 
 			Log.d("Response: ", "> " + jsonStr);
 			

@@ -39,8 +39,9 @@ public class MainActivity extends ListActivity {
 	private static String user = DataHandler.getUser();
 	private static boolean firstStart = true;
 	private static boolean autoSync = false;
-	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl. ServiceHandler
-	
+	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
+								// ServiceHandler
+
 	public static void setMethod(int pMethod) {
 		MainActivity.method = pMethod;
 	}
@@ -60,13 +61,15 @@ public class MainActivity extends ListActivity {
 
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
+	static ArrayList<HashMap<String, String>> compareList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		eventList = DataHandler.getEventList();
+		eventList = ListHandler.getEventList();
+		compareList = ListHandler.getCompareList();
 		ListView lv = getListView();
 
 		ListAdapter adapter = new SimpleAdapter(MainActivity.this, eventList,
@@ -167,7 +170,6 @@ public class MainActivity extends ListActivity {
 
 		case R.id.action_logOut:
 			DataHandler.logOutUser();
-			DataHandler.clearEventList();
 			firstStart = true;
 			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(logOut);
@@ -208,6 +210,7 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			ListHandler.clearCompareList();
 
 			Context context = getApplicationContext();
 			CharSequence text = "Synchronisation gestartet!";
@@ -248,11 +251,12 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_DATE, date);
 
 						// adding todo to event list
+						ListHandler.addToCompareList(singleEvent);
 						if (eventList.contains(singleEvent) == true) {
 							Log.d("MainAC", "eventList contains: "
 									+ singleEvent);
 						} else if (eventList.contains(singleEvent) != true) {
-							DataHandler.addToEventList(singleEvent);
+							ListHandler.addToEventList(singleEvent);
 						}
 					}
 				} catch (JSONException e) {
@@ -268,6 +272,22 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+
+			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
+			for (int i = 0; i < compareList.size(); i++) {
+
+				if (compareList.contains(eventList.get(i)) != true) {
+					Log.d("MainAC", "con FALSE: " + compareList.get(i));
+					ListHandler.deleteFromEventList(i);
+				}
+			}
+			/**
+			 * Überprüfung ob alles gelöscht wurde (falls die for Schleife nicht
+			 * ausgelöst wird da size() == 0.
+			 */
+			if (compareList.size() == 0) {
+				ListHandler.clearEventList();
+			}
 
 			/**
 			 * Updating parsed JSON data into ListView
@@ -291,10 +311,13 @@ public class MainActivity extends ListActivity {
 			ServiceHandler sh = new ServiceHandler();
 			String jsonStr = null;
 			if (method == 2) {
-				jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,DataHandler.getParamList());
-			}
-			else if (method == 3) {
-				jsonStr = sh.makeServiceCall(url,ServiceHandler.PUT,DataHandler.getParamList());
+				jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,
+						ListHandler.getParamList());
+			} else if (method == 3) {
+				jsonStr = sh.makeServiceCall(url, ServiceHandler.PUT,
+						ListHandler.getParamList());
+			} else if (method == 4) {
+				jsonStr = sh.makeServiceCall(url, ServiceHandler.DELETE);
 			}
 			Log.d("Response: ", "> " + jsonStr);
 
@@ -317,7 +340,7 @@ public class MainActivity extends ListActivity {
 					if (eventList.contains(singleEvent) == true) {
 						Log.d("MainAC", "eventList contains: " + singleEvent);
 					} else if (eventList.contains(singleEvent) != true) {
-						DataHandler.addToEventList(singleEvent);
+						ListHandler.addToEventList(singleEvent);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();

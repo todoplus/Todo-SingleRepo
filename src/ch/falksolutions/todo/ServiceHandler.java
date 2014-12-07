@@ -92,8 +92,9 @@ public class ServiceHandler {
 			} else if (method == DELETE) {
 				HttpDelete httpDelete = new HttpDelete(url);
 				if (params != null) {
-					
+					//ToDo
 				}
+				httpResponse = httpClient.execute(httpDelete);
 			}
 			httpEntity = httpResponse.getEntity();
 			response = EntityUtils.toString(httpEntity);

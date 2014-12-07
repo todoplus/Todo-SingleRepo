@@ -72,7 +72,7 @@ public class SingleEventActivity  extends Activity {
 		String StringListID = in.getStringExtra("list_id");
 		Log.d("SingleE AC", "listid: " + StringListID);
 		DataHandler.removeData(id);
-		DataHandler.deleteFromEventList(Long.valueOf(StringListID));
+		ListHandler.deleteFromEventList(Long.valueOf(StringListID));
 		
 		Context context = getApplicationContext();
 		CharSequence text = "ToDo wird geloescht!";
