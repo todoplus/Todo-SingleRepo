@@ -8,15 +8,18 @@ package ch.falksolutions.todo;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.util.Log;
 
 public class DataHandler {
 	
-	private static String STANURL = "http://192.168.178.162:8080/";
+	private static String STANURL = "http://192.168.178.162:8080/api";
 	private static String url = STANURL;
 	private static String user = null;
 	private static String password = null;
-	private static String[] sonderzeichen = {"&","?","%","+"};
+	private static String[] sonderzeichen = {"&","?","%","+","#"};
 	private static boolean enthaeltSonderzeichen;
 	
 	private static ArrayList<HashMap<String, String>> eventList = new ArrayList<HashMap<String, String>>();
@@ -33,12 +36,26 @@ public class DataHandler {
 		eventList.remove(intID);
 		Log.d("DataHandler", "eventList removed id" + id);
 	}
+	public static void clearEventList() {
+		eventList.clear();
+	}
+	
+	private static ArrayList<NameValuePair> paramList = new ArrayList<NameValuePair>();
 	
 	
+	
+	public static ArrayList<NameValuePair> getParamList() {
+		return paramList;
+	}
+
+	public static void clearParamList() {
+		paramList.clear();
+	}
+
 	public static void setStanUrl(String pUrl) {
 		String mUrl = "http://";
 		mUrl+= pUrl;
-		mUrl+= ":8080/";
+		mUrl+= ":8080/api";
 		DataHandler.STANURL = mUrl;
 	}
 	
@@ -62,25 +79,31 @@ public class DataHandler {
 		DataHandler.password = password;
 	}
 
-	public static void putData(String name) {
+	public static void postData(String name) {
 		url = STANURL;
-		url += "put";
-		url += "?usr="  + user + "&pass=" + password + "&text=" + name;
+		clearParamList();
+		MainActivity.setMethod(2);
+		paramList.add(new BasicNameValuePair("usr",user));
+		paramList.add(new BasicNameValuePair("pass",password));
+		paramList.add(new BasicNameValuePair("text",name));
+		Log.d("DataHandler","paramList: " + paramList);
 		setUrl(url);
 		MainActivity.setUrl(url);
 	}
 	
 	public static void removeData(String id) {
 		url = STANURL;
-		url += "rmv";
-		url+= "?usr=" + user + "&pass=" + password + "&id=" + id;
+		clearParamList();
+		url+= "/" + id;
+		paramList.add(new BasicNameValuePair("usr", user));
+		paramList.add(new BasicNameValuePair("pass", password));
+		
 		setUrl(url);
 		MainActivity.setUrl(url);
 		}
 	
 	public static void getData() {
 		url = STANURL;
-		url+= "get";
 		url+= "?usr=" + user + "&pass=" + password;
 		setUrl(url);
 		MainActivity.setUrl(url);
@@ -89,24 +112,32 @@ public class DataHandler {
 	
 	public static void updateData(String id, String text) {
 		url = STANURL;
-		url += "update";
-		url += "?id=" + id + "&usr=" + user + "&pass=" + password + "&new=" + text;
+		url += "/" + id;
+		clearParamList();
+		MainActivity.setMethod(3);
+		paramList.add(new BasicNameValuePair("usr", user));
+		paramList.add(new BasicNameValuePair("pass", password));
+		paramList.add(new BasicNameValuePair("text", text));
 		setUrl(url);
 		MainActivity.setUrl(url);
 	}
 
 	public static void userLogin(String user, String passwort) {
 		url = STANURL;
-		url += "login";
-		url += "?usr=" + user + "&pass=" + passwort;
+		url += "/login";
+		
+		paramList.add(new BasicNameValuePair("usr",user));
+		paramList.add(new BasicNameValuePair("pass",passwort));
 		setUrl(url);
 		Log.d("DataHandler", "loginURL= " + url);
 		}
 	
 	public static void createUser(String user, String passwort) {
 		url = STANURL;
-		url += "createuser";
-		url += "?usr=" + user + "&pass=" + passwort;
+		url += "/create";
+		
+		paramList.add(new BasicNameValuePair("usr",user));
+		paramList.add(new BasicNameValuePair("pass",passwort));
 		setUrl(url);
 		Log.d("DataHandler", "createURL= " + url);
 	}
@@ -120,7 +151,7 @@ public class DataHandler {
 		String inputString =  new String(input);
 		enthaeltSonderzeichen = false; //Standardwert
 		
-		for (int i=0; i<4; i++) {
+		for (int i=0; i<5; i++) {
 			if (inputString.contains(sonderzeichen[i])) {
 				Log.d("DataHandler","String contains " + sonderzeichen[i]);
 				enthaeltSonderzeichen = true;

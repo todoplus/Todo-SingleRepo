@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,74 +34,86 @@ import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
 
-	//URL + user & pass
+	// URL + user & pass
 	private static String url = DataHandler.getUrl();
 	private static String user = DataHandler.getUser();
 	private static boolean firstStart = true;
+	private static boolean autoSync = false;
+	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl. ServiceHandler
 	
-	//Setzten der Url mit den notwendigen Parametern, für die Synchronisation
+	public static void setMethod(int pMethod) {
+		MainActivity.method = pMethod;
+	}
+
+	// Setzten der Url mit den notwendigen Parametern, für die Synchronisation
 	public static void setUrl(String url) {
 		MainActivity.url = url;
 	}
 
-	
 	// JSON Node names
 	private static final String TAG_ID = "_id";
 	private static final String TAG_DATE = "Date";
 	private static final String TAG_NAME = "name";
-		
+
 	// content JSONArray
 	JSONArray content = null;
 
 	// Hashmap fuer ListView
-	ArrayList<HashMap<String, String>> eventList;
-	
+	static ArrayList<HashMap<String, String>> eventList;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-	
+
 		eventList = DataHandler.getEventList();
-		
 		ListView lv = getListView();
-		
+
+		ListAdapter adapter = new SimpleAdapter(MainActivity.this, eventList,
+				R.layout.list_item,
+				new String[] { TAG_NAME, TAG_DATE, TAG_ID }, new int[] {
+						R.id.name, R.id.description, R.id.id });
+
+		setListAdapter(adapter);
+
 		checkUser();
-		
+
 		Intent in = getIntent();
 		Boolean autoSync = in.getBooleanExtra("SYNC", false);
 		Log.d("MainAC", "autoSync = " + autoSync);
 		Log.d("MainAC", "firstStart = " + firstStart);
-		
+
 		if (autoSync == true) {
-			Log.d("MainAC","processRemove/Put= " + url);
+			Log.d("MainAC", "processRemove/Put= " + url);
 			new PutContent().execute();
-			
+			autoSync = false;
+
 		}
-		
+
 		if (firstStart != false) {
 			if (user != null) {
-			DataHandler.getData();
-			new GetContent().execute();
-			firstStart = false;
+				DataHandler.getData();
+				new GetContent().execute();
+				firstStart = false;
 			}
 		}
-		
-		
-		
-		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on item click listener
+
+		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on
+																// item click
+																// listener
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Log.d("MAIN AC", "ListID" + id);
 				String stringID = Long.toString(id);
-				
+
 				String name = ((TextView) view.findViewById(R.id.name))
 						.getText().toString();
 				String date = ((TextView) view.findViewById(R.id.description))
 						.getText().toString();
-				String _id = ((TextView) view.findViewById(R.id.id))
-						.getText().toString();
+				String _id = ((TextView) view.findViewById(R.id.id)).getText()
+						.toString();
 
 				// Starting single event activity
 				Intent in = new Intent(getApplicationContext(),
@@ -112,62 +125,63 @@ public class MainActivity extends ListActivity {
 				Log.d("MainAC", "list_id" + stringID);
 				startActivity(in);
 
-			
-		}
-    });
+			}
+		});
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    // Inflate the menu items for use in the action bar
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main, menu);
-	    return super.onCreateOptionsMenu(menu);
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle presses on the action bar items
-	    switch (item.getItemId()) {
-	        case R.id.action_synchronisieren:
-	            DataHandler.getData();
-	            Log.d("MainAC", "updatedURL= " + url);
-	            new GetContent().execute();
-	            
-	            Context context = getApplicationContext();
-	    		CharSequence text = "Synchronisation gestartet!";
-	    		int duration = Toast.LENGTH_SHORT;
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_synchronisieren:
+			DataHandler.getData();
+			Log.d("MainAC", "updatedURL= " + url);
+			new GetContent().execute();
 
-	    		Toast toast = Toast.makeText(context, text, duration);
-	    		toast.show();
-	            
-	            return true;
-	            
-	        case R.id.action_settings:
-	            //Todo
-	            return true;
-	            
-	        case R.id.action_hinzufuegen:
-	        	Intent in = new Intent(MainActivity.this,AddEventActivity.class);
-	        	startActivity(in);
-	        	
-	        	return true;
-	        	
-	        case R.id.action_logOut:
-	        	DataHandler.logOutUser();
-	        	Intent logOut = new Intent(MainActivity.this,LogInActivity.class);
-	        	startActivity(logOut);
-	        	
-	        	return true;
-	        	
-	        case R.id.action_seturl:
-	        	Intent setUrl = new Intent(MainActivity.this,ServerUrlSet_Debug.class);
-	        	startActivity(setUrl);
-	        	
-	            
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+			Context context = getApplicationContext();
+			CharSequence text = "Synchronisation gestartet!";
+			int duration = Toast.LENGTH_SHORT;
+
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+
+			return true;
+
+		case R.id.action_settings:
+			// Todo
+			return true;
+
+		case R.id.action_hinzufuegen:
+			Intent in = new Intent(MainActivity.this, AddEventActivity.class);
+			startActivity(in);
+
+			return true;
+
+		case R.id.action_logOut:
+			DataHandler.logOutUser();
+			DataHandler.clearEventList();
+			firstStart = true;
+			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
+			startActivity(logOut);
+
+			return true;
+
+		case R.id.action_seturl:
+			Intent setUrl = new Intent(MainActivity.this,
+					ServerUrlSet_Debug.class);
+			startActivity(setUrl);
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public void autoGET() {
@@ -176,15 +190,16 @@ public class MainActivity extends ListActivity {
 
 		new GetContent().execute();
 	}
-	public void checkUser() { //Check, ob schon ein User besteht
+
+	public void checkUser() { // Check, ob schon ein User besteht
 		user = DataHandler.getUser();
 
-		if (user==null) {
-			Intent in = new Intent(MainActivity.this,LogInActivity.class);
+		if (user == null) {
+			Intent in = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(in);
 		}
 	}
-	
+
 	/**
 	 * Async task class to get json by making HTTP call
 	 * */
@@ -193,13 +208,12 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			
+
 			Context context = getApplicationContext();
 			CharSequence text = "Synchronisation gestartet!";
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
-			
 
 		}
 
@@ -212,19 +226,18 @@ public class MainActivity extends ListActivity {
 			String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
 
 			Log.d("Response: ", "> " + jsonStr);
-			
+
 			if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
-					
 
 					// looping through content
 					for (int i = 0; i < content.length(); i++) {
 						JSONObject c = content.getJSONObject(i);
-						
+
 						String _id = c.getString(TAG_ID);
 						String name = c.getString(TAG_NAME);
-						String date = c.getString(TAG_DATE);	
+						String date = c.getString(TAG_DATE);
 
 						// tmp hashmap for single contact
 						HashMap<String, String> singleEvent = new HashMap<String, String>();
@@ -234,12 +247,12 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_ID, _id);
 						singleEvent.put(TAG_DATE, date);
 
-						// adding contact to event list
+						// adding todo to event list
 						if (eventList.contains(singleEvent) == true) {
-							Log.d("MainAC","eventList contains: " + singleEvent);
-						}
-						else if (eventList.contains(singleEvent) != true) {
-						DataHandler.addToEventList(singleEvent);
+							Log.d("MainAC", "eventList contains: "
+									+ singleEvent);
+						} else if (eventList.contains(singleEvent) != true) {
+							DataHandler.addToEventList(singleEvent);
 						}
 					}
 				} catch (JSONException e) {
@@ -252,23 +265,20 @@ public class MainActivity extends ListActivity {
 			return null;
 		}
 
-	
-		
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
+
 			/**
 			 * Updating parsed JSON data into ListView
 			 * */
-			ListAdapter adapter = new SimpleAdapter(
-					MainActivity.this, eventList,
-					R.layout.list_item, new String[] { TAG_NAME, TAG_DATE,
-							TAG_ID }, new int[] { R.id.name,
+			ListAdapter adapter = new SimpleAdapter(MainActivity.this,
+					eventList, R.layout.list_item, new String[] { TAG_NAME,
+							TAG_DATE, TAG_ID }, new int[] { R.id.name,
 							R.id.description, R.id.id });
 
 			setListAdapter(adapter);
-			
+
 		}
 
 	}
@@ -277,35 +287,38 @@ public class MainActivity extends ListActivity {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			
-			ServiceHandler sh = new ServiceHandler();
-			String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
 
+			ServiceHandler sh = new ServiceHandler();
+			String jsonStr = null;
+			if (method == 2) {
+				jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,DataHandler.getParamList());
+			}
+			else if (method == 3) {
+				jsonStr = sh.makeServiceCall(url,ServiceHandler.PUT,DataHandler.getParamList());
+			}
 			Log.d("Response: ", "> " + jsonStr);
-			
 
 			if (jsonStr != null) {
 				try {
 					JSONObject sC = new JSONObject(jsonStr);
-						
-						String _id = sC.getString(TAG_ID);
-						String name = sC.getString(TAG_NAME);
-						String date = sC.getString(TAG_DATE);
-						
-						// tmp hashmap for single contact
-						HashMap<String, String> singleEvent = new HashMap<String, String>();
 
-						// adding each child node to HashMap key => value
-						singleEvent.put(TAG_NAME, name);
-						singleEvent.put(TAG_ID, _id);
-						singleEvent.put(TAG_DATE, date);
-						
-						if (eventList.contains(singleEvent) == true) {
-							Log.d("MainAC","eventList contains: " + singleEvent);
-						}
-						else if (eventList.contains(singleEvent) != true) {
+					String _id = sC.getString(TAG_ID);
+					String name = sC.getString(TAG_NAME);
+					String date = sC.getString(TAG_DATE);
+
+					// tmp hashmap for single contact
+					HashMap<String, String> singleEvent = new HashMap<String, String>();
+
+					// adding each child node to HashMap key => value
+					singleEvent.put(TAG_NAME, name);
+					singleEvent.put(TAG_ID, _id);
+					singleEvent.put(TAG_DATE, date);
+
+					if (eventList.contains(singleEvent) == true) {
+						Log.d("MainAC", "eventList contains: " + singleEvent);
+					} else if (eventList.contains(singleEvent) != true) {
 						DataHandler.addToEventList(singleEvent);
-						}
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -319,17 +332,14 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
-			ListAdapter adapter = new SimpleAdapter(
-					MainActivity.this, eventList,
-					R.layout.list_item, new String[] { TAG_NAME, TAG_DATE,
-							TAG_ID }, new int[] { R.id.name,
+
+			ListAdapter adapter = new SimpleAdapter(MainActivity.this,
+					eventList, R.layout.list_item, new String[] { TAG_NAME,
+							TAG_DATE, TAG_ID }, new int[] { R.id.name,
 							R.id.description, R.id.id });
 
-			setListAdapter(adapter); 
+			setListAdapter(adapter);
 		}
 
 	}
 }
-
-

@@ -110,7 +110,7 @@ public class AddEventActivity extends Activity {
 		else {
 			
 			Context context = getApplicationContext();
-			CharSequence text = "Der Text darf die folgenden Zeichen nicht enthalten: % & ? +";
+			CharSequence text = "Der Text darf die folgenden Zeichen nicht enthalten: % & ? + #";
 			int duration = Toast.LENGTH_LONG;
 			
 			Toast toast = Toast.makeText(context, text, duration);
@@ -119,7 +119,7 @@ public class AddEventActivity extends Activity {
 		}
 		
 		if (update == false) {
-			DataHandler.putData(analyzedString);
+			DataHandler.postData(analyzedString);
 		
 		}
 		else if (update == true) {

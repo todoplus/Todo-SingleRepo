@@ -77,5 +77,6 @@
         android:layout_toLeftOf="@+id/button2"
         android:onClick="onUserCreate"
         android:text="Erstellen" />
+    	
 
 </RelativeLayout>

@@ -89,17 +89,17 @@ public class LogInActivity extends Activity {
 			
 			
 			ServiceHandler sh = new ServiceHandler();
-			String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
+			String jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,DataHandler.getParamList());
 
 			Log.d("Response: ", "> " + jsonStr);
 			
 
 			if (jsonStr != null) {
 				try {
-					JSONArray jsonArray = new JSONArray(jsonStr);
+					JSONArray content = new JSONArray(jsonStr);
 					
-					for (int i = 0; i < jsonArray.length(); i++) {
-						JSONObject c = jsonArray.getJSONObject(i);
+					for (int i = 0; i < content.length(); i++) {
+						JSONObject c = content.getJSONObject(i);
 						
 						String _id = c.getString(TAG_ID);
 						String username = c.getString(TAG_USERNAME);
@@ -107,8 +107,10 @@ public class LogInActivity extends Activity {
 						
 						password = pass;
 						user = username;
-						startMainAC();
-					} 
+					}
+						
+						
+						startMainAC(); 
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -118,7 +120,7 @@ public class LogInActivity extends Activity {
 			}
 			return null;
 		}
-
+		
 	}
 
 }
