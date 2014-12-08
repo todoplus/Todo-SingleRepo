@@ -46,11 +46,10 @@ public class MainActivity extends ListActivity {
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
 	private static boolean pSync = false;
-	
+
 	final Handler handler = new Handler();
 	Timer timer = new Timer();
-	
-	
+
 	public static void setMethod(int pMethod) {
 		MainActivity.method = pMethod;
 	}
@@ -71,7 +70,7 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
 	static ArrayList<HashMap<String, String>> compareList;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,19 +80,14 @@ public class MainActivity extends ListActivity {
 		compareList = ListHandler.getCompareList();
 		ListView lv = getListView();
 
+		// User schon eingeloggt?
 		checkUser();
-		
-		ListAdapter adapter = new SimpleAdapter(MainActivity.this, eventList,
-				R.layout.list_item,
-				new String[] { TAG_NAME, TAG_DATE, TAG_ID }, new int[] {
-						R.id.name, R.id.description, R.id.id });
-		
-		setListAdapter(adapter);
+		// Initialisieren eines Adapters für die Anzeige
+		newAdapter();
 
 		Intent in = getIntent();
 		autoSync = in.getBooleanExtra("SYNC", false);
 		Log.d("MainAC", "autoSync = " + autoSync);
-		
 
 		if (autoSync == true) {
 			new PutContent().execute();
@@ -107,8 +101,8 @@ public class MainActivity extends ListActivity {
 				callAsyncTask();
 				firstStart = false;
 			}
-			Log.d("Main AC","checkUser pSync: " + pSync);
-			
+			Log.d("Main AC", "checkUser pSync: " + pSync);
+
 		}
 
 		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on
@@ -181,6 +175,7 @@ public class MainActivity extends ListActivity {
 		case R.id.action_logOut:
 			DataHandler.logOutUser();
 			pSync = false;
+			firstStart = true;
 			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(logOut);
 
@@ -203,25 +198,25 @@ public class MainActivity extends ListActivity {
 		new GetContent().cancel(true);
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onResume() {
-		Log.d("MainAC","onResume ausgeführt");
+		Log.d("MainAC", "onResume ausgeführt");
 		Intent in = getIntent();
 		boolean pAutoSync = in.getBooleanExtra("SYNC", false);
 		if (pAutoSync != true) {
 			if (checkUser() == true) {
 				pSync = true;
-				Log.d("MainAC","onResume callAsync");
+				Log.d("MainAC", "onResume callAsync");
 			}
-			
+
 		}
-		
+
 		super.onResume();
 	}
 
 	public void callAsyncTask() {
-		
+
 		// Automatische Synchronisierung
 		TimerTask task = new TimerTask() {
 			@Override
@@ -231,21 +226,22 @@ public class MainActivity extends ListActivity {
 						if (pSync == true) {
 							DataHandler.getData();
 							new GetContent().execute();
-							Log.d("MainAC","timerTask calld getC");
+							Log.d("MainAC", "timerTask calld getC");
 						}
 					}
 				});
-				
+
 			}
 		};
 		timer.schedule(task, 0, 7000);
 	}
-	public void newAdapter() {
-		ListAdapter adapter = new SimpleAdapter(MainActivity.this,
-				eventList, R.layout.list_item, new String[] { TAG_NAME,
-						TAG_DATE, TAG_ID }, new int[] { R.id.name,
-						R.id.description, R.id.id });
-		
+
+	public synchronized void newAdapter() {
+		ListAdapter adapter = new SimpleAdapter(MainActivity.this, eventList,
+				R.layout.list_item,
+				new String[] { TAG_NAME, TAG_DATE, TAG_ID }, new int[] {
+						R.id.name, R.id.description, R.id.id });
+
 		setListAdapter(adapter);
 	}
 
@@ -327,13 +323,11 @@ public class MainActivity extends ListActivity {
 
 			return null;
 		}
-		
-		
-	
 
-		@TargetApi(Build.VERSION_CODES.HONEYCOMB) @Override
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+		@Override
 		protected void onCancelled(Void result) {
-			Log.d("MainAC","AsyncTask cancelled");
+			Log.d("MainAC", "AsyncTask cancelled");
 			super.onCancelled(result);
 		}
 
@@ -361,7 +355,6 @@ public class MainActivity extends ListActivity {
 			 * Updating parsed JSON data into ListView
 			 * */
 			newAdapter();
-			
 
 		}
 
@@ -371,7 +364,7 @@ public class MainActivity extends ListActivity {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			
+
 			new GetContent().cancel(true);
 			ServiceHandler sh = new ServiceHandler();
 			String jsonStr = null;
@@ -420,10 +413,10 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
+
 			newAdapter();
 			pSync = true;
-			Log.d("MainAC","PutContent call Async");
+			Log.d("MainAC", "PutContent call Async");
 		}
 
 	}
