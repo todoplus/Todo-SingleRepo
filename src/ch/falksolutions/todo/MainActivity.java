@@ -8,17 +8,21 @@ package ch.falksolutions.todo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +45,12 @@ public class MainActivity extends ListActivity {
 	private static boolean autoSync = false;
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
-
+	private static boolean pSync = false;
+	
+	final Handler handler = new Handler();
+	Timer timer = new Timer();
+	
+	
 	public static void setMethod(int pMethod) {
 		MainActivity.method = pMethod;
 	}
@@ -62,7 +71,7 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
 	static ArrayList<HashMap<String, String>> compareList;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,33 +81,34 @@ public class MainActivity extends ListActivity {
 		compareList = ListHandler.getCompareList();
 		ListView lv = getListView();
 
+		checkUser();
+		
 		ListAdapter adapter = new SimpleAdapter(MainActivity.this, eventList,
 				R.layout.list_item,
 				new String[] { TAG_NAME, TAG_DATE, TAG_ID }, new int[] {
 						R.id.name, R.id.description, R.id.id });
-
+		
 		setListAdapter(adapter);
 
-		checkUser();
-
 		Intent in = getIntent();
-		Boolean autoSync = in.getBooleanExtra("SYNC", false);
+		autoSync = in.getBooleanExtra("SYNC", false);
 		Log.d("MainAC", "autoSync = " + autoSync);
-		Log.d("MainAC", "firstStart = " + firstStart);
+		
 
 		if (autoSync == true) {
-			Log.d("MainAC", "processRemove/Put= " + url);
 			new PutContent().execute();
 			autoSync = false;
 
 		}
-
-		if (firstStart != false) {
-			if (user != null) {
-				DataHandler.getData();
-				new GetContent().execute();
+		// Start Synchronisationsintervall
+		if (checkUser() == true) {
+			pSync = true;
+			if (firstStart == true) {
+				callAsyncTask();
 				firstStart = false;
 			}
+			Log.d("Main AC","checkUser pSync: " + pSync);
+			
 		}
 
 		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on
@@ -170,7 +180,7 @@ public class MainActivity extends ListActivity {
 
 		case R.id.action_logOut:
 			DataHandler.logOutUser();
-			firstStart = true;
+			pSync = false;
 			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(logOut);
 
@@ -186,20 +196,70 @@ public class MainActivity extends ListActivity {
 		}
 	}
 
-	public void autoGET() {
-		DataHandler.getData();
-		Log.d("Main AC", "autoGet= " + url);
-
-		new GetContent().execute();
+	@Override
+	protected void onPause() {
+		Log.d("MainAC", "onPause ausgefuehrt");
+		pSync = false;
+		new GetContent().cancel(true);
+		super.onPause();
+	}
+	
+	@Override
+	protected void onResume() {
+		Log.d("MainAC","onResume ausgeführt");
+		Intent in = getIntent();
+		boolean pAutoSync = in.getBooleanExtra("SYNC", false);
+		if (pAutoSync != true) {
+			if (checkUser() == true) {
+				pSync = true;
+				Log.d("MainAC","onResume callAsync");
+			}
+			
+		}
+		
+		super.onResume();
 	}
 
-	public void checkUser() { // Check, ob schon ein User besteht
-		user = DataHandler.getUser();
+	public void callAsyncTask() {
+		
+		// Automatische Synchronisierung
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				handler.post(new Runnable() {
+					public void run() {
+						if (pSync == true) {
+							DataHandler.getData();
+							new GetContent().execute();
+							Log.d("MainAC","timerTask calld getC");
+						}
+					}
+				});
+				
+			}
+		};
+		timer.schedule(task, 0, 7000);
+	}
+	public void newAdapter() {
+		ListAdapter adapter = new SimpleAdapter(MainActivity.this,
+				eventList, R.layout.list_item, new String[] { TAG_NAME,
+						TAG_DATE, TAG_ID }, new int[] { R.id.name,
+						R.id.description, R.id.id });
+		
+		setListAdapter(adapter);
+	}
 
+	public boolean checkUser() { // Check, ob schon ein User besteht
+		user = DataHandler.getUser();
+		boolean check = false;
 		if (user == null) {
 			Intent in = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(in);
+			check = false;
+		} else if (user != null) {
+			check = true;
 		}
+		return check;
 	}
 
 	/**
@@ -210,7 +270,6 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			ListHandler.clearCompareList();
 
 			Context context = getApplicationContext();
 			CharSequence text = "Synchronisation gestartet!";
@@ -268,13 +327,22 @@ public class MainActivity extends ListActivity {
 
 			return null;
 		}
+		
+		
+	
+
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB) @Override
+		protected void onCancelled(Void result) {
+			Log.d("MainAC","AsyncTask cancelled");
+			super.onCancelled(result);
+		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
 			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
-			for (int i = 0; i < compareList.size(); i++) {
+			for (int i = 0; i < eventList.size(); i++) {
 
 				if (compareList.contains(eventList.get(i)) != true) {
 					Log.d("MainAC", "con FALSE: " + compareList.get(i));
@@ -292,12 +360,8 @@ public class MainActivity extends ListActivity {
 			/**
 			 * Updating parsed JSON data into ListView
 			 * */
-			ListAdapter adapter = new SimpleAdapter(MainActivity.this,
-					eventList, R.layout.list_item, new String[] { TAG_NAME,
-							TAG_DATE, TAG_ID }, new int[] { R.id.name,
-							R.id.description, R.id.id });
-
-			setListAdapter(adapter);
+			newAdapter();
+			
 
 		}
 
@@ -307,7 +371,8 @@ public class MainActivity extends ListActivity {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-
+			
+			new GetContent().cancel(true);
 			ServiceHandler sh = new ServiceHandler();
 			String jsonStr = null;
 			if (method == 2) {
@@ -355,13 +420,10 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-
-			ListAdapter adapter = new SimpleAdapter(MainActivity.this,
-					eventList, R.layout.list_item, new String[] { TAG_NAME,
-							TAG_DATE, TAG_ID }, new int[] { R.id.name,
-							R.id.description, R.id.id });
-
-			setListAdapter(adapter);
+			
+			newAdapter();
+			pSync = true;
+			Log.d("MainAC","PutContent call Async");
 		}
 
 	}

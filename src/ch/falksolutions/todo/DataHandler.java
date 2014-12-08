@@ -73,7 +73,6 @@ public class DataHandler {
 		url += "?usr=" + user + "&pass=" + password;
 		setUrl(url);
 		MainActivity.setUrl(url);
-		Log.d("DataHandler", "getURL= " + url);
 	}
 
 	public static void updateData(String id, String text) {

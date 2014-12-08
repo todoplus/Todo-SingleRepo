@@ -21,7 +21,6 @@ public class AddEventActivity extends Activity {
 	private static String updateID;
 	private static String updateContent;
 	private static boolean update = false;
-	private static boolean enthaeltSonderZeichen = false;
 	private static String listID;
 
 	public static void setInputName(EditText pInputName) {
