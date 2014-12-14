@@ -4,6 +4,8 @@
 
 package ch.falksolutions.todo;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,10 +18,10 @@ import ch.falksolutions.todo.R;
 
 public class SingleEventActivity  extends Activity {
 	
-	// JSON node keys
 	private static final String TAG_NAME = "name";
 	private static final String TAG_ID = "_id";
 	private static final String TAG_DATE = "date";
+	private static final String TAG_SHARED = "sharedw";
 	
 	
 	@Override
@@ -27,18 +29,12 @@ public class SingleEventActivity  extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_event);
         
-        // getting intent data
-        Intent in = getIntent();
         
-        // Get JSON values from previous intent
-        String name = in.getStringExtra(TAG_NAME);
-        Log.d("SingleE AC","tagname: " + name);
-        String id = in.getStringExtra(TAG_ID);
-        String date = in.getStringExtra(TAG_DATE);
-        Log.d("SingleEvent AC", "tagid= " + id);
-        String listid = in.getStringExtra("list_id");
-        Log.d("SingleE AC", "listid1: " + listid);
-        
+        HashMap<String, String> eventObj = ListHandler.getObjFromEventList();
+        String name = eventObj.get(TAG_NAME);
+        String id = eventObj.get(TAG_ID);
+        String date = eventObj.get(TAG_DATE);
+        String shared = eventObj.get(TAG_SHARED);
         
         // Displaying all values on the screen
         TextView lblName = (TextView) findViewById(R.id.name_label);
@@ -53,16 +49,8 @@ public class SingleEventActivity  extends Activity {
     }
 	
 	public void onUpdate(View v) {
-		Intent in = getIntent();
-		String id = in.getStringExtra(TAG_ID);
-		String name = in.getStringExtra(TAG_NAME);
-		String listid = in.getStringExtra("list_id");
-		
 		Intent in2 = new Intent(SingleEventActivity.this, AddEventActivity.class);
-		in2.putExtra("id", id);
-		in2.putExtra("content", name);
 		in2.putExtra("update", true);
-		in2.putExtra("list_id", listid);
 		startActivity(in2);
 	}
 	

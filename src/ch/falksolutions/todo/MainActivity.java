@@ -46,6 +46,7 @@ public class MainActivity extends ListActivity {
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
 	private static boolean pSync = false;
+	private static boolean doInBackGroundFailed;
 
 	final Handler handler = new Handler();
 	Timer timer = new Timer();
@@ -63,6 +64,8 @@ public class MainActivity extends ListActivity {
 	private static final String TAG_ID = "_id";
 	private static final String TAG_DATE = "Date";
 	private static final String TAG_NAME = "name";
+	private static final String TAG_SHARED = "sharedw";
+	private static final String TAG_USER = "user";
 
 	// content JSONArray
 	JSONArray content = null;
@@ -98,7 +101,7 @@ public class MainActivity extends ListActivity {
 		if (checkUser() == true) {
 			pSync = true;
 			if (firstStart == true) {
-				//callAsyncTask();
+				callAsyncTask();
 				firstStart = false;
 			}
 			Log.d("Main AC", "checkUser pSync: " + pSync);
@@ -113,23 +116,11 @@ public class MainActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Log.d("MAIN AC", "ListID" + id);
-				String stringID = Long.toString(id);
-
-				String name = ((TextView) view.findViewById(R.id.name))
-						.getText().toString();
-				String date = ((TextView) view.findViewById(R.id.description))
-						.getText().toString();
-				String _id = ((TextView) view.findViewById(R.id.id)).getText()
-						.toString();
+				DataHandler.saveListID(id);
 
 				// Starting single event activity
 				Intent in = new Intent(getApplicationContext(),
 						SingleEventActivity.class);
-				in.putExtra(TAG_NAME, name);
-				in.putExtra(TAG_DATE, date);
-				in.putExtra(TAG_ID, _id);
-				in.putExtra("list_id", stringID);
-				Log.d("MainAC", "list_id" + stringID);
 				startActivity(in);
 
 			}
@@ -163,7 +154,11 @@ public class MainActivity extends ListActivity {
 			return true;
 
 		case R.id.action_settings:
-			// Todo
+			if (pSync == true) {
+				pSync = false;
+			} else if (pSync == false) {
+				pSync = true;
+			}
 			return true;
 
 		case R.id.action_hinzufuegen:
@@ -239,8 +234,8 @@ public class MainActivity extends ListActivity {
 	public synchronized void newAdapter() {
 		ListAdapter adapter = new SimpleAdapter(MainActivity.this, eventList,
 				R.layout.list_item,
-				new String[] { TAG_NAME, TAG_DATE, TAG_ID }, new int[] {
-						R.id.name, R.id.description, R.id.id });
+				new String[] { TAG_NAME, TAG_DATE, TAG_USER }, new int[] {
+						R.id.name, R.id.date, R.id.user });
 
 		setListAdapter(adapter);
 	}
@@ -284,6 +279,8 @@ public class MainActivity extends ListActivity {
 			String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
 
 			Log.d("Response: ", "> " + jsonStr);
+			jsonStr = jsonStr.replace("HTTP/1.1", "");
+			Log.d("Replaced: ", "> " + jsonStr);
 
 			if (jsonStr != null) {
 				try {
@@ -296,6 +293,8 @@ public class MainActivity extends ListActivity {
 						String _id = c.getString(TAG_ID);
 						String name = c.getString(TAG_NAME);
 						String date = c.getString(TAG_DATE);
+						String shared = c.getString(TAG_SHARED);
+						String createdbyUser = c.getString(TAG_USER);
 
 						// tmp hashmap for single contact
 						HashMap<String, String> singleEvent = new HashMap<String, String>();
@@ -304,6 +303,8 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_NAME, name);
 						singleEvent.put(TAG_ID, _id);
 						singleEvent.put(TAG_DATE, date);
+						singleEvent.put(TAG_SHARED, shared);
+						singleEvent.put(TAG_USER, createdbyUser);
 
 						// adding todo to event list
 						ListHandler.addToCompareList(singleEvent);
@@ -313,8 +314,10 @@ public class MainActivity extends ListActivity {
 						} else if (eventList.contains(singleEvent) != true) {
 							ListHandler.addToEventList(singleEvent);
 						}
+						doInBackGroundFailed = false;
 					}
 				} catch (JSONException e) {
+					doInBackGroundFailed = true;
 					e.printStackTrace();
 				}
 			} else {
@@ -336,20 +339,24 @@ public class MainActivity extends ListActivity {
 			super.onPostExecute(result);
 
 			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
-			if (eventList.size() > 0) {
-			for (int i = 0; i < eventList.size(); i++) {
+			if (doInBackGroundFailed != true) {
+				if (eventList.size() > 0) {
+					for (int i = 0; i < eventList.size(); i++) {
 
-				if (compareList.contains(eventList.get(i)) != true) {
-					Log.d("MainAC", "con FALSE: " + compareList.get(i));
-					ListHandler.deleteFromEventList(i);
+						if (compareList.contains(eventList.get(i)) != true) {
+							Log.d("MainAC", "con FALSE: " + compareList.get(i));
+							ListHandler.deleteFromEventList(i);
+						}
+					}
 				}
-			}
+			} else {
+				Log.d("MainAC", "doInBackGroundFailed: " + doInBackGroundFailed);
 			}
 			/**
 			 * Überprüfung ob alles gelöscht wurde (falls die for Schleife nicht
 			 * ausgelöst wird da size() == 0.
 			 */
-			else if (compareList.size() == 0) {
+			if (compareList.size() == 0) {
 				ListHandler.clearEventList();
 			}
 
@@ -383,24 +390,31 @@ public class MainActivity extends ListActivity {
 
 			if (jsonStr != null) {
 				try {
-					JSONObject sC = new JSONObject(jsonStr);
+					JSONArray content = new JSONArray(jsonStr);
 
-					String _id = sC.getString(TAG_ID);
-					String name = sC.getString(TAG_NAME);
-					String date = sC.getString(TAG_DATE);
+					for (int i = 0; i < content.length(); i++) {
+						JSONObject sC = content.getJSONObject(i);
 
-					// tmp hashmap for single contact
-					HashMap<String, String> singleEvent = new HashMap<String, String>();
+						String _id = sC.getString(TAG_ID);
+						String name = sC.getString(TAG_NAME);
+						String date = sC.getString(TAG_DATE);
+						String user = sC.getString(TAG_USER);
 
-					// adding each child node to HashMap key => value
-					singleEvent.put(TAG_NAME, name);
-					singleEvent.put(TAG_ID, _id);
-					singleEvent.put(TAG_DATE, date);
+						// tmp hashmap for single contact
+						HashMap<String, String> singleEvent = new HashMap<String, String>();
 
-					if (eventList.contains(singleEvent) == true) {
-						Log.d("MainAC", "eventList contains: " + singleEvent);
-					} else if (eventList.contains(singleEvent) != true) {
-						ListHandler.addToEventList(singleEvent);
+						// adding each child node to HashMap key => value
+						singleEvent.put(TAG_NAME, name);
+						singleEvent.put(TAG_ID, _id);
+						singleEvent.put(TAG_DATE, date);
+						singleEvent.put(TAG_USER, user);
+
+						if (eventList.contains(singleEvent) == true) {
+							Log.d("MainAC", "eventList contains: "
+									+ singleEvent);
+						} else if (eventList.contains(singleEvent) != true) {
+							ListHandler.addToEventList(singleEvent);
+						}
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();

@@ -259,12 +259,12 @@ int id activity_chooser_view_content 0x7f090025
 int id always 0x7f09000f
 int id beginning 0x7f090016
 int id button1 0x7f090041
-int id button2 0x7f090042
+int id button2 0x7f090043
 int id checkbox 0x7f09002d
 int id collapseActionView 0x7f090010
+int id date 0x7f090048
 int id date_label 0x7f090046
 int id default_activity_button 0x7f090028
-int id description 0x7f090049
 int id dialog 0x7f090014
 int id disableHome 0x7f090009
 int id dropdown 0x7f090015
@@ -277,7 +277,6 @@ int id expanded_menu 0x7f09002c
 int id home 0x7f090000
 int id homeAsUp 0x7f09000a
 int id icon 0x7f09002a
-int id id 0x7f090048
 int id id_label 0x7f090045
 int id ifRoom 0x7f090011
 int id image 0x7f090027
@@ -312,11 +311,12 @@ int id tabMode 0x7f090008
 int id textView1 0x7f09003c
 int id textView2 0x7f09003d
 int id textView3 0x7f09003f
-int id textView4 0x7f090043
+int id textView4 0x7f090042
 int id title 0x7f09002b
 int id top_action_bar 0x7f090020
 int id up 0x7f090021
 int id useLogo 0x7f09000e
+int id user 0x7f090049
 int id withText 0x7f090013
 int integer abc_max_action_buttons 0x7f080000
 int layout abc_action_bar_decor 0x7f030000

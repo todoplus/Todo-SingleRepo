@@ -15,6 +15,7 @@ public class DataHandler {
 	private static String user = null;
 	private static String password = null;
 	private static boolean response;
+	private static long listID;
 
 
 
@@ -121,6 +122,14 @@ public class DataHandler {
 		setUser(null);
 		setPassword(null);
 		ListHandler.clearEventList();
+	}
+	
+	public static void saveListID(long ID) {
+		DataHandler.listID = ID;
+		
+	}
+	public static long getListID() {
+		return listID;
 	}
 
 }

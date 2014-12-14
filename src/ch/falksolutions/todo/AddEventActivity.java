@@ -4,6 +4,8 @@
 
 package ch.falksolutions.todo;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +20,17 @@ import android.widget.Toast;
 public class AddEventActivity extends Activity {
 	private static EditText inputName;
 	private static EditText inputSharedWith;
+	private static boolean update = false;
+	
 	private static String updateID;
 	private static String updateContent;
-	private static boolean update = false;
-	private static String listID;
+	private static String sharedWith;
+	private static long listID;
+	
+	
+	private static final String TAG_SHARED = "sharedw";
+	private static final String TAG_NAME = "name";
+	private static final String TAG_ID = "_id";
 
 	public static void setInputName(EditText pInputName) {
 		inputName = pInputName;
@@ -40,12 +49,15 @@ public class AddEventActivity extends Activity {
 		update = in.getBooleanExtra("update", false);
 
 		if (update == true) {
-			updateContent = in.getStringExtra("content");
-			updateID = in.getStringExtra("id");
-			listID = in.getStringExtra("list_id");
-			Log.d("AddEventAC", "updID= " + updateID);
+			HashMap<String, String> eventObj = ListHandler.getObjFromEventList();
+			
+			sharedWith = eventObj.get(TAG_SHARED);
+			updateContent = eventObj.get(TAG_NAME);
+			updateID = eventObj.get(TAG_ID);
+			
 
 			inputName.setText(updateContent);
+			inputSharedWith.setText(sharedWith);
 		}
 
 	}
@@ -100,6 +112,7 @@ public class AddEventActivity extends Activity {
 			DataHandler.postData(todo, shared);
 
 		} else if (update == true) {
+			listID = DataHandler.getListID();
 			DataHandler.updateData(updateID, todo);
 			ListHandler.deleteFromEventList(Long.valueOf(listID));
 			update = false;

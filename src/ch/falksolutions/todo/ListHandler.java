@@ -24,6 +24,12 @@ public class ListHandler {
 		eventList.remove(intID);
 		Log.d("DataHandler", "eventList removed id" + id);
 	}
+	public static HashMap<String, String> getObjFromEventList() {
+		int intID = (int) DataHandler.getListID();
+		eventList.get(intID);
+		
+		return eventList.get(intID);
+	}
 	
 
 	public static void clearEventList() {
