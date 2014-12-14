@@ -8,7 +8,7 @@
     <string name="finish">Fertig</string>
     <string name="addevent_new">Event hinzufügen</string>
     <string name="name">Name</string>
-    <string name="Beschreibung">Beschreibung</string>
+    <string name="sharewith">Teilen mit:</string>
     <string name="login">Login/Create User</string>
     <string name="synchronisieren">Synchronisieren</string>
     <string name="hinzufuegen">ToDo hinzufügen</string>

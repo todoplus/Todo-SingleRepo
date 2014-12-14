@@ -24,17 +24,6 @@
         android:text="User"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button1"
-        android:layout_alignBottom="@+id/button1"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/textView1"
-        android:onClick = "onUserLogin"
-        android:text="Login" />
-
     <EditText
         android:id="@+id/editText1"
         android:layout_width="wrap_content"
@@ -70,13 +59,33 @@
 
     <Button
         android:id="@+id/button1"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/editText2"
-        android:layout_toLeftOf="@+id/button2"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView4"
         android:onClick="onUserCreate"
         android:text="Erstellen" />
-    	
+
+    <Button
+        android:id="@+id/button2"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/editText2"
+        android:onClick="onUserLogin"
+        android:text="Login" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true"
+        android:text="oder"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

@@ -44,7 +44,7 @@
         android:layout_alignLeft="@+id/editText1"
         android:layout_below="@+id/editText1"
         android:layout_marginTop="20dp"
-        android:text="@string/Beschreibung"
+        android:text="@string/sharewith"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText

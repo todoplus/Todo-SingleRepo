@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 public class AddEventActivity extends Activity {
 	private static EditText inputName;
-	private static EditText inputBeschreibung;
+	private static EditText inputSharedWith;
 	private static String updateID;
 	private static String updateContent;
 	private static boolean update = false;
@@ -34,7 +34,7 @@ public class AddEventActivity extends Activity {
 		setContentView(R.layout.addevent);
 
 		inputName = (EditText) findViewById(R.id.editText1);
-		inputBeschreibung = (EditText) findViewById(R.id.editText2);
+		inputSharedWith = (EditText) findViewById(R.id.editText2);
 
 		Intent in = getIntent();
 		update = in.getBooleanExtra("update", false);
@@ -81,6 +81,7 @@ public class AddEventActivity extends Activity {
 
 		Log.d("AddEventAc", "ActionBar finish");
 		String todo = inputName.getText().toString();
+		String shared = inputSharedWith.getText().toString();
 
 		Context context = getApplicationContext();
 		CharSequence text = "ToDo: '" + inputName.getText().toString()
@@ -96,7 +97,7 @@ public class AddEventActivity extends Activity {
 		startActivity(goToMainActivity);
 
 		if (update == false) {
-			DataHandler.postData(todo);
+			DataHandler.postData(todo, shared);
 
 		} else if (update == true) {
 			DataHandler.updateData(updateID, todo);

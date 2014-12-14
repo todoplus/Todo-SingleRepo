@@ -14,6 +14,7 @@ public class DataHandler {
 	private static String url = STANURL;
 	private static String user = null;
 	private static String password = null;
+	private static boolean response;
 
 
 
@@ -48,13 +49,14 @@ public class DataHandler {
 		DataHandler.password = password;
 	}
 
-	public static void postData(String name) {
+	public static void postData(String name, String shared) {
 		url = STANURL;
 		ListHandler.clearParamList();
 		MainActivity.setMethod(2);
 		ListHandler.addToParamList(new BasicNameValuePair("usr", user));
 		ListHandler.addToParamList(new BasicNameValuePair("pass", password));
 		ListHandler.addToParamList(new BasicNameValuePair("text", name));
+		ListHandler.addToParamList(new BasicNameValuePair("shared", shared));
 		
 		setUrl(url);
 		MainActivity.setUrl(url);
@@ -97,14 +99,22 @@ public class DataHandler {
 		Log.d("DataHandler", "loginURL= " + url);
 	}
 
-	public static void createUser(String user, String passwort) {
+	public static boolean createUser(String user, String passwort) {
 		url = STANURL;
 		url += "/create";
+		response = false;
 		ListHandler.clearParamList();
-		ListHandler.addToParamList(new BasicNameValuePair("usr", user));
-		ListHandler.addToParamList(new BasicNameValuePair("pass", passwort));
-		setUrl(url);
-		Log.d("DataHandler", "createURL= " + url);
+		if (user.equals("") != true) {
+			ListHandler.addToParamList(new BasicNameValuePair("usr", user));
+			if (passwort.equals("") != true) {
+					ListHandler.addToParamList(new BasicNameValuePair("pass", passwort));
+					setUrl(url);
+					response = true;
+			}
+		}
+		return response;
+		
+		
 	}
 
 	public static void logOutUser() {

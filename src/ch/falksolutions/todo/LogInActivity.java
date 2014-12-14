@@ -42,12 +42,25 @@ public class LogInActivity extends Activity {
 
 		if (method == 1) {
 			DataHandler.userLogin(user, password);
+			url = DataHandler.getUrl();
+			new userLogin().execute();
 		} else if (method == 2) {
 			DataHandler.createUser(user, password);
+			if (DataHandler.createUser(user, password) == true) {
+				url = DataHandler.getUrl();
+				new userLogin().execute();
+			} else {
+				Context context = getApplicationContext();
+				CharSequence text = "User oder Passwort dürfen nicht leer sein!";
+				int duration = Toast.LENGTH_SHORT;
+
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+				
+			}
 		}
 		
-		url = DataHandler.getUrl();
-		new userLogin().execute();
+		
 		
 
 	}

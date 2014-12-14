@@ -98,7 +98,7 @@ public class MainActivity extends ListActivity {
 		if (checkUser() == true) {
 			pSync = true;
 			if (firstStart == true) {
-				callAsyncTask();
+				//callAsyncTask();
 				firstStart = false;
 			}
 			Log.d("Main AC", "checkUser pSync: " + pSync);
@@ -336,6 +336,7 @@ public class MainActivity extends ListActivity {
 			super.onPostExecute(result);
 
 			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
+			if (eventList.size() > 0) {
 			for (int i = 0; i < eventList.size(); i++) {
 
 				if (compareList.contains(eventList.get(i)) != true) {
@@ -343,11 +344,12 @@ public class MainActivity extends ListActivity {
 					ListHandler.deleteFromEventList(i);
 				}
 			}
+			}
 			/**
 			 * Überprüfung ob alles gelöscht wurde (falls die for Schleife nicht
 			 * ausgelöst wird da size() == 0.
 			 */
-			if (compareList.size() == 0) {
+			else if (compareList.size() == 0) {
 				ListHandler.clearEventList();
 			}
 
