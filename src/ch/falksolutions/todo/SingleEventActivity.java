@@ -10,18 +10,23 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import ch.falksolutions.todo.R;
 
 public class SingleEventActivity  extends Activity {
 	
+	// Elemente Objekt
 	private static final String TAG_NAME = "name";
 	private static final String TAG_ID = "_id";
 	private static final String TAG_DATE = "date";
 	private static final String TAG_SHARED = "sharedw";
+	
+	// Vom Objekt ausgelesene Variablen
+	private static String id;
+	private static String name;
+	private static String date;
+	private static String shared;
 	
 	
 	@Override
@@ -31,10 +36,10 @@ public class SingleEventActivity  extends Activity {
         
         
         HashMap<String, String> eventObj = ListHandler.getObjFromEventList();
-        String name = eventObj.get(TAG_NAME);
-        String id = eventObj.get(TAG_ID);
-        String date = eventObj.get(TAG_DATE);
-        String shared = eventObj.get(TAG_SHARED);
+        name = eventObj.get(TAG_NAME);
+        id = eventObj.get(TAG_ID);
+        date = eventObj.get(TAG_DATE);
+        shared = eventObj.get(TAG_SHARED);
         
         // Displaying all values on the screen
         TextView lblName = (TextView) findViewById(R.id.name_label);
@@ -55,12 +60,9 @@ public class SingleEventActivity  extends Activity {
 	}
 	
 	public void onDelete(View v) {
-		Intent in = getIntent();
-		String id = in.getStringExtra(TAG_ID);
-		String StringListID = in.getStringExtra("list_id");
-		Log.d("SingleE AC", "listid: " + StringListID);
+		
 		DataHandler.removeData(id);
-		ListHandler.deleteFromEventList(Long.valueOf(StringListID));
+		ListHandler.deleteFromEventList(DataHandler.getListID());
 		
 		Context context = getApplicationContext();
 		CharSequence text = "ToDo wird geloescht!";

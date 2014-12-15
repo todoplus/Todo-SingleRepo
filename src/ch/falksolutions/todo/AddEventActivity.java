@@ -114,7 +114,7 @@ public class AddEventActivity extends Activity {
 		} else if (update == true) {
 			listID = DataHandler.getListID();
 			DataHandler.updateData(updateID, todo);
-			ListHandler.deleteFromEventList(Long.valueOf(listID));
+			ListHandler.deleteFromEventList(listID);
 			update = false;
 
 		}

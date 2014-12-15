@@ -33,7 +33,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
@@ -73,6 +72,7 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
 	static ArrayList<HashMap<String, String>> compareList;
+	static ArrayList<HashMap<String, String>> compareList2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,9 +99,9 @@ public class MainActivity extends ListActivity {
 		}
 		// Start Synchronisationsintervall
 		if (checkUser() == true) {
-			pSync = true;
+			// pSync = true;
 			if (firstStart == true) {
-				callAsyncTask();
+				// callAsyncTask();
 				firstStart = false;
 			}
 			Log.d("Main AC", "checkUser pSync: " + pSync);
@@ -155,6 +155,7 @@ public class MainActivity extends ListActivity {
 
 		case R.id.action_settings:
 			if (pSync == true) {
+				new GetContent().cancel(true);
 				pSync = false;
 			} else if (pSync == false) {
 				pSync = true;
@@ -210,6 +211,40 @@ public class MainActivity extends ListActivity {
 		super.onResume();
 	}
 
+	public void renewEventList() {
+		// ToDo = compareList2;
+	}
+
+	public boolean checkErrorCodes(String jsonStr) {
+		boolean error = false;
+		String analyze = jsonStr.substring(0, 2);
+
+		if (analyze.equals("001") == true) {
+			error = true;
+			makeToast("Fehler: Bitte logge dich erneut ein!");
+
+		} else if (analyze.equals("002") == true) {
+			error = true;
+			makeToast("Fehler: Bitte logge dich erneut ein!");
+		} else if (analyze.equals("003") == true) {
+			error = true;
+			// Abbruch, da Removing OK
+		} else if (analyze.equals("004") == true) {
+			error = true;
+			makeToast("Fehler: Bitte versuche es erneut!");
+		
+		} return error;
+	}
+	
+	public void makeToast(CharSequence toastText) {
+		Context context = getApplicationContext();
+		CharSequence text = toastText;
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		
+	}
+
 	public void callAsyncTask() {
 
 		// Automatische Synchronisierung
@@ -238,6 +273,7 @@ public class MainActivity extends ListActivity {
 						R.id.name, R.id.date, R.id.user });
 
 		setListAdapter(adapter);
+
 	}
 
 	public boolean checkUser() { // Check, ob schon ein User besteht
@@ -279,10 +315,11 @@ public class MainActivity extends ListActivity {
 			String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
 
 			Log.d("Response: ", "> " + jsonStr);
-			jsonStr = jsonStr.replace("HTTP/1.1", "");
-			Log.d("Replaced: ", "> " + jsonStr);
-
-			if (jsonStr != null) {
+			
+			if (checkErrorCodes(jsonStr) == true) {
+				//ToDo
+			}
+			else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
 
@@ -340,12 +377,14 @@ public class MainActivity extends ListActivity {
 
 			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
 			if (doInBackGroundFailed != true) {
+				// compareList2 = eventList;
 				if (eventList.size() > 0) {
 					for (int i = 0; i < eventList.size(); i++) {
 
 						if (compareList.contains(eventList.get(i)) != true) {
 							Log.d("MainAC", "con FALSE: " + compareList.get(i));
 							ListHandler.deleteFromEventList(i);
+							// frenewEventList();
 						}
 					}
 				}
@@ -387,8 +426,11 @@ public class MainActivity extends ListActivity {
 				jsonStr = sh.makeServiceCall(url, ServiceHandler.DELETE);
 			}
 			Log.d("Response: ", "> " + jsonStr);
-
-			if (jsonStr != null) {
+			
+			if (checkErrorCodes(jsonStr) == true) {
+				//ToDo
+			}
+			else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
 

@@ -1,6 +1,5 @@
 package ch.falksolutions.todo;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,24 +18,22 @@ public class LogInActivity extends Activity {
 	String user;
 	String password;
 	String url;
-	
 
 	private static final String TAG_ID = "_id";
 	private static final String TAG_USERNAME = "username";
 	private static final String TAG_PASS = "pass";
-	
 
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d("LogIn AC", "Started");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 	}
-	
+
 	public void userHandler(int method) { // 1 = login, 2 = create
 
 		EditText userET = (EditText) findViewById(R.id.editText1);
 		EditText passwordET = (EditText) findViewById(R.id.editText2);
-		
+
 		user = userET.getText().toString();
 		password = passwordET.getText().toString();
 
@@ -56,86 +53,84 @@ public class LogInActivity extends Activity {
 
 				Toast toast = Toast.makeText(context, text, duration);
 				toast.show();
-				
+
 			}
 		}
-		
-		
-		
 
 	}
-		
+
 	public void onUserCreate(View view) {
 		userHandler(2);
-		
+
 	}
-	
+
 	public void onUserLogin(View view) {
 		userHandler(1);
-		
+
 	}
-	
+
 	public void startMainAC() {
-			DataHandler.setUser(user);
-			DataHandler.setPassword(password);
-			Log.d("LoginAC", "user= " + user);
-			Log.d("LoginAC", "pass= " + password);
-			
-			Intent in = new Intent(LogInActivity.this,MainActivity.class);
-			startActivity(in);
-			
+		DataHandler.setUser(user);
+		DataHandler.setPassword(password);
+		Log.d("LoginAC", "user= " + user);
+		Log.d("LoginAC", "pass= " + password);
+
+		Intent in = new Intent(LogInActivity.this, MainActivity.class);
+		startActivity(in);
+
 	}
-	
+
 	public void makeToast(String toastText) {
 		Context context = getApplicationContext();
 		CharSequence text = toastText;
 		int duration = Toast.LENGTH_SHORT;
-		
+
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
 	}
-	
+
 	public class userLogin extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			
-			
+
 			ServiceHandler sh = new ServiceHandler();
-			String jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,ListHandler.getParamList());
+			String jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,
+					ListHandler.getParamList());
 
 			Log.d("Response: ", "> " + jsonStr);
-			
+			String analyze = jsonStr.substring(0, 2);
 
-			if (jsonStr != null) {
+			if (analyze.equals("001") == true) {
+				makeToast("Fehler: User oder Passwort inkorrekt.");
+			} else if (analyze.equals("002") == true) {
+				makeToast("Fehler: Der Username ist schon in Verwendung.");
+			} else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
-					
+
 					for (int i = 0; i < content.length(); i++) {
 						JSONObject c = content.getJSONObject(i);
-						
+
 						String _id = c.getString(TAG_ID);
 						String username = c.getString(TAG_USERNAME);
 						String pass = c.getString(TAG_PASS);
-						
+
 						password = pass;
 						user = username;
 					}
-						
-						
-						startMainAC(); 
+
+					startMainAC();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} else {
 				Log.e("ServiceHandler", "Couldn't get any data from the url");
-				
+
 			}
 			return null;
 		}
-		
+
 	}
 
 }
-
-	
