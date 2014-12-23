@@ -216,8 +216,10 @@ public class MainActivity extends ListActivity {
 	public boolean checkErrorCodes(String jsonStr) {
 		String analyze = "999";
 		error = false;
-		if (jsonStr.length() > 2) {
-			analyze = jsonStr.substring(1, 4);
+		if (jsonStr != null) {
+			if (jsonStr.length() > 2) {
+				analyze = jsonStr.substring(1, 4);
+			}
 		}
 
 		if (analyze.equals("001") == true) {
@@ -256,7 +258,7 @@ public class MainActivity extends ListActivity {
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
 		}
-		
+
 	}
 
 	public void callAsyncTask() {
@@ -345,6 +347,13 @@ public class MainActivity extends ListActivity {
 						String date = c.getString(TAG_DATE);
 						String shared = c.getString(TAG_SHARED);
 						String createdbyUser = c.getString(TAG_USER);
+						
+						
+						String year = date.substring(0,4);
+						String month = date.substring(5, 7);
+						String day = date.substring(8, 10);
+						String time = date.substring(11,16);
+						date = day + "." + month + "." + year + " " + time;
 
 						// tmp hashmap for single contact
 						HashMap<String, String> singleEvent = new HashMap<String, String>();
@@ -457,6 +466,12 @@ public class MainActivity extends ListActivity {
 						String name = sC.getString(TAG_NAME);
 						String date = sC.getString(TAG_DATE);
 						String user = sC.getString(TAG_USER);
+						
+						String year = date.substring(0,4);
+						String month = date.substring(5, 7);
+						String day = date.substring(8, 10);
+						String time = date.substring(11,16);
+						date = day + "." + month + "." + year + " " + time;
 
 						// tmp hashmap for single contact
 						HashMap<String, String> singleEvent = new HashMap<String, String>();
@@ -466,6 +481,7 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_ID, _id);
 						singleEvent.put(TAG_DATE, date);
 						singleEvent.put(TAG_USER, user);
+						
 
 						if (eventList.contains(singleEvent) == true) {
 							Log.d("MainAC", "eventList contains: "

@@ -6,43 +6,58 @@
   android:layout_height="match_parent"
   android:padding="10dp">
 
-  <TextView android:id="@+id/name_label"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="25dip"
-            android:textStyle="bold"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:textColor="#08088A"/>
-
-  <TextView android:id="@+id/id_label"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#acacac"/>
-
-  <TextView android:id="@+id/date_label"
-      		android:layout_width="fill_parent"
-      		android:layout_height="wrap_content"
-      		android:textStyle="bold"/>
-
   <Button
       android:id="@+id/button2"
+      style="?android:attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignBaseline="@+id/button1"
-      android:layout_alignBottom="@+id/button1"
-      android:layout_alignLeft="@+id/name_label"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentRight="true"
+      android:layout_below="@+id/name_label"
+      android:layout_marginTop="62dp"
       android:onClick="onUpdate"
       android:text="Bearbeiten" />
 
   <Button
       android:id="@+id/button1"
+      style="?android:attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
-      android:layout_below="@+id/name_label"
-      android:layout_marginTop="30dp"
+      android:layout_alignLeft="@+id/button2"
+      android:layout_alignRight="@+id/button2"
+      android:layout_below="@+id/button2"
       android:onClick="onDelete"
       android:text="Löschen" />
+
+  <TextView
+      android:id="@+id/date_label"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_above="@+id/button2"
+      android:layout_alignParentRight="true"
+      android:text="sampleDateLabel"
+      android:textStyle="bold" />
+
+  <TextView
+      android:id="@+id/id_label"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@+id/name_label"
+      android:layout_below="@+id/name_label"
+      android:text="sampleLabel"
+      android:textColor="#acacac" />
+
+  <TextView
+      android:id="@+id/name_label"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@+id/date_label"
+      android:layout_alignParentTop="true"
+      android:paddingBottom="10dip"
+      android:paddingTop="10dip"
+      android:text="sampleText"
+      android:textColor="#08088A"
+      android:textSize="25dip"
+      android:textStyle="bold" />
 
 </RelativeLayout>

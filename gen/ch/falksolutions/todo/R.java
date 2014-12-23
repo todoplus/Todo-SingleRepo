@@ -1091,15 +1091,15 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f090023;
         public static final int action_bar_title=0x7f090022;
         public static final int action_context_bar=0x7f09001d;
-        public static final int action_finish=0x7f09004f;
-        public static final int action_hinzufuegen=0x7f09004c;
-        public static final int action_logOut=0x7f09004d;
+        public static final int action_finish=0x7f090050;
+        public static final int action_hinzufuegen=0x7f09004d;
+        public static final int action_logOut=0x7f09004e;
         public static final int action_menu_divider=0x7f090002;
         public static final int action_menu_presenter=0x7f090003;
         public static final int action_mode_close_button=0x7f090024;
-        public static final int action_settings=0x7f09004a;
-        public static final int action_seturl=0x7f09004e;
-        public static final int action_synchronisieren=0x7f09004b;
+        public static final int action_settings=0x7f09004b;
+        public static final int action_seturl=0x7f09004f;
+        public static final int action_synchronisieren=0x7f09004c;
         public static final int activity_chooser_view_content=0x7f090025;
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f090016;
@@ -1161,7 +1161,8 @@ containing a value of this type.
         public static final int top_action_bar=0x7f090020;
         public static final int up=0x7f090021;
         public static final int useLogo=0x7f09000e;
-        public static final int user=0x7f090049;
+        public static final int user=0x7f09004a;
+        public static final int userText=0x7f090049;
         public static final int withText=0x7f090013;
     }
     public static final class integer {
