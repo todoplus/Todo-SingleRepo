@@ -39,13 +39,15 @@ public class MainActivity extends ListActivity {
 
 	// URL + user & pass
 	private static String url = DataHandler.getUrl();
-	private static String user = DataHandler.getUser();
+	private static String user = UserHandler.getUser();
 	private static boolean firstStart = true;
 	private static boolean autoSync = false;
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
 	private static boolean pSync = false;
 	private static boolean doInBackGroundFailed;
+	private static boolean error;
+	private static int errorCode;
 
 	final Handler handler = new Handler();
 	Timer timer = new Timer();
@@ -72,7 +74,6 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
 	static ArrayList<HashMap<String, String>> compareList;
-	static ArrayList<HashMap<String, String>> compareList2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class MainActivity extends ListActivity {
 		if (checkUser() == true) {
 			// pSync = true;
 			if (firstStart == true) {
+				DataHandler.setSsid(UserHandler.getSsid());
 				// callAsyncTask();
 				firstStart = false;
 			}
@@ -211,37 +213,49 @@ public class MainActivity extends ListActivity {
 		super.onResume();
 	}
 
-	public void renewEventList() {
-		// ToDo = compareList2;
-	}
-
 	public boolean checkErrorCodes(String jsonStr) {
-		boolean error = false;
-		String analyze = jsonStr.substring(0, 2);
+		String analyze = "999";
+		error = false;
+		if (jsonStr.length() > 2) {
+			analyze = jsonStr.substring(1, 4);
+		}
 
 		if (analyze.equals("001") == true) {
 			error = true;
-			makeToast("Fehler: Bitte logge dich erneut ein!");
+			errorCode = 001;
 
 		} else if (analyze.equals("002") == true) {
 			error = true;
-			makeToast("Fehler: Bitte logge dich erneut ein!");
+			errorCode = 002;
 		} else if (analyze.equals("003") == true) {
 			error = true;
 			// Abbruch, da Removing OK
 		} else if (analyze.equals("004") == true) {
 			error = true;
-			makeToast("Fehler: Bitte versuche es erneut!");
-		
-		} return error;
+			errorCode = 004;
+		}
+		Log.d("MainAC", "error Code: " + error);
+		return error;
 	}
-	
-	public void makeToast(CharSequence toastText) {
-		Context context = getApplicationContext();
-		CharSequence text = toastText;
-		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
+
+	public void makeToast(int errorCode) {
+		String toastText = "";
+		if (MainActivity.error == true) {
+			if (errorCode == 001) {
+				toastText = "Fehler: Bitte logge dich erneut ein!";
+			} else if (errorCode == 002) {
+				toastText = "Fehler: Bitte logge dich erneut ein!";
+			} else if (errorCode == 003) {
+				toastText = "ToDo wurde gelöscht";
+			} else if (errorCode == 004) {
+				toastText = "Fehler: Bitte versuche es erneut!";
+			}
+			Context context = getApplicationContext();
+			CharSequence text = toastText;
+			int duration = Toast.LENGTH_SHORT;
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+		}
 		
 	}
 
@@ -277,7 +291,7 @@ public class MainActivity extends ListActivity {
 	}
 
 	public boolean checkUser() { // Check, ob schon ein User besteht
-		user = DataHandler.getUser();
+		user = UserHandler.getUser();
 		boolean check = false;
 		if (user == null) {
 			Intent in = new Intent(MainActivity.this, LogInActivity.class);
@@ -315,11 +329,10 @@ public class MainActivity extends ListActivity {
 			String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
 
 			Log.d("Response: ", "> " + jsonStr);
-			
+
 			if (checkErrorCodes(jsonStr) == true) {
-				//ToDo
-			}
-			else if (jsonStr != null) {
+				// ToDo
+			} else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
 
@@ -384,7 +397,11 @@ public class MainActivity extends ListActivity {
 						if (compareList.contains(eventList.get(i)) != true) {
 							Log.d("MainAC", "con FALSE: " + compareList.get(i));
 							ListHandler.deleteFromEventList(i);
-							// frenewEventList();
+							// renewEventList();
+							if (error == true) {
+								Log.d("MainAC", "makeToast started" + errorCode);
+								makeToast(errorCode);
+							}
 						}
 					}
 				}
@@ -426,11 +443,10 @@ public class MainActivity extends ListActivity {
 				jsonStr = sh.makeServiceCall(url, ServiceHandler.DELETE);
 			}
 			Log.d("Response: ", "> " + jsonStr);
-			
+
 			if (checkErrorCodes(jsonStr) == true) {
-				//ToDo
-			}
-			else if (jsonStr != null) {
+				// ToDo
+			} else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
 
@@ -471,6 +487,10 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+
+			if (error == true) {
+				makeToast(errorCode);
+			}
 
 			newAdapter();
 			pSync = true;

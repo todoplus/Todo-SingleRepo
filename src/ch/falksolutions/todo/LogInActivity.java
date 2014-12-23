@@ -10,23 +10,58 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class LogInActivity extends Activity {
 	String user;
-	String password;
+	String SSID;
+	String passwordInput;
 	String url;
 
-	private static final String TAG_ID = "_id";
-	private static final String TAG_USERNAME = "username";
-	private static final String TAG_PASS = "pass";
+	private static final String TAG_USERNAME = "user";
+	private static final String TAG_SESSIONID = "ssid";
+	private static boolean error;
+	private static int errorCode;
+	
+	String android_id;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d("LogIn AC", "Started");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		
+		DeviceUuidFactory device = new DeviceUuidFactory(getBaseContext());
+		android_id = device.getDeviceUuid().toString();
+		Log.d("LoginAC", "onC ID: " + android_id);
+		//somerandom
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_seturl:
+			Intent setUrl = new Intent(LogInActivity.this,
+					ServerUrlSet_Debug.class);
+			startActivity(setUrl);
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
 	}
 
 	public void userHandler(int method) { // 1 = login, 2 = create
@@ -35,15 +70,16 @@ public class LogInActivity extends Activity {
 		EditText passwordET = (EditText) findViewById(R.id.editText2);
 
 		user = userET.getText().toString();
-		password = passwordET.getText().toString();
+		passwordInput = passwordET.getText().toString();
 
 		if (method == 1) {
-			DataHandler.userLogin(user, password);
+			Log.d("LoginAC","androidid: " + android_id);
+			DataHandler.userLogin(user, passwordInput, android_id);
 			url = DataHandler.getUrl();
 			new userLogin().execute();
 		} else if (method == 2) {
-			DataHandler.createUser(user, password);
-			if (DataHandler.createUser(user, password) == true) {
+			DataHandler.createUser(user, passwordInput, android_id);
+			if (DataHandler.createUser(user, passwordInput, android_id) == true) {
 				url = DataHandler.getUrl();
 				new userLogin().execute();
 			} else {
@@ -70,23 +106,52 @@ public class LogInActivity extends Activity {
 	}
 
 	public void startMainAC() {
-		DataHandler.setUser(user);
-		DataHandler.setPassword(password);
+		UserHandler.setUser(user);
+		UserHandler.setSsid(SSID);
 		Log.d("LoginAC", "user= " + user);
-		Log.d("LoginAC", "pass= " + password);
+		Log.d("LoginAC", "ssid= " + SSID);
 
 		Intent in = new Intent(LogInActivity.this, MainActivity.class);
 		startActivity(in);
 
 	}
 
-	public void makeToast(String toastText) {
+	public void makeToast(int errorCode) {
+		String toastText = null;
+		
+		if (errorCode == 001) {
+			toastText = "Fehler: User oder Passwort inkorrekt";
+		} else if (errorCode == 002) {
+			toastText = "Fehler: Username schon in Verwendung";
+		}
+		
 		Context context = getApplicationContext();
 		CharSequence text = toastText;
 		int duration = Toast.LENGTH_SHORT;
 
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
+	}
+	public boolean checkErrorCodes(String jsonStr) {
+		String analyze = "999";
+		if (jsonStr != null) {
+			if (jsonStr.length() > 2) {
+					analyze = jsonStr.substring(1, 4);
+		}
+		}
+		Log.d("LoginAC","analyze String: " + analyze);
+		error = false;
+		
+		if (analyze.equals("001") == true) {
+			error = true;
+			errorCode = 001;
+		} else if (analyze.equals("002") == true) {
+			error = true;
+			errorCode = 002;
+			
+		}
+		Log.d("LoginAC","error Code: " + error);
+		return error;
 	}
 
 	public class userLogin extends AsyncTask<Void, Void, Void> {
@@ -99,24 +164,24 @@ public class LogInActivity extends Activity {
 					ListHandler.getParamList());
 
 			Log.d("Response: ", "> " + jsonStr);
-			String analyze = jsonStr.substring(0, 2);
-
-			if (analyze.equals("001") == true) {
-				makeToast("Fehler: User oder Passwort inkorrekt.");
-			} else if (analyze.equals("002") == true) {
-				makeToast("Fehler: Der Username ist schon in Verwendung.");
-			} else if (jsonStr != null) {
+			
+			
+			if (checkErrorCodes(jsonStr) == true) {
+				// ToDo
+			}
+			
+			else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
 
 					for (int i = 0; i < content.length(); i++) {
 						JSONObject c = content.getJSONObject(i);
 
-						String _id = c.getString(TAG_ID);
+						
 						String username = c.getString(TAG_USERNAME);
-						String pass = c.getString(TAG_PASS);
+						String sessionID = c.getString(TAG_SESSIONID);
 
-						password = pass;
+						SSID = sessionID;
 						user = username;
 					}
 
@@ -124,13 +189,21 @@ public class LogInActivity extends Activity {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+				
 			} else {
 				Log.e("ServiceHandler", "Couldn't get any data from the url");
-
+				
 			}
 			return null;
+		}
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			if (error == true) {
+			makeToast(errorCode);
+			}
 		}
 
 	}
 
 }
+
