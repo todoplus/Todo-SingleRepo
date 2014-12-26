@@ -26,7 +26,7 @@ import android.util.Log;
 
 public class ServiceHandler {
 
-	static String response = null;
+	String response;
 	public final static int GET = 1;
 	public final static int POST = 2;
 	public final static int PUT = 3;

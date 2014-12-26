@@ -9,11 +9,26 @@
     <string name="addevent_new">Event hinzufügen</string>
     <string name="name">Name</string>
     <string name="sharewith">Teilen mit:</string>
-    <string name="login">Login/Create User</string>
+    <string name="login">Login</string>
     <string name="synchronisieren">Synchronisieren</string>
     <string name="hinzufuegen">ToDo hinzufügen</string>
     <string name="logout">Log Out</string>
     <string name="todohinzufuegen">Fertig</string>
     <string name="setURL">set URL</string>
+    <string name="erstellt_von">"Erstellt von: "</string>
+    <string name="geteilt_mit_">"Geteilt mit: "</string>
+    <string name="bearbeiten">Bearbeiten</string>
+    <string name="loeschen">Löschen</string>
+    <string name="samplesharelabel">sampleShareLabel</string>
+    <string name="sampledatelabel">sampleDateLabel</string>
+    <string name="sampleuserlabel">sampleUserLabel</string>
+    <string name="sampletext">sampleText</string>
+    <string name="sampleuser_">"SampleUser "</string>
+    <string name="sampledate">sampleDate</string>
+    <string name="samplename">sampleName</string>
+    <string name="user">User</string>
+    <string name="erstellen">Erstellen</string>
+    <string name="oder">oder</string>
+    <string name="passwort">Passwort</string>
 
 </resources>

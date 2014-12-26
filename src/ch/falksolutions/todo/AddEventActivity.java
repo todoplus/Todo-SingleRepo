@@ -21,13 +21,12 @@ public class AddEventActivity extends Activity {
 	private static EditText inputName;
 	private static EditText inputSharedWith;
 	private static boolean update = false;
-	
+
 	private static String updateID;
 	private static String updateContent;
 	private static String sharedWith;
 	private static long listID;
-	
-	
+
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_NAME = "name";
 	private static final String TAG_ID = "_id";
@@ -49,12 +48,12 @@ public class AddEventActivity extends Activity {
 		update = in.getBooleanExtra("update", false);
 
 		if (update == true) {
-			HashMap<String, String> eventObj = ListHandler.getObjFromEventList();
-			
+			HashMap<String, String> eventObj = ListHandler
+					.getObjFromEventList();
+
 			sharedWith = eventObj.get(TAG_SHARED);
 			updateContent = eventObj.get(TAG_NAME);
 			updateID = eventObj.get(TAG_ID);
-			
 
 			inputName.setText(updateContent);
 			inputSharedWith.setText(sharedWith);
@@ -89,19 +88,21 @@ public class AddEventActivity extends Activity {
 		}
 	}
 
+	public void makeToast(String toastText) {
+
+		Context context = getApplicationContext();
+		CharSequence text = toastText;
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+	}
+
 	public void uploadToDo() {
 
 		Log.d("AddEventAc", "ActionBar finish");
 		String todo = inputName.getText().toString();
 		String shared = inputSharedWith.getText().toString();
-
-		Context context = getApplicationContext();
-		CharSequence text = "ToDo: '" + inputName.getText().toString()
-				+ "' wird hochgeladen!";
-		int duration = Toast.LENGTH_SHORT;
-
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
 
 		Intent goToMainActivity = new Intent(AddEventActivity.this,
 				MainActivity.class);
@@ -110,12 +111,22 @@ public class AddEventActivity extends Activity {
 
 		if (update == false) {
 			DataHandler.postData(todo, shared);
+			makeToast("ToDo: '" + inputName.getText().toString()
+					+ "' wird hochgeladen!");
 
 		} else if (update == true) {
 			listID = DataHandler.getListID();
 			DataHandler.updateData(updateID, todo);
 			ListHandler.deleteFromEventList(listID);
 			update = false;
+			if (shared.equals(sharedWith) == true) {
+				Log.d("AddEAC","equals true");
+				makeToast("ToDo: '" + inputName.getText().toString()
+						+ "' wird hochgeladen!");
+			} else if (shared.equals(sharedWith) != true) {
+				Log.d("AddEAC","equals false");
+				makeToast("Freigaben können nachträglich nicht geändert werden!");
+			}
 
 		}
 	}

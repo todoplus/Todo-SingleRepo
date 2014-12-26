@@ -21,7 +21,7 @@
         android:layout_alignBottom="@+id/editText1"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="32dp"
-        android:text="User"
+        android:text="@string/user"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -32,7 +32,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="65dp"
-        android:ems="10" >
+        android:ems="10" android:inputType="text">
 
         <requestFocus />
     </EditText>
@@ -44,7 +44,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView2"
         android:layout_marginTop="24dp"
-        android:text="Passwort"
+        android:text="@string/passwort"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -66,7 +66,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView4"
         android:onClick="onUserCreate"
-        android:text="Erstellen" />
+        android:text="@string/erstellen" />
 
     <Button
         android:id="@+id/button2"
@@ -77,7 +77,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/editText2"
         android:onClick="onUserLogin"
-        android:text="Login" />
+        android:text="@string/login" />
 
     <TextView
         android:id="@+id/textView4"
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true"
-        android:text="oder"
+        android:text="@string/oder"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

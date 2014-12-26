@@ -27,18 +27,18 @@ public class LogInActivity extends Activity {
 	private static final String TAG_SESSIONID = "ssid";
 	private static boolean error;
 	private static int errorCode;
-	
+
 	String android_id;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d("LogIn AC", "Started");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
 		DeviceUuidFactory device = new DeviceUuidFactory(getBaseContext());
 		android_id = device.getDeviceUuid().toString();
 		Log.d("LoginAC", "onC ID: " + android_id);
-		//somerandom
+		// somerandom
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class LogInActivity extends Activity {
 		passwordInput = passwordET.getText().toString();
 
 		if (method == 1) {
-			Log.d("LoginAC","androidid: " + android_id);
+			Log.d("LoginAC", "androidid: " + android_id);
 			DataHandler.userLogin(user, passwordInput, android_id);
 			url = DataHandler.getUrl();
 			new userLogin().execute();
@@ -117,40 +117,48 @@ public class LogInActivity extends Activity {
 	}
 
 	public void makeToast(int errorCode) {
-		String toastText = null;
-		
+		String toastText = "";
+
 		if (errorCode == 001) {
 			toastText = "Fehler: User oder Passwort inkorrekt";
 		} else if (errorCode == 002) {
 			toastText = "Fehler: Username schon in Verwendung";
+		} else if (errorCode == 999) {
+			toastText = "Verbindung zum Server nicht möglich!";
 		}
-		
-		Context context = getApplicationContext();
-		CharSequence text = toastText;
-		int duration = Toast.LENGTH_SHORT;
 
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
+		if (toastText.equals("") != true) {
+			Context context = getApplicationContext();
+			CharSequence text = toastText;
+			int duration = Toast.LENGTH_SHORT;
+
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+		}
 	}
+
 	public boolean checkErrorCodes(String jsonStr) {
+		errorCode = 888;
 		String analyze = "999";
 		if (jsonStr != null) {
 			if (jsonStr.length() > 2) {
-					analyze = jsonStr.substring(1, 4);
+				analyze = jsonStr.substring(1, 4);
+			}
 		}
-		}
-		Log.d("LoginAC","analyze String: " + analyze);
+		Log.d("LoginAC", "analyze String: " + analyze);
 		error = false;
-		
+
 		if (analyze.equals("001") == true) {
 			error = true;
 			errorCode = 001;
 		} else if (analyze.equals("002") == true) {
 			error = true;
 			errorCode = 002;
-			
+		} else if (analyze.equals("999") == true) {
+			error = true;
+			errorCode = 999;
 		}
-		Log.d("LoginAC","error Code: " + error);
+		Log.d("LoginAC", "error Code: " + error);
 		return error;
 	}
 
@@ -164,12 +172,11 @@ public class LogInActivity extends Activity {
 					ListHandler.getParamList());
 
 			Log.d("Response: ", "> " + jsonStr);
-			
-			
+
 			if (checkErrorCodes(jsonStr) == true) {
 				// ToDo
 			}
-			
+
 			else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
@@ -177,7 +184,6 @@ public class LogInActivity extends Activity {
 					for (int i = 0; i < content.length(); i++) {
 						JSONObject c = content.getJSONObject(i);
 
-						
 						String username = c.getString(TAG_USERNAME);
 						String sessionID = c.getString(TAG_SESSIONID);
 
@@ -189,21 +195,21 @@ public class LogInActivity extends Activity {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+
 			} else {
 				Log.e("ServiceHandler", "Couldn't get any data from the url");
-				
+
 			}
 			return null;
 		}
+
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			if (error == true) {
+
 			makeToast(errorCode);
-			}
+
 		}
 
 	}
 
 }
-

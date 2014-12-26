@@ -215,6 +215,7 @@ public class MainActivity extends ListActivity {
 
 	public boolean checkErrorCodes(String jsonStr) {
 		String analyze = "999";
+		errorCode = 888;
 		error = false;
 		if (jsonStr != null) {
 			if (jsonStr.length() > 2) {
@@ -225,18 +226,20 @@ public class MainActivity extends ListActivity {
 		if (analyze.equals("001") == true) {
 			error = true;
 			errorCode = 001;
-
 		} else if (analyze.equals("002") == true) {
 			error = true;
 			errorCode = 002;
 		} else if (analyze.equals("003") == true) {
 			error = true;
-			// Abbruch, da Removing OK
+			errorCode = 003;
 		} else if (analyze.equals("004") == true) {
 			error = true;
 			errorCode = 004;
+		} else if (analyze.equals("999") == true) {
+			error = true;
+			errorCode = 999;
 		}
-		Log.d("MainAC", "error Code: " + error);
+		Log.d("MainAC", "error Code: " + errorCode);
 		return error;
 	}
 
@@ -251,12 +254,17 @@ public class MainActivity extends ListActivity {
 				toastText = "ToDo wurde gelöscht";
 			} else if (errorCode == 004) {
 				toastText = "Fehler: Bitte versuche es erneut!";
+			} else if (errorCode == 999) {
+				toastText = "Verbindung zum Server nicht möglich!";
 			}
-			Context context = getApplicationContext();
-			CharSequence text = toastText;
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
+			if (toastText.equals("") != true) {
+				Context context = getApplicationContext();
+				CharSequence text = toastText;
+				int duration = Toast.LENGTH_SHORT;
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+			}
+			Log.d("MainAC", "toast: " + toastText);
 		}
 
 	}
@@ -347,12 +355,11 @@ public class MainActivity extends ListActivity {
 						String date = c.getString(TAG_DATE);
 						String shared = c.getString(TAG_SHARED);
 						String createdbyUser = c.getString(TAG_USER);
-						
-						
-						String year = date.substring(0,4);
+
+						String year = date.substring(0, 4);
 						String month = date.substring(5, 7);
 						String day = date.substring(8, 10);
-						String time = date.substring(11,16);
+						String time = date.substring(11, 16);
 						date = day + "." + month + "." + year + " " + time;
 
 						// tmp hashmap for single contact
@@ -396,6 +403,7 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+			makeToast(errorCode);
 
 			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
 			if (doInBackGroundFailed != true) {
@@ -406,11 +414,7 @@ public class MainActivity extends ListActivity {
 						if (compareList.contains(eventList.get(i)) != true) {
 							Log.d("MainAC", "con FALSE: " + compareList.get(i));
 							ListHandler.deleteFromEventList(i);
-							// renewEventList();
-							if (error == true) {
-								Log.d("MainAC", "makeToast started" + errorCode);
-								makeToast(errorCode);
-							}
+
 						}
 					}
 				}
@@ -441,7 +445,7 @@ public class MainActivity extends ListActivity {
 
 			new GetContent().cancel(true);
 			ServiceHandler sh = new ServiceHandler();
-			String jsonStr = null;
+			String jsonStr = "";
 			if (method == 2) {
 				jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,
 						ListHandler.getParamList());
@@ -466,11 +470,12 @@ public class MainActivity extends ListActivity {
 						String name = sC.getString(TAG_NAME);
 						String date = sC.getString(TAG_DATE);
 						String user = sC.getString(TAG_USER);
-						
-						String year = date.substring(0,4);
+						String shared = sC.getString(TAG_SHARED);
+
+						String year = date.substring(0, 4);
 						String month = date.substring(5, 7);
 						String day = date.substring(8, 10);
-						String time = date.substring(11,16);
+						String time = date.substring(11, 16);
 						date = day + "." + month + "." + year + " " + time;
 
 						// tmp hashmap for single contact
@@ -481,7 +486,7 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_ID, _id);
 						singleEvent.put(TAG_DATE, date);
 						singleEvent.put(TAG_USER, user);
-						
+						singleEvent.put(TAG_SHARED, shared);
 
 						if (eventList.contains(singleEvent) == true) {
 							Log.d("MainAC", "eventList contains: "
@@ -496,7 +501,6 @@ public class MainActivity extends ListActivity {
 			} else {
 				Log.e("ServiceHandler", "Couldn't get any data from the url");
 			}
-
 			return null;
 		}
 
@@ -504,14 +508,10 @@ public class MainActivity extends ListActivity {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			if (error == true) {
-				makeToast(errorCode);
-			}
-
+			makeToast(errorCode);
 			newAdapter();
 			pSync = true;
 			Log.d("MainAC", "PutContent call Async");
 		}
-
 	}
 }
