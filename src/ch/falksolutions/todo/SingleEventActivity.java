@@ -65,10 +65,9 @@ public class SingleEventActivity  extends Activity {
 	public void onDelete(View v) {
 		
 		DataHandler.removeData(id);
-		
+		MainActivity.setAutoSync(true);
 		Intent goToMainActivity = new Intent
 				(SingleEventActivity.this,MainActivity.class);
-				goToMainActivity.putExtra("SYNC",true);
 		startActivity(goToMainActivity);
 	}
 	

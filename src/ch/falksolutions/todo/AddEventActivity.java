@@ -109,10 +109,11 @@ public class AddEventActivity extends Activity {
 		Log.d("AddEventAc", "ActionBar finish");
 		String todo = inputName.getText().toString();
 		String shared = inputSharedWith.getText().toString();
-
+		
+		MainActivity.setAutoSync(true);
+		
 		Intent goToMainActivity = new Intent(AddEventActivity.this,
 				MainActivity.class);
-		goToMainActivity.putExtra("SYNC", true);
 		startActivity(goToMainActivity);
 
 		if (update == false) {

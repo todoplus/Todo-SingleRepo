@@ -8,6 +8,7 @@ package ch.falksolutions.todo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,7 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -45,9 +46,12 @@ public class MainActivity extends ListActivity {
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
 	private static boolean pSync = false;
-	private static boolean doInBackGroundFailed;
 	private static boolean error;
 	private static int errorCode;
+
+	public static void setAutoSync(boolean autoSync) {
+		MainActivity.autoSync = autoSync;
+	}
 
 	final Handler handler = new Handler();
 	Timer timer = new Timer();
@@ -68,8 +72,10 @@ public class MainActivity extends ListActivity {
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_USER = "user";
 
-	// content JSONArray
+	// content Array, ListView, adapter
 	JSONArray content = null;
+	ListView lv;
+	BaseAdapter adapter;
 
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
@@ -82,20 +88,25 @@ public class MainActivity extends ListActivity {
 
 		eventList = ListHandler.getEventList();
 		compareList = ListHandler.getCompareList();
-		ListView lv = getListView();
+		lv = getListView();
+		
+		// Initialisieren eines Adapters für die Anzeige
+		adapter = new SimpleAdapter(MainActivity.this, eventList,
+				R.layout.list_item,
+				new String[] { TAG_NAME, TAG_DATE, TAG_USER }, new int[] {
+						R.id.name, R.id.date, R.id.user }); 
+		
+		setListAdapter(adapter);
+		
 		
 		// User schon eingeloggt?
 		checkUser();
-		// Initialisieren eines Adapters für die Anzeige
-		newAdapter();
-
-		Intent in = getIntent();
-		autoSync = in.getBooleanExtra("SYNC", false);
-		Log.d("MainAC", "autoSync = " + autoSync);
-
+		
 		if (autoSync == true) {
 			new PutContent().execute();
-			autoSync = false;
+			Log.d("MainAC","autoSync1 " + autoSync);
+			setAutoSync(false);
+			Log.d("MainAC","autoSync " + autoSync);
 
 		}
 		// Start Synchronisationsintervall
@@ -173,10 +184,9 @@ public class MainActivity extends ListActivity {
 			return true;
 
 		case R.id.action_logOut:
+			ListHandler.clearEventList();
 			UserHandler uH = new UserHandler(getBaseContext());
 			uH.logOut();
-			DeviceUuidFactory uuid = new DeviceUuidFactory(getBaseContext());
-			uuid.deleteDeviceID();
 			pSync = false;
 			firstStart = true;
 			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
@@ -296,14 +306,9 @@ public class MainActivity extends ListActivity {
 		timer.schedule(task, 0, 7000);
 	}
 
-	public synchronized void newAdapter() {
-		ListAdapter adapter = new SimpleAdapter(MainActivity.this, eventList,
-				R.layout.list_item,
-				new String[] { TAG_NAME, TAG_DATE, TAG_USER }, new int[] {
-						R.id.name, R.id.date, R.id.user });
-
-		setListAdapter(adapter);
-
+	public synchronized void contentChanged() {
+		adapter.notifyDataSetChanged();
+		
 	}
 
 	public boolean checkUser() { // Check, ob schon ein User besteht
@@ -328,6 +333,7 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			ListHandler.clearCompareList();
 		}
 
 		@Override
@@ -380,10 +386,9 @@ public class MainActivity extends ListActivity {
 						} else if (eventList.contains(singleEvent) != true) {
 							ListHandler.addToEventList(singleEvent);
 						}
-						doInBackGroundFailed = false;
+						
 					}
 				} catch (JSONException e) {
-					doInBackGroundFailed = true;
 					e.printStackTrace();
 				}
 			} else {
@@ -404,35 +409,36 @@ public class MainActivity extends ListActivity {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			makeToast(errorCode);
+			List<Integer> objToDelete = new ArrayList<Integer>();
+			
 
 			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
-			if (doInBackGroundFailed != true) {
-				// compareList2 = eventList;
+				eventList = ListHandler.getEventList();
+				compareList = ListHandler.getCompareList();
 				if (eventList.size() > 0) {
-					for (int i = 0; i < eventList.size(); i++) {
-
+					Log.e("MainAC","eventList schleife");
+					for (int i = 0; i < ListHandler.getEventListSize(); i++) {
+						Log.d("MainAC","eventList Stelle: " + i);
 						if (compareList.contains(eventList.get(i)) != true) {
 							Log.d("MainAC", "con FALSE: " + compareList.get(i));
-							ListHandler.deleteFromEventList(i);
+							objToDelete.add(i);
 
 						}
-					}
 				}
-			} else {
-				Log.d("MainAC", "doInBackGroundFailed: " + doInBackGroundFailed);
+			} 
+			for (int k = 0; k < objToDelete.size(); k++) {
+				ListHandler.deleteFromEventList(k);
 			}
 			/**
-			 * Überprüfung ob alles gelöscht wurde (falls die for Schleife nicht
+			 * Überprüfung, ob alles gelöscht wurde (falls die for Schleife nicht
 			 * ausgelöst wird da size() == 0.
 			 */
 			if (compareList.size() == 0) {
 				ListHandler.clearEventList();
 			}
 
-			/**
-			 * Updating parsed JSON data into ListView
-			 * */
-			newAdapter();
+			// Updating parsed JSON data into ListView
+			contentChanged();
 
 		}
 
@@ -515,7 +521,7 @@ public class MainActivity extends ListActivity {
 			super.onPostExecute(result);
 
 			makeToast(errorCode);
-			newAdapter();
+			contentChanged();
 			pSync = true;
 			Log.d("MainAC", "PutContent call Async");
 		}

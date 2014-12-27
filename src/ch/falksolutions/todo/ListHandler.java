@@ -1,4 +1,4 @@
-/** Beinhaltet die Liste für die ToDos und Methoden um sie zu löschen verändern etc.
+/** Beinhaltet die Liste für die ToDos und Methoden um sie zu löschen, zu verändern, etc.
  * 
  */
 
@@ -37,6 +37,12 @@ public class ListHandler {
 		eventList.get(intID);
 		
 		return eventList.get(intID);
+	}
+	
+	public static int getEventListSize() {
+		int size = eventList.size();
+		
+		return size;
 	}
 	
 

@@ -1,6 +1,6 @@
 /** Zustaendig für die Server Kommunikation
  * Erstellt einen HTTP Client und uebernimmt die Kommunikation
- * übernommen von "http://www.androidhive.info/2012/01/android-json-parsing-tutorial/"
+ * übernommen und modifiziert von "http://www.androidhive.info/2012/01/android-json-parsing-tutorial/"
  */
 
 

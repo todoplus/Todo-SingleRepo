@@ -97,7 +97,5 @@ public class DeviceUuidFactory {
     public UUID getDeviceUuid() {
         return uuid;
     }
-    public void deleteDeviceID() {
-    	prefs.edit().remove(PREFS_DEVICE_ID).commit();
-    }
+    
 }
