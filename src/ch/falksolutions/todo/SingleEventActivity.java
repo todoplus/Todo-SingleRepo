@@ -65,7 +65,6 @@ public class SingleEventActivity  extends Activity {
 	public void onDelete(View v) {
 		
 		DataHandler.removeData(id);
-		ListHandler.deleteFromEventList(DataHandler.getListID());
 		
 		Intent goToMainActivity = new Intent
 				(SingleEventActivity.this,MainActivity.class);

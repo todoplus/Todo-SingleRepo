@@ -18,15 +18,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddEventActivity extends Activity {
+	
+	// Eingabefelder
 	private static EditText inputName;
 	private static EditText inputSharedWith;
+	
+	// Unterscheidung neu/update
 	private static boolean update = false;
 
+	// vom Objekt ausgelesene Variabeln
 	private static String updateID;
 	private static String updateContent;
 	private static String sharedWith;
-	private static long listID;
+	
 
+	// Object name keys
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_NAME = "name";
 	private static final String TAG_ID = "_id";
@@ -115,9 +121,7 @@ public class AddEventActivity extends Activity {
 					+ "' wird hochgeladen!");
 
 		} else if (update == true) {
-			listID = DataHandler.getListID();
 			DataHandler.updateData(updateID, todo);
-			ListHandler.deleteFromEventList(listID);
 			update = false;
 			if (shared.equals(sharedWith) == true) {
 				Log.d("AddEAC","equals true");

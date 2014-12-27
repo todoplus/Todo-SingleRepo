@@ -38,8 +38,8 @@ import android.widget.Toast;
 public class MainActivity extends ListActivity {
 
 	// URL + user & pass
-	private static String url = DataHandler.getUrl();
-	private static String user = UserHandler.getUser();
+	private static String url;
+	private static String user;
 	private static boolean firstStart = true;
 	private static boolean autoSync = false;
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
@@ -83,7 +83,7 @@ public class MainActivity extends ListActivity {
 		eventList = ListHandler.getEventList();
 		compareList = ListHandler.getCompareList();
 		ListView lv = getListView();
-
+		
 		// User schon eingeloggt?
 		checkUser();
 		// Initialisieren eines Adapters für die Anzeige
@@ -103,7 +103,9 @@ public class MainActivity extends ListActivity {
 			// pSync = true;
 			if (firstStart == true) {
 				DataHandler.setSsid(UserHandler.getSsid());
-				// callAsyncTask();
+				//callAsyncTask();
+				DataHandler.getData();
+				new GetContent().execute();
 				firstStart = false;
 			}
 			Log.d("Main AC", "checkUser pSync: " + pSync);
@@ -171,7 +173,10 @@ public class MainActivity extends ListActivity {
 			return true;
 
 		case R.id.action_logOut:
-			DataHandler.logOutUser();
+			UserHandler uH = new UserHandler(getBaseContext());
+			uH.logOut();
+			DeviceUuidFactory uuid = new DeviceUuidFactory(getBaseContext());
+			uuid.deleteDeviceID();
 			pSync = false;
 			firstStart = true;
 			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
@@ -252,6 +257,7 @@ public class MainActivity extends ListActivity {
 				toastText = "Fehler: Bitte logge dich erneut ein!";
 			} else if (errorCode == 003) {
 				toastText = "ToDo wurde gelöscht";
+				ListHandler.deleteFromEventList(DataHandler.getListID());
 			} else if (errorCode == 004) {
 				toastText = "Fehler: Bitte versuche es erneut!";
 			} else if (errorCode == 999) {
@@ -301,7 +307,8 @@ public class MainActivity extends ListActivity {
 	}
 
 	public boolean checkUser() { // Check, ob schon ein User besteht
-		user = UserHandler.getUser();
+		UserHandler userHandler = new UserHandler(getBaseContext());
+		user = userHandler.getUser();
 		boolean check = false;
 		if (user == null) {
 			Intent in = new Intent(MainActivity.this, LogInActivity.class);
@@ -321,13 +328,6 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
-			Context context = getApplicationContext();
-			CharSequence text = "Synchronisation gestartet!";
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
-
 		}
 
 		@Override
@@ -492,7 +492,13 @@ public class MainActivity extends ListActivity {
 							Log.d("MainAC", "eventList contains: "
 									+ singleEvent);
 						} else if (eventList.contains(singleEvent) != true) {
-							ListHandler.addToEventList(singleEvent);
+							if (method == 3) { // Bei Update einfügen in Liste an gleicher Position
+								ListHandler.updateObjEventList(
+										(int) DataHandler.getListID(),
+										singleEvent);
+							} else {
+								ListHandler.addToEventList(singleEvent);
+							}
 						}
 					}
 				} catch (JSONException e) {

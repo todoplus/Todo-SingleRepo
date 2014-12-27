@@ -18,12 +18,13 @@ public class DeviceUuidFactory {
     protected static final String PREFS_FILE = "device_id.xml";
     protected static final String PREFS_DEVICE_ID = "device_id";
     protected volatile static UUID uuid;
+    SharedPreferences prefs;
 
     public DeviceUuidFactory(Context context) {
         if (uuid == null) {
             synchronized (DeviceUuidFactory.class) {
                 if (uuid == null) {
-                    final SharedPreferences prefs = context
+                    prefs = context
                             .getSharedPreferences(PREFS_FILE, 0);
                     final String id = prefs.getString(PREFS_DEVICE_ID, null);
                     if (id != null) {
@@ -95,5 +96,8 @@ public class DeviceUuidFactory {
      */
     public UUID getDeviceUuid() {
         return uuid;
+    }
+    public void deleteDeviceID() {
+    	prefs.edit().remove(PREFS_DEVICE_ID).commit();
     }
 }

@@ -1,93 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:padding="10dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
 
-  <TextView
-      android:id="@+id/name_label"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentTop="true"
-      android:paddingBottom="10dip"
-      android:paddingTop="10dip"
-      android:text="@string/sampletext"
-      android:textColor="#08088A"
-      android:textSize="25sp"
-      android:textStyle="bold" />
+    <TextView
+        android:id="@+id/name_label"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="10dip"
+        android:paddingTop="10dip"
+        android:text="@string/sampletext"
+        android:textColor="#08088A"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
-  <TextView
-      android:id="@+id/user_label"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/name_label"
-      android:layout_marginTop="28dp"
-      android:layout_toRightOf="@+id/createdbyview"
-      android:text="@string/sampleuserlabel"
-      android:textStyle="bold" />
+    <TextView
+        android:id="@+id/user_label"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name_label"
+        android:layout_marginTop="28dp"
+        android:layout_toRightOf="@+id/createdbyview"
+        android:text="@string/sampleuserlabel"
+        android:textStyle="bold" />
 
-  <TextView
-      android:id="@+id/date_label"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignLeft="@+id/name_label"
-      android:layout_below="@+id/name_label"
-      android:text="@string/sampledatelabel"
-      android:textColor="#acacac" />
-  	  
-  <TextView
-      android:id="@+id/share_label"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/user_label"
-      android:layout_marginTop="14dp"
-      android:layout_toRightOf="@+id/createdbyview"
-      android:text="@string/samplesharelabel"
-      android:textAppearance="?android:attr/textAppearanceSmall"
-      android:textStyle="bold" />
+    <TextView
+        android:id="@+id/date_label"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name_label"
+        android:layout_below="@+id/name_label"
+        android:text="@string/sampledatelabel"
+        android:textColor="#acacac" />
 
-  <Button
-      android:id="@+id/button1"
-      style="?android:attr/borderlessButtonStyle"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_alignRight="@+id/button2"
-      android:layout_centerVertical="true"
-      android:onClick="onDelete"
-      android:text="@string/loeschen" />
+    <TextView
+        android:id="@+id/share_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_label"
+        android:layout_marginTop="14dp"
+        android:layout_toRightOf="@+id/createdbyview"
+        android:text="@string/samplesharelabel"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
 
-  <Button
-      android:id="@+id/button2"
-      style="?android:attr/borderlessButtonStyle"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_above="@+id/button1"
-      android:layout_alignLeft="@+id/date_label"
-      android:layout_alignRight="@+id/date_label"
-      android:onClick="onUpdate"
-      android:text="@string/bearbeiten" />
+    <TextView
+        android:id="@+id/createdbyview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/share_label"
+        android:layout_alignParentLeft="true"
+        android:text="@string/erstellt_von"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
 
-  <TextView
-      android:id="@+id/createdbyview"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_above="@+id/share_label"
-      android:layout_alignParentLeft="true"
-      android:textStyle="bold"
-      android:text="@string/erstellt_von"
-      android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/sharedwithview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/share_label"
+        android:layout_alignBottom="@+id/share_label"
+        android:text="@string/geteilt_mit_"
+        android:textStyle="bold" />
 
-  <TextView
-      android:id="@+id/sharedwithview"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBaseline="@+id/share_label"
-      android:layout_alignBottom="@+id/share_label"
-      android:textStyle="bold"
-      android:text="@string/geteilt_mit_" />
+    <Button
+        android:id="@+id/button1"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/centerShim"
+        android:layout_below="@+id/share_label"
+        android:layout_marginTop="15dp"
+        android:onClick="onDelete"
+        android:text="@string/loeschen" />
+
+    <Button
+        android:id="@+id/button2"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/centerShim"
+        android:layout_below="@+id/share_label"
+        android:layout_marginTop="15dp"
+        android:onClick="onUpdate"
+        android:text="@string/bearbeiten" />
+
+    <View
+        android:id="@+id/centerShim"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

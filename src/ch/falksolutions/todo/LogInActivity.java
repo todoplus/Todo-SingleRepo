@@ -106,8 +106,9 @@ public class LogInActivity extends Activity {
 	}
 
 	public void startMainAC() {
-		UserHandler.setUser(user);
-		UserHandler.setSsid(SSID);
+		UserHandler userHandler = new UserHandler(getBaseContext());
+		userHandler.setUser(user);
+		userHandler.setSsid(SSID);
 		Log.d("LoginAC", "user= " + user);
 		Log.d("LoginAC", "ssid= " + SSID);
 

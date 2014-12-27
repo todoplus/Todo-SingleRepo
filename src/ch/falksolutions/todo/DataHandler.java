@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class DataHandler {
 
-	private static String STANURL = "http://192.168.178.162:8080/api";
+	private static String STANURL = "https://node-progress-todoplus.c9.io/api";
 	private static String url = STANURL;
 	private static String ssid = UserHandler.getSsid();
 	private static boolean response;
@@ -106,11 +106,7 @@ public class DataHandler {
 		
 	}
 
-	public static void logOutUser() {
-		UserHandler.setUser(null);
-		UserHandler.setSsid(null);
-		ListHandler.clearEventList();
-	}
+	
 	
 	public static void saveListID(long ID) {
 		DataHandler.listID = ID;

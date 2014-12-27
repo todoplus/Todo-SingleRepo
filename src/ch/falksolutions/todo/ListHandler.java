@@ -1,3 +1,7 @@
+/** Beinhaltet die Liste für die ToDos und Methoden um sie zu löschen verändern etc.
+ * 
+ */
+
 package ch.falksolutions.todo;
 
 import java.util.ArrayList;
@@ -17,6 +21,10 @@ public class ListHandler {
 
 	public static void addToEventList(HashMap<String, String> singleEvent) {
 		eventList.add(singleEvent);
+	}
+	public static void updateObjEventList(int listID, HashMap<String, String> singleEvent) {
+		eventList.set(listID, singleEvent);
+		
 	}
 
 	public static void deleteFromEventList(long id) {
@@ -58,6 +66,7 @@ public class ListHandler {
 	
 	public static void addToParamList(NameValuePair nameValuePair) {
 		paramList.add(nameValuePair);
+		Log.d("ListHandler","params: " + nameValuePair);
 	}
 
 	public static void clearParamList() {
