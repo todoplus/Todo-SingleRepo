@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +41,7 @@ public class MainActivity extends ListActivity {
 	// URL + user & pass
 	private static String url;
 	private static String user;
-	
+
 	// Sync Params
 	private static boolean firstStart = true;
 	private static boolean autoSync = false;
@@ -49,7 +50,7 @@ public class MainActivity extends ListActivity {
 	private static boolean pSync = false;
 	private static boolean error;
 	private static int errorCode;
-	
+
 	// JSON Node names
 	private static final String TAG_ID = "_id";
 	private static final String TAG_DATE = "Date";
@@ -65,11 +66,7 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
 	static ArrayList<HashMap<String, String>> compareList;
-	static ArrayList<HashMap<String, String>> saveList;
-	
 
-	static final ArrayList<HashMap<String, String>> SAVED_LIST = saveList;
-	
 	// Timer
 	final Handler handler = new Handler();
 	Timer timer = new Timer();
@@ -78,47 +75,53 @@ public class MainActivity extends ListActivity {
 	public static void setAutoSync(boolean autoSync) {
 		MainActivity.autoSync = autoSync;
 	}
-	
+
 	public static void setMethod(int pMethod) {
 		MainActivity.method = pMethod;
 	}
-	
+
 	public static void setUrl(String url) {
 		MainActivity.url = url;
+	}
+
+	public static void setPeriodicSync(boolean sync) {
+		MainActivity.pSync = sync;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		eventList = ListHandler.getEventList();
 		compareList = ListHandler.getCompareList();
 		lv = getListView();
-		
+
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle("");
+
 		// Initialisieren eines Adapters für die Anzeige
 		adapter = new SimpleAdapter(MainActivity.this, eventList,
 				R.layout.list_item,
 				new String[] { TAG_NAME, TAG_DATE, TAG_USER }, new int[] {
-						R.id.name, R.id.date, R.id.user }); 
-		
+						R.id.name, R.id.date, R.id.user });
+
 		setListAdapter(adapter);
-		
-		
+
 		// User schon eingeloggt?
 		checkUser();
-		
+
 		if (autoSync == true) {
 			new PutContent().execute();
 			setAutoSync(false);
 		}
-		
+
 		// Start Synchronisationsintervall
 		if (checkUser() == true) {
-			pSync = true;
+			setPeriodicSync(false);
 			if (firstStart == true) {
 				DataHandler.setSsid(UserHandler.getSsid());
-				//callAsyncTask();
+				callAsyncTask();
 				DataHandler.getData();
 				new GetContent().execute();
 				firstStart = false;
@@ -142,6 +145,7 @@ public class MainActivity extends ListActivity {
 
 			}
 		});
+
 	}
 
 	@Override
@@ -158,7 +162,6 @@ public class MainActivity extends ListActivity {
 		switch (item.getItemId()) {
 		case R.id.action_synchronisieren:
 			DataHandler.getData();
-			Log.d("MainAC", "updatedURL= " + url);
 			new GetContent().execute();
 
 			Context context = getApplicationContext();
@@ -173,9 +176,9 @@ public class MainActivity extends ListActivity {
 		case R.id.action_settings:
 			if (pSync == true) {
 				new GetContent().cancel(true);
-				pSync = false;
+				setPeriodicSync(false);
 			} else if (pSync == false) {
-				pSync = true;
+				setPeriodicSync(true);
 			}
 			return true;
 
@@ -186,11 +189,17 @@ public class MainActivity extends ListActivity {
 			return true;
 
 		case R.id.action_logOut:
+			new GetContent().cancel(true);
+
 			ListHandler.clearEventList();
 			UserHandler uH = new UserHandler(getBaseContext());
 			uH.logOut();
-			pSync = false;
+			DataHandler.userLogOut();
+			new PutContent().execute();
+
+			setPeriodicSync(false);
 			firstStart = true;
+
 			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(logOut);
 
@@ -209,7 +218,7 @@ public class MainActivity extends ListActivity {
 	@Override
 	protected void onPause() {
 		Log.d("MainAC", "onPause ausgefuehrt");
-		pSync = false;
+		setPeriodicSync(false);
 		new GetContent().cancel(true);
 		super.onPause();
 	}
@@ -221,26 +230,32 @@ public class MainActivity extends ListActivity {
 		boolean pAutoSync = in.getBooleanExtra("SYNC", false);
 		if (pAutoSync != true) {
 			if (checkUser() == true) {
-				pSync = true;
+				setPeriodicSync(true);
 				Log.d("MainAC", "onResume callAsync");
 			}
 
 		}
 		super.onResume();
 	}
-	
 
 	public boolean checkErrorCodes(String jsonStr) {
 		String analyze = "999";
+		String c9case = "";
 		errorCode = 888;
 		error = false;
 		if (jsonStr != null) {
 			if (jsonStr.length() > 2) {
 				analyze = jsonStr.substring(1, 4);
+				c9case = jsonStr.substring(1, 5);
+				Log.d("MainAC", "c9: " + c9case);
 			}
 		}
-
-		if (analyze.equals("001") == true) {
+		if (c9case.equals("html") == true) { // Rückmeldung des cloud9 Servers,
+												// wenn die Applikation nicht
+												// läuft
+			error = true;
+			errorCode = 999;
+		} else if (analyze.equals("001") == true) {
 			error = true;
 			errorCode = 001;
 		} else if (analyze.equals("002") == true) {
@@ -255,6 +270,8 @@ public class MainActivity extends ListActivity {
 		} else if (analyze.equals("999") == true) {
 			error = true;
 			errorCode = 999;
+		} else if (analyze.equals("006") == true) {
+			error = true;
 		}
 		Log.d("MainAC", "error Code: " + errorCode);
 		return error;
@@ -287,6 +304,16 @@ public class MainActivity extends ListActivity {
 
 	}
 
+	public String cutDate(String date) {
+		String year = date.substring(0, 4);
+		String month = date.substring(5, 7);
+		String day = date.substring(8, 10);
+		String time = date.substring(11, 16);
+		date = day + "." + month + "." + year + " " + time;
+
+		return date;
+	}
+
 	public void callAsyncTask() {
 
 		// Automatische Synchronisierung
@@ -310,7 +337,7 @@ public class MainActivity extends ListActivity {
 
 	public synchronized void contentChanged() {
 		adapter.notifyDataSetChanged();
-		
+
 	}
 
 	public boolean checkUser() { // Check, ob schon ein User besteht
@@ -364,11 +391,8 @@ public class MainActivity extends ListActivity {
 						String shared = c.getString(TAG_SHARED);
 						String createdbyUser = c.getString(TAG_USER);
 
-						String year = date.substring(0, 4);
-						String month = date.substring(5, 7);
-						String day = date.substring(8, 10);
-						String time = date.substring(11, 16);
-						date = day + "." + month + "." + year + " " + time;
+						date = cutDate(date);
+						shared = shared.replace(';', ' ');
 
 						// tmp hashmap for single contact
 						HashMap<String, String> singleEvent = new HashMap<String, String>();
@@ -389,7 +413,7 @@ public class MainActivity extends ListActivity {
 						} else if (eventList.contains(singleEvent) != true) {
 							ListHandler.addToEventList(singleEvent);
 						}
-						
+
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -411,22 +435,21 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
+
 			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
-				if (eventList.isEmpty() == false) {
-					for (int i = 0; i < ListHandler.getEventListSize(); i++) {
-						Log.d("MainAC","eventList Stelle: " + i);
-						if (compareList.contains(eventList.get(i)) != true) {
-							Log.d("MainAC", "con FALSE: " + eventList.get(i));
-							ListHandler.deleteFromEventList(i);
-						}
+			if (eventList.isEmpty() == false) {
+				for (int i = 0; i < ListHandler.getEventListSize(); i++) {
+					if (compareList.contains(eventList.get(i)) != true) {
+						Log.d("MainAC", "con FALSE: " + eventList.get(i));
+						ListHandler.deleteFromEventList(i);
+					}
 				}
-			} 
-			 //zero case, compareList leer -> alles löschen
+			}
+			// zero case, compareList leer -> alles löschen
 			if (compareList.isEmpty() == true) {
 				ListHandler.clearEventList();
 			}
-			
+
 			// Ausgabe, wenn Fehler
 			makeToast(errorCode);
 
@@ -471,11 +494,8 @@ public class MainActivity extends ListActivity {
 						String user = sC.getString(TAG_USER);
 						String shared = sC.getString(TAG_SHARED);
 
-						String year = date.substring(0, 4);
-						String month = date.substring(5, 7);
-						String day = date.substring(8, 10);
-						String time = date.substring(11, 16);
-						date = day + "." + month + "." + year + " " + time;
+						date = cutDate(date);
+						shared = shared.replace(';', ' ');
 
 						// tmp hashmap for single contact
 						HashMap<String, String> singleEvent = new HashMap<String, String>();
@@ -491,7 +511,8 @@ public class MainActivity extends ListActivity {
 							Log.d("MainAC", "eventList contains: "
 									+ singleEvent);
 						} else if (eventList.contains(singleEvent) != true) {
-							if (method == 3) { // Bei Update einfügen in Liste an gleicher Position
+							if (method == 3) { // Bei Update einfügen in Liste
+												// an gleicher Position
 								ListHandler.updateObjEventList(
 										(int) DataHandler.getListID(),
 										singleEvent);
@@ -515,11 +536,14 @@ public class MainActivity extends ListActivity {
 
 			// Ausgabe, wenn Fehler
 			makeToast(errorCode);
-			
+
 			// Information an ListView (geänderter Inhalt)
 			contentChanged();
-			pSync = true;
-			Log.d("MainAC", "PutContent call Async");
+			if (firstStart != true) {
+				setPeriodicSync(true);
+				Log.d("MainAC", "PutContent call Async");
+			}
+			
 		}
 	}
 }

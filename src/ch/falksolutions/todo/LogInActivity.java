@@ -38,7 +38,7 @@ public class LogInActivity extends Activity {
 		DeviceUuidFactory device = new DeviceUuidFactory(getBaseContext());
 		android_id = device.getDeviceUuid().toString();
 		Log.d("LoginAC", "onC ID: " + android_id);
-		// somerandom
+
 	}
 
 	@Override
@@ -141,15 +141,23 @@ public class LogInActivity extends Activity {
 	public boolean checkErrorCodes(String jsonStr) {
 		errorCode = 888;
 		String analyze = "999";
+		String c9case = "";
 		if (jsonStr != null) {
 			if (jsonStr.length() > 2) {
 				analyze = jsonStr.substring(1, 4);
+				c9case = jsonStr.substring(1, 5);
+				Log.d("MainAC", "c9: " + c9case);
 			}
 		}
 		Log.d("LoginAC", "analyze String: " + analyze);
 		error = false;
 
-		if (analyze.equals("001") == true) {
+		if (c9case.equals("html") == true) { // Rückmeldung des cloud9 Servers,
+			error = true; 					// wenn die Applikation nicht
+			errorCode = 999; 				// läuft
+		}
+
+		else if (analyze.equals("001") == true) {
 			error = true;
 			errorCode = 001;
 		} else if (analyze.equals("002") == true) {

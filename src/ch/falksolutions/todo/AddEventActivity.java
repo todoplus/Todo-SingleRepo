@@ -46,7 +46,7 @@ public class AddEventActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d("AddEvent Activity", "Started");
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.addevent);
+		setContentView(R.layout.activity_addevent);
 
 		inputName = (EditText) findViewById(R.id.editText1);
 		inputSharedWith = (EditText) findViewById(R.id.editText2);
@@ -76,6 +76,7 @@ public class AddEventActivity extends Activity {
 		
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
+	    actionBar.setTitle("ToDo hinzufügen");
 		
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -115,13 +116,13 @@ public class AddEventActivity extends Activity {
 		String todo = inputName.getText().toString();
 		String shared = inputSharedWith.getText().toString();
 		
+		
 		MainActivity.setAutoSync(true);
 		
-		Intent goToMainActivity = new Intent(AddEventActivity.this,
-				MainActivity.class);
-		startActivity(goToMainActivity);
-
 		if (update == false) {
+			if (shared.equals("") == false) {
+				shared = shared + ';';
+			}
 			DataHandler.postData(todo, shared);
 			makeToast("ToDo: '" + inputName.getText().toString()
 					+ "' wird hochgeladen!");
@@ -137,8 +138,13 @@ public class AddEventActivity extends Activity {
 				Log.d("AddEAC","equals false");
 				makeToast("Freigaben können nachträglich nicht geändert werden!");
 			}
-
+			
+		
 		}
+		Intent goToMainActivity = new Intent(AddEventActivity.this,
+				MainActivity.class);
+		startActivity(goToMainActivity);
+		finish();
 	}
 
 }

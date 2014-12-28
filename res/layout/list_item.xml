@@ -7,14 +7,14 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp" >
 
-    
     <TextView
         android:id="@+id/name"
-        android:text="@string/samplename"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/checkBox1"
         android:paddingBottom="2dip"
         android:paddingTop="6dip"
+        android:text="@string/samplename"
         android:textColor="#08088A"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -23,8 +23,8 @@
         android:id="@+id/date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/name"
+        android:layout_toRightOf="@+id/checkBox1"
         android:paddingBottom="2dip"
         android:text="@string/sampledate"
         android:textColor="#acacac" />
@@ -51,5 +51,16 @@
         android:text="@string/sampleuser_"
         android:textColor="#5d5d5d"
         android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/date"
+        android:layout_alignBottom="@+id/date"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_alignParentLeft="true" />
+    	
 
 </RelativeLayout>

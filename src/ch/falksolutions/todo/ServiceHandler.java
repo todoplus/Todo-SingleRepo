@@ -68,6 +68,7 @@ public class ServiceHandler {
 			// adding post params
 			if (params != null) {
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
+			Log.d("ServiceHandler","encoded Params: " + new UrlEncodedFormEntity(params));
 				}
 				Log.d("ServiceHandler", "url= " + url);
 				httpResponse = httpClient.execute(httpPost);

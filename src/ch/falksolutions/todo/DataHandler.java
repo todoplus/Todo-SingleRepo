@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class DataHandler {
 
-	private static String STANURL = "https://node-progress-todoplus.c9.io/api";
+	private static String STANURL = "https://new-todoplus.c9.io/api";
 	private static String url = STANURL;
 	private static String ssid = UserHandler.getSsid();
 	private static boolean response;
@@ -104,6 +104,14 @@ public class DataHandler {
 		return response;
 		
 		
+	}
+	public static void userLogOut() {
+		url = STANURL;
+		url += "/logout";
+		MainActivity.setMethod(2);
+		ListHandler.clearParamList();
+		ListHandler.addToParamList(new BasicNameValuePair("ssid",ssid));
+		MainActivity.setUrl(url);
 	}
 
 	

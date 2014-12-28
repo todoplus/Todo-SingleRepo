@@ -37,6 +37,7 @@ public class SingleEventActivity  extends Activity {
         
         ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
+	    actionBar.setTitle("Einzelanzeige");
         
         HashMap<String, String> eventObj = ListHandler.getObjFromEventList();
         name = eventObj.get(TAG_NAME);
@@ -63,6 +64,8 @@ public class SingleEventActivity  extends Activity {
 		Intent in2 = new Intent(SingleEventActivity.this, AddEventActivity.class);
 		in2.putExtra("update", true);
 		startActivity(in2);
+		finish();
+		
 	}
 	
 	public void onDelete(View v) {
@@ -72,6 +75,7 @@ public class SingleEventActivity  extends Activity {
 		Intent goToMainActivity = new Intent
 				(SingleEventActivity.this,MainActivity.class);
 		startActivity(goToMainActivity);
+		finish();
 	}
 	
 }
