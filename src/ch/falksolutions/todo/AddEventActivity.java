@@ -6,6 +6,7 @@ package ch.falksolutions.todo;
 
 import java.util.HashMap;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -72,6 +73,10 @@ public class AddEventActivity extends Activity {
 		// Inflate the menu items for use in the action bar
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_addevent, menu);
+		
+		ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 

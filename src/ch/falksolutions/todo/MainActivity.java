@@ -8,7 +8,6 @@ package ch.falksolutions.todo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,6 +40,8 @@ public class MainActivity extends ListActivity {
 	// URL + user & pass
 	private static String url;
 	private static String user;
+	
+	// Sync Params
 	private static boolean firstStart = true;
 	private static boolean autoSync = false;
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
@@ -48,23 +49,7 @@ public class MainActivity extends ListActivity {
 	private static boolean pSync = false;
 	private static boolean error;
 	private static int errorCode;
-
-	public static void setAutoSync(boolean autoSync) {
-		MainActivity.autoSync = autoSync;
-	}
-
-	final Handler handler = new Handler();
-	Timer timer = new Timer();
-
-	public static void setMethod(int pMethod) {
-		MainActivity.method = pMethod;
-	}
-
-	// Setzten der Url mit den notwendigen Parametern, für die Synchronisation
-	public static void setUrl(String url) {
-		MainActivity.url = url;
-	}
-
+	
 	// JSON Node names
 	private static final String TAG_ID = "_id";
 	private static final String TAG_DATE = "Date";
@@ -80,12 +65,33 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
 	static ArrayList<HashMap<String, String>> compareList;
+	static ArrayList<HashMap<String, String>> saveList;
+	
+
+	static final ArrayList<HashMap<String, String>> SAVED_LIST = saveList;
+	
+	// Timer
+	final Handler handler = new Handler();
+	Timer timer = new Timer();
+
+	// Setter
+	public static void setAutoSync(boolean autoSync) {
+		MainActivity.autoSync = autoSync;
+	}
+	
+	public static void setMethod(int pMethod) {
+		MainActivity.method = pMethod;
+	}
+	
+	public static void setUrl(String url) {
+		MainActivity.url = url;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		eventList = ListHandler.getEventList();
 		compareList = ListHandler.getCompareList();
 		lv = getListView();
@@ -104,14 +110,12 @@ public class MainActivity extends ListActivity {
 		
 		if (autoSync == true) {
 			new PutContent().execute();
-			Log.d("MainAC","autoSync1 " + autoSync);
 			setAutoSync(false);
-			Log.d("MainAC","autoSync " + autoSync);
-
 		}
+		
 		// Start Synchronisationsintervall
 		if (checkUser() == true) {
-			// pSync = true;
+			pSync = true;
 			if (firstStart == true) {
 				DataHandler.setSsid(UserHandler.getSsid());
 				//callAsyncTask();
@@ -119,8 +123,6 @@ public class MainActivity extends ListActivity {
 				new GetContent().execute();
 				firstStart = false;
 			}
-			Log.d("Main AC", "checkUser pSync: " + pSync);
-
 		}
 
 		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on
@@ -224,9 +226,9 @@ public class MainActivity extends ListActivity {
 			}
 
 		}
-
 		super.onResume();
 	}
+	
 
 	public boolean checkErrorCodes(String jsonStr) {
 		String analyze = "999";
@@ -378,9 +380,10 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_SHARED, shared);
 						singleEvent.put(TAG_USER, createdbyUser);
 
-						// adding todo to event list
+						// Objekt zu Liste hinzufügen
 						ListHandler.addToCompareList(singleEvent);
 						if (eventList.contains(singleEvent) == true) {
+							// Objekt schon in Liste
 							Log.d("MainAC", "eventList contains: "
 									+ singleEvent);
 						} else if (eventList.contains(singleEvent) != true) {
@@ -408,36 +411,26 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			makeToast(errorCode);
-			List<Integer> objToDelete = new ArrayList<Integer>();
 			
-
 			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
-				eventList = ListHandler.getEventList();
-				compareList = ListHandler.getCompareList();
-				if (eventList.size() > 0) {
-					Log.e("MainAC","eventList schleife");
+				if (eventList.isEmpty() == false) {
 					for (int i = 0; i < ListHandler.getEventListSize(); i++) {
 						Log.d("MainAC","eventList Stelle: " + i);
 						if (compareList.contains(eventList.get(i)) != true) {
-							Log.d("MainAC", "con FALSE: " + compareList.get(i));
-							objToDelete.add(i);
-
+							Log.d("MainAC", "con FALSE: " + eventList.get(i));
+							ListHandler.deleteFromEventList(i);
 						}
 				}
 			} 
-			for (int k = 0; k < objToDelete.size(); k++) {
-				ListHandler.deleteFromEventList(k);
-			}
-			/**
-			 * Überprüfung, ob alles gelöscht wurde (falls die for Schleife nicht
-			 * ausgelöst wird da size() == 0.
-			 */
-			if (compareList.size() == 0) {
+			 //zero case, compareList leer -> alles löschen
+			if (compareList.isEmpty() == true) {
 				ListHandler.clearEventList();
 			}
+			
+			// Ausgabe, wenn Fehler
+			makeToast(errorCode);
 
-			// Updating parsed JSON data into ListView
+			// Information an ListView (geänderter Inhalt)
 			contentChanged();
 
 		}
@@ -520,7 +513,10 @@ public class MainActivity extends ListActivity {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
+			// Ausgabe, wenn Fehler
 			makeToast(errorCode);
+			
+			// Information an ListView (geänderter Inhalt)
 			contentChanged();
 			pSync = true;
 			Log.d("MainAC", "PutContent call Async");

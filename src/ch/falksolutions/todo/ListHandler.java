@@ -30,7 +30,7 @@ public class ListHandler {
 	public static void deleteFromEventList(long id) {
 		int intID = (int) id;
 		eventList.remove(intID);
-		Log.d("DataHandler", "eventList removed id" + id);
+		Log.d("ListHandler", "eventList removed id" + id);
 	}
 	public static HashMap<String, String> getObjFromEventList() {
 		int intID = (int) DataHandler.getListID();

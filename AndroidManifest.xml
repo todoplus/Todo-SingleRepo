@@ -7,7 +7,8 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="21" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -23,10 +24,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="SingleEventActivity"></activity>
-        <activity android:name="AddEventActivity"></activity>
-        <activity android:name="LogInActivity"></activity>
-        <activity android:name="ServerUrlSet_Debug"></activity>
+        <activity android:name="SingleEventActivity"
+            android:parentActivityName="ch.falksolutions.todo.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.falksolutions.todo.MainActivity" />
+        </activity>
+        <activity android:name="AddEventActivity"
+            android:parentActivityName = "ch.falksolutions.todo.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.falksolutions.todo.MainActivity" />
+        </activity>
+        <activity android:name="LogInActivity" >
+        </activity>
+        <activity android:name="ServerUrlSet_Debug" >
+        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ package ch.falksolutions.todo;
 
 import java.util.HashMap;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +35,8 @@ public class SingleEventActivity  extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_event);
         
+        ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
         
         HashMap<String, String> eventObj = ListHandler.getObjFromEventList();
         name = eventObj.get(TAG_NAME);
