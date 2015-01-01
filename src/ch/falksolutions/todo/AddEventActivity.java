@@ -19,11 +19,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddEventActivity extends Activity {
-	
+
 	// Eingabefelder
 	private static EditText inputName;
 	private static EditText inputSharedWith;
-	
+
 	// Unterscheidung neu/update
 	private static boolean update = false;
 
@@ -31,7 +31,6 @@ public class AddEventActivity extends Activity {
 	private static String updateID;
 	private static String updateContent;
 	private static String sharedWith;
-	
 
 	// Object name keys
 	private static final String TAG_SHARED = "sharedw";
@@ -73,11 +72,16 @@ public class AddEventActivity extends Activity {
 		// Inflate the menu items for use in the action bar
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_addevent, menu);
-		
+
 		ActionBar actionBar = getActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
-	    actionBar.setTitle("ToDo hinzufügen");
-		
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		if (update == false) {
+			actionBar.setTitle("ToDo hinzufügen");
+		} else if (update == true) {
+			actionBar.setTitle("ToDo bearbeiten");
+		}
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -115,10 +119,9 @@ public class AddEventActivity extends Activity {
 		Log.d("AddEventAc", "ActionBar finish");
 		String todo = inputName.getText().toString();
 		String shared = inputSharedWith.getText().toString();
-		
-		
+
 		MainActivity.setAutoSync(true);
-		
+
 		if (update == false) {
 			if (shared.equals("") == false) {
 				shared = shared + ';';
@@ -131,15 +134,14 @@ public class AddEventActivity extends Activity {
 			DataHandler.updateData(updateID, todo);
 			update = false;
 			if (shared.equals(sharedWith) == true) {
-				Log.d("AddEAC","equals true");
+				Log.d("AddEAC", "equals true");
 				makeToast("ToDo: '" + inputName.getText().toString()
 						+ "' wird hochgeladen!");
 			} else if (shared.equals(sharedWith) != true) {
-				Log.d("AddEAC","equals false");
+				Log.d("AddEAC", "equals false");
 				makeToast("Freigaben können nachträglich nicht geändert werden!");
 			}
-			
-		
+
 		}
 		Intent goToMainActivity = new Intent(AddEventActivity.this,
 				MainActivity.class);

@@ -48,6 +48,7 @@ public class MainActivity extends ListActivity {
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
 	private static boolean pSync = false;
+	private static boolean firstSync = true;
 	private static boolean error;
 	private static int errorCode;
 
@@ -87,6 +88,10 @@ public class MainActivity extends ListActivity {
 	public static void setPeriodicSync(boolean sync) {
 		MainActivity.pSync = sync;
 	}
+	public static void setStartupMethods(boolean value) {
+		MainActivity.firstStart = value;
+		MainActivity.firstSync = value;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +116,7 @@ public class MainActivity extends ListActivity {
 		// User schon eingeloggt?
 		checkUser();
 
+		// POST/PUT/DELETE wenn von anderer Activity angefordert
 		if (autoSync == true) {
 			new PutContent().execute();
 			setAutoSync(false);
@@ -118,14 +124,11 @@ public class MainActivity extends ListActivity {
 
 		// Start Synchronisationsintervall
 		if (checkUser() == true) {
-			setPeriodicSync(false);
 			if (firstStart == true) {
 				DataHandler.setSsid(UserHandler.getSsid());
-				callAsyncTask();
-				DataHandler.getData();
-				new GetContent().execute();
-				firstStart = false;
-			}
+				setPeriodicSync(true);
+				callAsyncTask();	
+			} firstStart = false;
 		}
 
 		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on
@@ -198,7 +201,7 @@ public class MainActivity extends ListActivity {
 			new PutContent().execute();
 
 			setPeriodicSync(false);
-			firstStart = true;
+			setStartupMethods(true);
 
 			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(logOut);
@@ -238,9 +241,9 @@ public class MainActivity extends ListActivity {
 		super.onResume();
 	}
 
-	public boolean checkErrorCodes(String jsonStr) {
-		String analyze = "999";
-		String c9case = "";
+	public boolean checkErrorCodes(String jsonStr) { // Stellenanalyse der Antwort + setzten des Errorcodes
+		String analyze = "999";						// Code wird nicht verändert, falls keine Antwort
+		String c9case = "";							// -> keine Verbindung
 		errorCode = 888;
 		error = false;
 		if (jsonStr != null) {
@@ -250,11 +253,9 @@ public class MainActivity extends ListActivity {
 				Log.d("MainAC", "c9: " + c9case);
 			}
 		}
-		if (c9case.equals("html") == true) { // Rückmeldung des cloud9 Servers,
-												// wenn die Applikation nicht
-												// läuft
-			error = true;
-			errorCode = 999;
+		if (c9case.equals("html") == true) { // Rückmeldung des cloud9 Servers,								
+			error = true;					// wenn die Server-Applikation nicht
+			errorCode = 999;				// läuft
 		} else if (analyze.equals("001") == true) {
 			error = true;
 			errorCode = 001;
@@ -277,7 +278,7 @@ public class MainActivity extends ListActivity {
 		return error;
 	}
 
-	public void makeToast(int errorCode) {
+	public void makeToast(int errorCode) { // Errorcodespezifische Ausgabe
 		String toastText = "";
 		if (MainActivity.error == true) {
 			if (errorCode == 001) {
@@ -304,7 +305,7 @@ public class MainActivity extends ListActivity {
 
 	}
 
-	public String cutDate(String date) {
+	public String cutDate(String date) { // Datum neu zusammensetzen (DD.MM.YYYY HH:MM)
 		String year = date.substring(0, 4);
 		String month = date.substring(5, 7);
 		String day = date.substring(8, 10);
@@ -322,7 +323,7 @@ public class MainActivity extends ListActivity {
 			public void run() {
 				handler.post(new Runnable() {
 					public void run() {
-						if (pSync == true) {
+						if (pSync == true) { // solange Activity im Vordergrund und aktiv
 							DataHandler.getData();
 							new GetContent().execute();
 							Log.d("MainAC", "timerTask calld getC");
@@ -332,7 +333,7 @@ public class MainActivity extends ListActivity {
 
 			}
 		};
-		timer.schedule(task, 0, 7000);
+		timer.schedule(task, 0, 7000); // 7 Sekundenintervall
 	}
 
 	public synchronized void contentChanged() {
@@ -344,7 +345,7 @@ public class MainActivity extends ListActivity {
 		UserHandler userHandler = new UserHandler(getBaseContext());
 		user = userHandler.getUser();
 		boolean check = false;
-		if (user == null) {
+		if (user == null) { // Wenn kein User eingeloggt -> Wechsel zu Login
 			Intent in = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(in);
 			check = false;
@@ -376,7 +377,7 @@ public class MainActivity extends ListActivity {
 			Log.d("Response: ", "> " + jsonStr);
 
 			if (checkErrorCodes(jsonStr) == true) {
-				// ToDo
+				// Abbruch des Parsings + ErrorCode ausgabe
 			} else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
@@ -411,10 +412,14 @@ public class MainActivity extends ListActivity {
 							Log.d("MainAC", "eventList contains: "
 									+ singleEvent);
 						} else if (eventList.contains(singleEvent) != true) {
-							ListHandler.addToEventList(singleEvent);
+							if (firstSync == true) { // Bei erster Sync alles hinzufügen, da Liste leer
+								ListHandler.addToEventList(singleEvent);
+							} else { // Änderung IndexStelle wenn sich Objekt geändert hat
+								ListHandler.updateObjEventList(i, singleEvent);
+							}
 						}
 
-					}
+					} firstSync = false;
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -468,7 +473,7 @@ public class MainActivity extends ListActivity {
 			new GetContent().cancel(true);
 			ServiceHandler sh = new ServiceHandler();
 			String jsonStr = "";
-			if (method == 2) {
+			if (method == 2) { // Festlegung Request Type
 				jsonStr = sh.makeServiceCall(url, ServiceHandler.POST,
 						ListHandler.getParamList());
 			} else if (method == 3) {
@@ -480,7 +485,7 @@ public class MainActivity extends ListActivity {
 			Log.d("Response: ", "> " + jsonStr);
 
 			if (checkErrorCodes(jsonStr) == true) {
-				// ToDo
+				// Abbruch des Parsings + ErrorCode ausgabe
 			} else if (jsonStr != null) {
 				try {
 					JSONArray content = new JSONArray(jsonStr);
@@ -543,7 +548,7 @@ public class MainActivity extends ListActivity {
 				setPeriodicSync(true);
 				Log.d("MainAC", "PutContent call Async");
 			}
-			
+
 		}
 	}
 }

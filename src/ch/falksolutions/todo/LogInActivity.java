@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +39,9 @@ public class LogInActivity extends Activity {
 		DeviceUuidFactory device = new DeviceUuidFactory(getBaseContext());
 		android_id = device.getDeviceUuid().toString();
 		Log.d("LoginAC", "onC ID: " + android_id);
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle("Login");
 
 	}
 

@@ -67,8 +67,8 @@ public class ServiceHandler {
 			HttpPost httpPost = new HttpPost(url);
 			// adding post params
 			if (params != null) {
-			httpPost.setEntity(new UrlEncodedFormEntity(params));
-			Log.d("ServiceHandler","encoded Params: " + new UrlEncodedFormEntity(params));
+			httpPost.setEntity(new UrlEncodedFormEntity(params,"utf-8"));
+			Log.e("ServiceHandler","encoded Params: " + new UrlEncodedFormEntity(params,"utf-8"));
 				}
 				Log.d("ServiceHandler", "url= " + url);
 				httpResponse = httpClient.execute(httpPost);
@@ -88,7 +88,7 @@ public class ServiceHandler {
 			} else if (method == PUT) {
 				HttpPut httpPut = new HttpPut(url);
 				if (params != null) {
-					httpPut.setEntity(new UrlEncodedFormEntity(params));
+					httpPut.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
 				}
 				httpResponse = httpClient.execute(httpPut);
 			} else if (method == DELETE) {
