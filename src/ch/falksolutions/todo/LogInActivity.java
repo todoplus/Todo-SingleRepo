@@ -83,16 +83,16 @@ public class LogInActivity extends Activity {
 			new userLogin().execute();
 		} else if (method == 2) {
 			DataHandler.createUser(user, passwordInput, android_id);
-			if (DataHandler.createUser(user, passwordInput, android_id) == true) {
+			if (user.contains(";") == true) {
+				Log.d("LoginAC","user contains ;");
+				makeToast(998);
+			} else if (user.contains(" ") == true) {
+				makeToast(997);
+			} else if (DataHandler.createUser(user, passwordInput, android_id) == true) {
 				url = DataHandler.getUrl();
 				new userLogin().execute();
 			} else {
-				Context context = getApplicationContext();
-				CharSequence text = "User oder Passwort dürfen nicht leer sein!";
-				int duration = Toast.LENGTH_SHORT;
-
-				Toast toast = Toast.makeText(context, text, duration);
-				toast.show();
+				makeToast(996);
 
 			}
 		}
@@ -122,7 +122,7 @@ public class LogInActivity extends Activity {
 	}
 
 	public void makeToast(int errorCode) {
-		String toastText = "";
+		String toastText = " ";
 
 		if (errorCode == 001) {
 			toastText = "Fehler: User oder Passwort inkorrekt";
@@ -130,9 +130,15 @@ public class LogInActivity extends Activity {
 			toastText = "Fehler: Username schon in Verwendung";
 		} else if (errorCode == 999) {
 			toastText = "Verbindung zum Server nicht möglich!";
+		} else if (errorCode == 998) {
+			toastText = "Fehler: Username darf ';' nicht beinhalten";
+		} else if  (errorCode == 997) {
+			toastText = "Fehler: Username darf keinen Abstand enthalten";
+		} else if (errorCode == 996) {
+			toastText = "User oder Passwort dürfen nicht leer sein!";
 		}
 
-		if (toastText.equals("") != true) {
+		if (toastText.equals(" ") != true) {
 			Context context = getApplicationContext();
 			CharSequence text = toastText;
 			int duration = Toast.LENGTH_SHORT;

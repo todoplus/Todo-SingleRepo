@@ -48,7 +48,7 @@ public class MainActivity extends ListActivity {
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
 	private static boolean pSync = false;
-	private static boolean firstSync = true;
+	private static boolean idEqual = false;
 	private static boolean error;
 	private static int errorCode;
 
@@ -88,11 +88,15 @@ public class MainActivity extends ListActivity {
 	public static void setPeriodicSync(boolean sync) {
 		MainActivity.pSync = sync;
 	}
+
 	public static void setStartupMethods(boolean value) {
 		MainActivity.firstStart = value;
-		MainActivity.firstSync = value;
+
 	}
 
+	public static boolean getError() {
+		return error;
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,14 +108,6 @@ public class MainActivity extends ListActivity {
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setTitle("");
-
-		// Initialisieren eines Adapters für die Anzeige
-		adapter = new SimpleAdapter(MainActivity.this, eventList,
-				R.layout.list_item,
-				new String[] { TAG_NAME, TAG_DATE, TAG_USER }, new int[] {
-						R.id.name, R.id.date, R.id.user });
-
-		setListAdapter(adapter);
 
 		// User schon eingeloggt?
 		checkUser();
@@ -125,11 +121,25 @@ public class MainActivity extends ListActivity {
 		// Start Synchronisationsintervall
 		if (checkUser() == true) {
 			if (firstStart == true) {
+				try {
+					ListHandler.readList(getApplicationContext());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				DataHandler.setSsid(UserHandler.getSsid());
 				setPeriodicSync(true);
-				callAsyncTask();	
-			} firstStart = false;
+				callAsyncTask();
+			}
+			firstStart = false;
 		}
+
+		// Initialisieren eines Adapters für die Anzeige
+		adapter = new SimpleAdapter(MainActivity.this, eventList,
+				R.layout.list_item,
+				new String[] { TAG_NAME, TAG_DATE, TAG_USER }, new int[] {
+						R.id.name, R.id.date, R.id.user });
+
+		setListAdapter(adapter);
 
 		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on
 																// item click
@@ -223,7 +233,15 @@ public class MainActivity extends ListActivity {
 		Log.d("MainAC", "onPause ausgefuehrt");
 		setPeriodicSync(false);
 		new GetContent().cancel(true);
+
 		super.onPause();
+	}
+
+	@Override
+	protected void onStop() {
+		ListHandler.saveList(getApplicationContext());
+		Log.e("MainAC", "onStop ausgeführt");
+		super.onStop();
 	}
 
 	@Override
@@ -238,12 +256,15 @@ public class MainActivity extends ListActivity {
 			}
 
 		}
+
 		super.onResume();
 	}
 
-	public boolean checkErrorCodes(String jsonStr) { // Stellenanalyse der Antwort + setzten des Errorcodes
-		String analyze = "999";						// Code wird nicht verändert, falls keine Antwort
-		String c9case = "";							// -> keine Verbindung
+	public boolean checkErrorCodes(String jsonStr) {
+		// Stellenanalyse der Antwort + setzten des Errorcodes
+		String analyze = "999"; // String wird nicht verändert, falls keine
+								// Antwort -> keine Verbindung
+		String c9case = "";
 		errorCode = 888;
 		error = false;
 		if (jsonStr != null) {
@@ -253,9 +274,10 @@ public class MainActivity extends ListActivity {
 				Log.d("MainAC", "c9: " + c9case);
 			}
 		}
-		if (c9case.equals("html") == true) { // Rückmeldung des cloud9 Servers,								
-			error = true;					// wenn die Server-Applikation nicht
-			errorCode = 999;				// läuft
+		if (c9case.equals("html") == true) { // Rückmeldung des cloud9 Servers,
+			error = true; // wenn die Server-Applikation nicht
+			errorCode = 999; // läuft
+			setPeriodicSync(false);
 		} else if (analyze.equals("001") == true) {
 			error = true;
 			errorCode = 001;
@@ -271,8 +293,10 @@ public class MainActivity extends ListActivity {
 		} else if (analyze.equals("999") == true) {
 			error = true;
 			errorCode = 999;
+			setPeriodicSync(false);
 		} else if (analyze.equals("006") == true) {
 			error = true;
+
 		}
 		Log.d("MainAC", "error Code: " + errorCode);
 		return error;
@@ -305,7 +329,8 @@ public class MainActivity extends ListActivity {
 
 	}
 
-	public String cutDate(String date) { // Datum neu zusammensetzen (DD.MM.YYYY HH:MM)
+	public String cutDate(String date) { // Datum neu zusammensetzen (DD.MM.YYYY
+											// HH:MM)
 		String year = date.substring(0, 4);
 		String month = date.substring(5, 7);
 		String day = date.substring(8, 10);
@@ -323,7 +348,8 @@ public class MainActivity extends ListActivity {
 			public void run() {
 				handler.post(new Runnable() {
 					public void run() {
-						if (pSync == true) { // solange Activity im Vordergrund und aktiv
+						if (pSync == true) { // solange Activity im Vordergrund
+												// und aktiv
 							DataHandler.getData();
 							new GetContent().execute();
 							Log.d("MainAC", "timerTask calld getC");
@@ -338,7 +364,6 @@ public class MainActivity extends ListActivity {
 
 	public synchronized void contentChanged() {
 		adapter.notifyDataSetChanged();
-
 	}
 
 	public boolean checkUser() { // Check, ob schon ein User besteht
@@ -355,9 +380,7 @@ public class MainActivity extends ListActivity {
 		return check;
 	}
 
-	/**
-	 * Async task class to get json by making HTTP call
-	 * */
+	// Async Tasks
 	public class GetContent extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -368,7 +391,7 @@ public class MainActivity extends ListActivity {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			// Creating service handler class instance
+
 			ServiceHandler sh = new ServiceHandler();
 
 			// URL Request
@@ -395,7 +418,6 @@ public class MainActivity extends ListActivity {
 						date = cutDate(date);
 						shared = shared.replace(';', ' ');
 
-						// tmp hashmap for single contact
 						HashMap<String, String> singleEvent = new HashMap<String, String>();
 
 						// adding each child node to HashMap key => value
@@ -407,19 +429,9 @@ public class MainActivity extends ListActivity {
 
 						// Objekt zu Liste hinzufügen
 						ListHandler.addToCompareList(singleEvent);
-						if (eventList.contains(singleEvent) == true) {
-							// Objekt schon in Liste
-							Log.d("MainAC", "eventList contains: "
-									+ singleEvent);
-						} else if (eventList.contains(singleEvent) != true) {
-							if (firstSync == true) { // Bei erster Sync alles hinzufügen, da Liste leer
-								ListHandler.addToEventList(singleEvent);
-							} else { // Änderung IndexStelle wenn sich Objekt geändert hat
-								ListHandler.updateObjEventList(i, singleEvent);
-							}
-						}
 
-					} firstSync = false;
+					}
+
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -441,18 +453,57 @@ public class MainActivity extends ListActivity {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
-			if (eventList.isEmpty() == false) {
-				for (int i = 0; i < ListHandler.getEventListSize(); i++) {
-					if (compareList.contains(eventList.get(i)) != true) {
-						Log.d("MainAC", "con FALSE: " + eventList.get(i));
-						ListHandler.deleteFromEventList(i);
+			if (eventList.isEmpty() == true) {
+				Log.d("MainAC", "eventList empty");
+				for (int i = 0; i < compareList.size(); i++) {
+					ListHandler.addToEventList(ListHandler
+							.getObjFromCompareList(i));
+				}
+			}
+
+			for (int k = 0; k < compareList.size(); k++) {
+				HashMap<String, String> singleEvent = ListHandler
+						.getObjFromCompareList(k);
+				if (eventList.contains(singleEvent) == true) {
+					// Objekt schon in Liste
+				} else if (eventList.contains(singleEvent) != true) {
+					String testID = singleEvent.get(TAG_ID);
+					for (int y = 0; y < ListHandler.getEventListSize(); y++) {
+						String compareID = ListHandler.getIDFromEventList(y);
+						if (compareID.equals(testID) == true) {
+							// Wenn ID übereinstimmt einsetzten an richtiger
+							// Stelle (update)
+							ListHandler.updateObjEventList(y, singleEvent);
+							idEqual = true;
+							break;
+						}
+					}
+					if (idEqual == false) {
+						// Einsetzen an letzter Stelle
+						ListHandler.addToEventList(singleEvent);
+					} else if (idEqual == true) {
+						idEqual = false;
 					}
 				}
 			}
+
+			// Überprüfung, ob von einem anderen Ort etwas gelöscht wurde
+			if (compareList.isEmpty() == false) {
+				if (eventList.isEmpty() == false) {
+					for (int i = 0; i < ListHandler.getEventListSize(); i++) {
+						if (compareList.contains(eventList.get(i)) != true) {
+							Log.d("MainAC", "con FALSE: " + eventList.get(i));
+							ListHandler.deleteFromEventList(i);
+						}
+					}
+				}
+			}
+
 			// zero case, compareList leer -> alles löschen
-			if (compareList.isEmpty() == true) {
-				ListHandler.clearEventList();
+			if (getError() == false) {
+				if (compareList.isEmpty() == true) {
+					ListHandler.clearEventList();
+				}
 			}
 
 			// Ausgabe, wenn Fehler
