@@ -1276,6 +1276,7 @@ containing a value of this type.
         public static final int action_settings=0x7f0a000f;
         public static final int addevent_new=0x7f0a0012;
         public static final int app_name=0x7f0a000d;
+        public static final int autosync_pausieren=0x7f0a002b;
         public static final int bearbeiten=0x7f0a001d;
         public static final int erstellen=0x7f0a0027;
         public static final int erstellt_von=0x7f0a001b;

@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -104,7 +105,7 @@ public class MainActivity extends ListActivity {
 
 		eventList = ListHandler.getEventList();
 		compareList = ListHandler.getCompareList();
-		lv = getListView();
+		
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setTitle("");
@@ -140,24 +141,46 @@ public class MainActivity extends ListActivity {
 						R.id.name, R.id.date, R.id.user });
 
 		setListAdapter(adapter);
+		lv = getListView();
+		
+		
+		
+		lv.setOnItemLongClickListener(new OnItemLongClickListener() { //LongClick -> direkt bearbeiten
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				DataHandler.saveListID(id);
+				
+				Intent directEdit = new Intent(getApplicationContext(), AddEventActivity.class);
+				directEdit.putExtra("update", true);
+				startActivity(directEdit);
+				
+				return true;
+			}
+			
+		});
 
 		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on
 																// item click
 																// listener
 
+			
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Log.d("MAIN AC", "ListID" + id);
 				DataHandler.saveListID(id);
-
+				
 				// Starting single event activity
 				Intent in = new Intent(getApplicationContext(),
 						SingleEventActivity.class);
 				startActivity(in);
-
+				
 			}
+			
 		});
+		
 
 	}
 
@@ -188,9 +211,11 @@ public class MainActivity extends ListActivity {
 
 		case R.id.action_settings:
 			if (pSync == true) {
+				makeToast(998);
 				new GetContent().cancel(true);
 				setPeriodicSync(false);
 			} else if (pSync == false) {
+				makeToast(997);
 				setPeriodicSync(true);
 			}
 			return true;
@@ -202,16 +227,18 @@ public class MainActivity extends ListActivity {
 			return true;
 
 		case R.id.action_logOut:
+			setPeriodicSync(false);
+			setStartupMethods(true);
+			
 			new GetContent().cancel(true);
 
+			
+			ListHandler.clearSavedList(getApplicationContext());
 			ListHandler.clearEventList();
-			UserHandler uH = new UserHandler(getBaseContext());
+			UserHandler uH = new UserHandler(getApplicationContext());
 			uH.logOut();
 			DataHandler.userLogOut();
 			new PutContent().execute();
-
-			setPeriodicSync(false);
-			setStartupMethods(true);
 
 			Intent logOut = new Intent(MainActivity.this, LogInActivity.class);
 			startActivity(logOut);
@@ -230,7 +257,6 @@ public class MainActivity extends ListActivity {
 
 	@Override
 	protected void onPause() {
-		Log.d("MainAC", "onPause ausgefuehrt");
 		setPeriodicSync(false);
 		new GetContent().cancel(true);
 
@@ -246,10 +272,8 @@ public class MainActivity extends ListActivity {
 
 	@Override
 	protected void onResume() {
-		Log.d("MainAC", "onResume ausgeführt");
-		Intent in = getIntent();
-		boolean pAutoSync = in.getBooleanExtra("SYNC", false);
-		if (pAutoSync != true) {
+		
+		if (autoSync != true) {
 			if (checkUser() == true) {
 				setPeriodicSync(true);
 				Log.d("MainAC", "onResume callAsync");
@@ -271,7 +295,6 @@ public class MainActivity extends ListActivity {
 			if (jsonStr.length() > 2) {
 				analyze = jsonStr.substring(1, 4);
 				c9case = jsonStr.substring(1, 5);
-				Log.d("MainAC", "c9: " + c9case);
 			}
 		}
 		if (c9case.equals("html") == true) { // Rückmeldung des cloud9 Servers,
@@ -298,13 +321,12 @@ public class MainActivity extends ListActivity {
 			error = true;
 
 		}
-		Log.d("MainAC", "error Code: " + errorCode);
 		return error;
 	}
 
 	public void makeToast(int errorCode) { // Errorcodespezifische Ausgabe
-		String toastText = "";
-		if (MainActivity.error == true) {
+		String toastText = " ";
+		
 			if (errorCode == 001) {
 				toastText = "Fehler: Bitte logge dich erneut ein!";
 			} else if (errorCode == 002) {
@@ -316,14 +338,18 @@ public class MainActivity extends ListActivity {
 				toastText = "Fehler: Bitte versuche es erneut!";
 			} else if (errorCode == 999) {
 				toastText = "Verbindung zum Server nicht möglich!";
+			} else if (errorCode == 998) {
+				toastText = "Automatische Synchronisation pausiert";
+			} else if (errorCode == 997) {
+				toastText = "Automatische Synchronisation aktiviert";
 			}
-			if (toastText.equals("") != true) {
+			if (toastText.equals(" ") != true) {
 				Context context = getApplicationContext();
 				CharSequence text = toastText;
 				int duration = Toast.LENGTH_SHORT;
 				Toast toast = Toast.makeText(context, text, duration);
 				toast.show();
-			}
+			
 			Log.d("MainAC", "toast: " + toastText);
 		}
 
@@ -473,6 +499,7 @@ public class MainActivity extends ListActivity {
 						if (compareID.equals(testID) == true) {
 							// Wenn ID übereinstimmt einsetzten an richtiger
 							// Stelle (update)
+							Log.d("MainAC","compareID true" + singleEvent);
 							ListHandler.updateObjEventList(y, singleEvent);
 							idEqual = true;
 							break;

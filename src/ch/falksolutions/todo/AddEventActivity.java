@@ -91,7 +91,6 @@ public class AddEventActivity extends Activity {
 		switch (item.getItemId()) {
 
 		case R.id.action_settings:
-			// Todo
 			return true;
 
 		case R.id.action_finish:
@@ -116,7 +115,6 @@ public class AddEventActivity extends Activity {
 
 	public void uploadToDo() {
 
-		Log.d("AddEventAc", "ActionBar finish");
 		String todo = inputName.getText().toString();
 		String shared = inputSharedWith.getText().toString();
 
@@ -145,6 +143,7 @@ public class AddEventActivity extends Activity {
 		}
 		Intent goToMainActivity = new Intent(AddEventActivity.this,
 				MainActivity.class);
+		
 		startActivity(goToMainActivity);
 		finish();
 	}

@@ -374,6 +374,7 @@ int string abc_shareactionprovider_share_with_application 0x7f0a000b
 int string action_settings 0x7f0a000f
 int string addevent_new 0x7f0a0012
 int string app_name 0x7f0a000d
+int string autosync_pausieren 0x7f0a002b
 int string bearbeiten 0x7f0a001d
 int string erstellen 0x7f0a0027
 int string erstellt_von 0x7f0a001b

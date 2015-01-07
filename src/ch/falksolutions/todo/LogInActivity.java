@@ -1,3 +1,8 @@
+/**
+ * Diese Activity ist für das Login/Create Verfahren verantwortlich und übergibt die enthaltenen Parametern
+ * an die Klasse UserHandler
+ */
+
 package ch.falksolutions.todo;
 
 import org.json.JSONArray;

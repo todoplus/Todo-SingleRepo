@@ -1,4 +1,4 @@
-/** Die Klasse ist fuer das Handling mit den Parametern verantwortlich und speichert den User und das Passwort
+/** Die Klasse ist für das Handling mit den URL Parametern verantwortlich je nach Request Type
  * 
  */
 
@@ -10,18 +10,20 @@ import android.util.Log;
 
 public class DataHandler {
 
+	// URL Params
 	private static String STANURL = "https://new-todoplus.c9.io/api";
 	private static String url = STANURL;
 	private static String ssid = UserHandler.getSsid();
 	private static boolean response;
 	private static long listID;
 	
+	// SSID für Server Anfragen
 	public static void setSsid(String ssid) {
 		DataHandler.ssid = ssid;
 	}
 	
 	
-	
+	// dev: URL für Serveranfragen setzen
 	public static void setStanUrl(String pUrl) {
 		String mUrl = "http://";
 		mUrl += pUrl;
@@ -29,15 +31,18 @@ public class DataHandler {
 		DataHandler.STANURL = mUrl;
 	}
 
+	// Get
 	public static String getUrl() {
 		return url;
 	}
-
+	
+	// Set
 	public static void setUrl(String url) {
 		DataHandler.url = url;
 	}
 
 
+	// Parameter für POST Request
 	public static void postData(String name, String shared) {
 		url = STANURL;
 		ListHandler.clearParamList();
@@ -49,7 +54,8 @@ public class DataHandler {
 		setUrl(url);
 		MainActivity.setUrl(url);
 	}
-
+	
+	// Parameter für DELETE Request
 	public static void removeData(String id) {
 		url = STANURL;
 		MainActivity.setMethod(4);
@@ -57,14 +63,16 @@ public class DataHandler {
 		setUrl(url);
 		MainActivity.setUrl(url);
 	}
-
+	
+	// Parameter für GET Request
 	public static void getData() {
 		url = STANURL;
 		url += "?ssid=" + ssid;
 		setUrl(url);
 		MainActivity.setUrl(url);
 	}
-
+	
+	// Parameter für PUT Request
 	public static void updateData(String id, String text) {
 		url = STANURL;
 		url += "/" + id;
@@ -76,6 +84,7 @@ public class DataHandler {
 		MainActivity.setUrl(url);
 	}
 
+	// Parameter für Login (POST Request)
 	public static void userLogin(String user, String passwort, String deviceID) {
 		url = STANURL;
 		url += "/login";
@@ -87,6 +96,7 @@ public class DataHandler {
 		Log.d("DataHandler", "loginURL= " + url);
 	}
 
+	// Parameter für Create (POST Request)
 	public static boolean createUser(String user, String passwort, String deviceID) {
 		url = STANURL;
 		url += "/create";
@@ -105,6 +115,8 @@ public class DataHandler {
 		
 		
 	}
+	
+	// Parameter für Logout (POST Request)
 	public static void userLogOut() {
 		url = STANURL;
 		url += "/logout";
@@ -115,11 +127,12 @@ public class DataHandler {
 	}
 
 	
-	
+	// Temporäres Speichern des Index eines Objekt's
 	public static void saveListID(long ID) {
 		DataHandler.listID = ID;
 		
 	}
+	// Getter
 	public static long getListID() {
 		return listID;
 	}

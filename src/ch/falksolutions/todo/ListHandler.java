@@ -17,30 +17,35 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 public class ListHandler{
+	// SharedPreferences
 	protected static String PREFS_FILE = "saveList";
 	protected static String PREFS_ARRAY = "jsonArray";
 	
 	private static SharedPreferences prefs;
 	
+	// JSON Node Keys
 	private static final String TAG_ID = "_id";
 	private static final String TAG_DATE = "Date";
 	private static final String TAG_NAME = "name";
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_USER = "user";
 	
+	// Lokale Liste für die Anzeige
 	private static ArrayList<HashMap<String, String>> eventList = new ArrayList<HashMap<String, String>>();
 	
+	// Offline Speicherung als JSON String
 	public static void saveList(Context context) {
 		JSONArray toSave = new JSONArray(eventList);
 		Log.d("ListHandler","JARRAY: " + toSave);
 		
-		prefs = context.getApplicationContext().getSharedPreferences(PREFS_FILE, 0);
+		prefs = context.getApplicationContext().getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
 		prefs.edit().putString(PREFS_ARRAY, toSave.toString()).commit();
 		
 	}
 	
+	// Auslesen des JSON Strings und einfügen in eventList
 	public static void readList(Context context) throws JSONException {
-		prefs = context.getSharedPreferences(PREFS_FILE, 0);
+		prefs = context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
 		String jsonStr = prefs.getString(PREFS_ARRAY, null);
 		Log.d("ListHandler","readStr:" + jsonStr);
 		if (jsonStr != null) {
@@ -71,24 +76,37 @@ public class ListHandler{
 
 		}
 	}
+	
+	// Offline Liste löschen (bei LogOut)
+	public static void clearSavedList(Context context) {
+		prefs = context.getSharedPreferences(PREFS_FILE, 0);
+		prefs.edit().clear().commit();
+	}
 
+	// Get List
 	public static ArrayList<HashMap<String, String>> getEventList() {
 		return eventList;
 	}
 
+	// Objekt hinzufügen
 	public static void addToEventList(HashMap<String, String> singleEvent) {
 		eventList.add(singleEvent);
 	}
+	
+	// Objekt an bestimmter Stelle einfügen
 	public static void updateObjEventList(int listID, HashMap<String, String> singleEvent) {
 		eventList.set(listID, singleEvent);
 		
 	}
 
+	// Objekt löschen
 	public static void deleteFromEventList(long id) {
 		int intID = (int) id;
 		eventList.remove(intID);
 		Log.d("ListHandler", "eventList removed id" + id);
 	}
+	
+	// Gibt das Objekt zurück, dessen Index in der Methode DataHandler.saveListID temporär gespeichert wird
 	public static HashMap<String, String> getObjFromEventList() {
 		int intID = (int) DataHandler.getListID();
 		eventList.get(intID);
@@ -96,6 +114,7 @@ public class ListHandler{
 		return eventList.get(intID);
 	}
 	
+	// Gibt die ID des Objekts an der angegebenen Stelle an
 	public static String getIDFromEventList(int intID) {
 		final String TAG_ID = "_id";
 		HashMap<String, String> singleEvent = eventList.get(intID);
@@ -104,47 +123,56 @@ public class ListHandler{
 		return testID;
 	}
 	
+	// Gibt die Grösse der eventList zurück
 	public static int getEventListSize() {
 		int size = eventList.size();
 		
 		return size;
 	}
 	
-
+	// Löscht die Liste (bei LogOut)
 	public static void clearEventList() {
 		eventList.clear();
 	}
 	
+	// Liste, so wie sie aktuell auf dem Server vorhanden ist
 	private static ArrayList<HashMap<String, String>> compareList = new ArrayList<HashMap<String, String>>();
 
+	// Get
 	public static ArrayList<HashMap<String, String>> getCompareList() {
 		return compareList;
 	}
-
+	
+	// add
 	public static void addToCompareList(HashMap<String, String> singleEvent) {
 		compareList.add(singleEvent);
 	}
 	
+	// löschen
 	public static void clearCompareList() {
 		compareList.clear();
 	}
 	
+	// Rückgabe Objekt an Stelle intID
 	public static HashMap<String, String> getObjFromCompareList(int intID) {
-		Log.d("ListHandler","compObj:" + compareList.get(intID));
 		return compareList.get(intID);
 	}
 	
+	// NameValuePair Liste für RequestBody
 	private static ArrayList<NameValuePair> paramList = new ArrayList<NameValuePair>();
 
+	// Rückgabe Parameter Liste
 	public static ArrayList<NameValuePair> getParamList() {
 		return paramList;
 	}
 	
+	// Parameter hinzufügen
 	public static void addToParamList(NameValuePair nameValuePair) {
 		paramList.add(nameValuePair);
 		Log.d("ListHandler","params: " + nameValuePair);
 	}
-
+	
+	// Liste löschen
 	public static void clearParamList() {
 		paramList.clear();
 	}

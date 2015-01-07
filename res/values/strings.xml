@@ -7,7 +7,7 @@
     <string name="plus">+</string>
     <string name="finish">Fertig</string>
     <string name="addevent_new">Event hinzufügen</string>
-    <string name="name">Name</string>
+    <string name="name">Text</string>
     <string name="sharewith">Teilen mit:</string>
     <string name="login">Login</string>
     <string name="synchronisieren">Synchronisieren</string>
@@ -31,5 +31,6 @@
     <string name="oder">oder</string>
     <string name="passwort">Passwort</string>
     <string name="mehrere_user_trennen">Mehrere User mittels ; trennen.</string>
+    <string name="autosync_pausieren">AutoSync pausieren</string>
 
 </resources>
