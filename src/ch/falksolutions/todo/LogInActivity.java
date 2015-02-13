@@ -62,10 +62,10 @@ public class LogInActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
-		case R.id.action_seturl:
+		/*case R.id.action_seturl:
 			Intent setUrl = new Intent(LogInActivity.this,
 					ServerUrlSet_Debug.class);
-			startActivity(setUrl);
+			startActivity(setUrl);*/
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -115,7 +115,7 @@ public class LogInActivity extends Activity {
 	}
 
 	public void startMainAC() {
-		UserHandler userHandler = new UserHandler(getBaseContext());
+		UserHandler userHandler = new UserHandler(getApplicationContext());
 		userHandler.setUser(user);
 		userHandler.setSsid(SSID);
 		Log.d("LoginAC", "user= " + user);
@@ -123,7 +123,7 @@ public class LogInActivity extends Activity {
 
 		Intent in = new Intent(LogInActivity.this, MainActivity.class);
 		startActivity(in);
-
+		finish();
 	}
 
 	public void makeToast(int errorCode) {

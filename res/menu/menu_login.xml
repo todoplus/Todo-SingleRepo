@@ -9,10 +9,10 @@
         android:title="@string/action_settings"
         app:showAsAction="never"/>
     
-    <item
+    <!-- <item
         android:id="@+id/action_seturl"
         android:title="@string/setURL"
-        android:showAsAction="never" />
+        android:showAsAction="never" />  -->
    
     
 

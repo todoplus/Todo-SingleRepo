@@ -125,6 +125,15 @@ public class DataHandler {
 		ListHandler.addToParamList(new BasicNameValuePair("ssid",ssid));
 		MainActivity.setUrl(url);
 	}
+	
+	public static void createGroupParams(String groupName, String groupMember) {
+		url = STANURL;
+		url += "/group";
+		ListHandler.clearParamList();
+		ListHandler.addToParamList(new BasicNameValuePair("name",groupName));
+		ListHandler.addToParamList(new BasicNameValuePair("member",groupMember));
+		CreateGroupActivity.uploadGroup(url);
+	}
 
 	
 	// Temporäres Speichern des Index eines Objekt's
@@ -136,5 +145,6 @@ public class DataHandler {
 	public static long getListID() {
 		return listID;
 	}
+	
 
 }

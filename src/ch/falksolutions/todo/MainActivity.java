@@ -45,13 +45,14 @@ public class MainActivity extends ListActivity {
 
 	// Sync Params
 	private static boolean firstStart = true;
+	private static boolean newLogin = false;
 	private static boolean autoSync = false;
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
-	private static boolean pSync = false;
-	private static boolean idEqual = false;
-	private static boolean error;
-	private static int errorCode;
+	private static boolean pSync = false; // periodische Synchronisation ein/aus
+	private static boolean idEqual = false; //ID gleich bei Überprüfung (update)
+	private static boolean error; //Fehler bei Synchronisation
+	private static int errorCode; // Fehlercode
 
 	// JSON Node names
 	private static final String TAG_ID = "_id";
@@ -68,6 +69,7 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
 	static ArrayList<HashMap<String, String>> compareList;
+	
 
 	// Timer
 	final Handler handler = new Handler();
@@ -90,10 +92,6 @@ public class MainActivity extends ListActivity {
 		MainActivity.pSync = sync;
 	}
 
-	public static void setStartupMethods(boolean value) {
-		MainActivity.firstStart = value;
-
-	}
 
 	public static boolean getError() {
 		return error;
@@ -106,7 +104,6 @@ public class MainActivity extends ListActivity {
 		eventList = ListHandler.getEventList();
 		compareList = ListHandler.getCompareList();
 		
-
 		ActionBar actionBar = getActionBar();
 		actionBar.setTitle("");
 
@@ -133,19 +130,24 @@ public class MainActivity extends ListActivity {
 			}
 			firstStart = false;
 		}
-
+		
+		if (newLogin == true) {
+			DataHandler.setSsid(UserHandler.getSsid());
+			DataHandler.getData();
+			new GetContent().execute();
+			newLogin = false;
+		}
+		
 		// Initialisieren eines Adapters für die Anzeige
-		adapter = new SimpleAdapter(MainActivity.this, eventList,
+		adapter = new SimpleAdapter(MainActivity.this, ListHandler.getEventList(),
 				R.layout.list_item,
 				new String[] { TAG_NAME, TAG_DATE, TAG_USER }, new int[] {
 						R.id.name, R.id.date, R.id.user });
 
 		setListAdapter(adapter);
 		lv = getListView();
-		
-		
-		
-		lv.setOnItemLongClickListener(new OnItemLongClickListener() { //LongClick -> direkt bearbeiten
+							
+	   lv.setOnItemLongClickListener(new OnItemLongClickListener() { //LongClick -> direkt bearbeiten
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
@@ -160,18 +162,15 @@ public class MainActivity extends ListActivity {
 			}
 			
 		});
+		
+		lv.setOnItemClickListener(new OnItemClickListener() { 
 
-		lv.setOnItemClickListener(new OnItemClickListener() { // ListView on
-																// item click
-																// listener
-
-			
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Log.d("MAIN AC", "ListID" + id);
 				DataHandler.saveListID(id);
-				
+							
 				// Starting single event activity
 				Intent in = new Intent(getApplicationContext(),
 						SingleEventActivity.class);
@@ -228,8 +227,7 @@ public class MainActivity extends ListActivity {
 
 		case R.id.action_logOut:
 			setPeriodicSync(false);
-			setStartupMethods(true);
-			
+			newLogin = true;
 			new GetContent().cancel(true);
 
 			
@@ -245,10 +243,11 @@ public class MainActivity extends ListActivity {
 
 			return true;
 
-		case R.id.action_seturl:
+		/* case R.id.action_seturl:
 			Intent setUrl = new Intent(MainActivity.this,
 					ServerUrlSet_Debug.class);
 			startActivity(setUrl);
+			return true;*/
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -492,6 +491,7 @@ public class MainActivity extends ListActivity {
 						.getObjFromCompareList(k);
 				if (eventList.contains(singleEvent) == true) {
 					// Objekt schon in Liste
+					Log.d("MainAC","eventList already contains: " + singleEvent);
 				} else if (eventList.contains(singleEvent) != true) {
 					String testID = singleEvent.get(TAG_ID);
 					for (int y = 0; y < ListHandler.getEventListSize(); y++) {
@@ -499,7 +499,8 @@ public class MainActivity extends ListActivity {
 						if (compareID.equals(testID) == true) {
 							// Wenn ID übereinstimmt einsetzten an richtiger
 							// Stelle (update)
-							Log.d("MainAC","compareID true" + singleEvent);
+							Log.d("MainAC","update detected, ID: " + singleEvent.get(TAG_ID));
+							Log.d("MainAC", "updated ToDo: " + singleEvent);
 							ListHandler.updateObjEventList(y, singleEvent);
 							idEqual = true;
 							break;
@@ -508,6 +509,7 @@ public class MainActivity extends ListActivity {
 					if (idEqual == false) {
 						// Einsetzen an letzter Stelle
 						ListHandler.addToEventList(singleEvent);
+						Log.d("MainAC","new Event: " + singleEvent);
 					} else if (idEqual == true) {
 						idEqual = false;
 					}
@@ -519,7 +521,7 @@ public class MainActivity extends ListActivity {
 				if (eventList.isEmpty() == false) {
 					for (int i = 0; i < ListHandler.getEventListSize(); i++) {
 						if (compareList.contains(eventList.get(i)) != true) {
-							Log.d("MainAC", "con FALSE: " + eventList.get(i));
+							Log.d("MainAC", "found already removed ToDo: " + eventList.get(i));
 							ListHandler.deleteFromEventList(i);
 						}
 					}
@@ -622,7 +624,8 @@ public class MainActivity extends ListActivity {
 
 			// Information an ListView (geänderter Inhalt)
 			contentChanged();
-			if (firstStart != true) {
+			
+			if (firstStart != true && newLogin != true) {
 				setPeriodicSync(true);
 				Log.d("MainAC", "PutContent call Async");
 			}

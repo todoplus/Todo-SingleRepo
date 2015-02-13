@@ -25,10 +25,11 @@
         android:title="@string/logout"
         app:showAsAction="never" />
     
-    <item
-        android:id="@+id/action_seturl"
+    <!--<item 
+    	android:id="@+id/action_seturl"
         android:title="@string/setURL"
-        android:showAsAction="never" />
+        android:showAsAction="never" />  -->
+        
    
     
 
