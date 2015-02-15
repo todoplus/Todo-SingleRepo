@@ -34,7 +34,7 @@ public class CreateGroupActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_finish:
 			createGroup();
-			
+			MainActivity.setAutoSync(true);
 			Intent in = new Intent(CreateGroupActivity.this, MainActivity.class);
 			startActivity(in);
 
@@ -53,9 +53,5 @@ public class CreateGroupActivity extends Activity {
 		
 		DataHandler.createGroupParams(gName, gMember);
 	}
-	public static void uploadGroup(String url) {
-		ServiceHandler sh = new ServiceHandler();
-		sh.makeServiceCall(url, ServiceHandler.POST,ListHandler.getParamList());
-	}
-	
+		
 }

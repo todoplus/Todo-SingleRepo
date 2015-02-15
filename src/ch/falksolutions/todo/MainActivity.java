@@ -224,8 +224,16 @@ public class MainActivity extends ListActivity {
 			startActivity(in);
 
 			return true;
+			
+		case R.id.action_creategroup:
+			Log.d("MainAC","createGroup");
+			Intent createGroup = new Intent(MainActivity.this,CreateGroupActivity.class);
+			startActivity(createGroup);
+			
+			return true;
 
 		case R.id.action_logOut:
+			Log.d("MainAC","logout");
 			setPeriodicSync(false);
 			newLogin = true;
 			new GetContent().cancel(true);
@@ -243,11 +251,11 @@ public class MainActivity extends ListActivity {
 
 			return true;
 
-		/* case R.id.action_seturl:
+		case R.id.action_seturl:
 			Intent setUrl = new Intent(MainActivity.this,
 					ServerUrlSet_Debug.class);
 			startActivity(setUrl);
-			return true;*/
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -318,7 +326,8 @@ public class MainActivity extends ListActivity {
 			setPeriodicSync(false);
 		} else if (analyze.equals("006") == true) {
 			error = true;
-
+		} else if (analyze.equals("005") == true) {
+			error = true;
 		}
 		return error;
 	}

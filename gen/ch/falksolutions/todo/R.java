@@ -1091,13 +1091,15 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f090023;
         public static final int action_bar_title=0x7f090022;
         public static final int action_context_bar=0x7f09001d;
-        public static final int action_finish=0x7f090054;
+        public static final int action_creategroup=0x7f090053;
+        public static final int action_finish=0x7f090056;
         public static final int action_hinzufuegen=0x7f090052;
-        public static final int action_logOut=0x7f090053;
+        public static final int action_logOut=0x7f090054;
         public static final int action_menu_divider=0x7f090002;
         public static final int action_menu_presenter=0x7f090003;
         public static final int action_mode_close_button=0x7f090024;
         public static final int action_settings=0x7f090050;
+        public static final int action_seturl=0x7f090055;
         public static final int action_synchronisieren=0x7f090051;
         public static final int activity_chooser_view_content=0x7f090025;
         public static final int always=0x7f09000f;
@@ -1120,8 +1122,8 @@ containing a value of this type.
         public static final int end=0x7f090017;
         public static final int expand_activities_button=0x7f090026;
         public static final int expanded_menu=0x7f09002c;
-        public static final int groupmember=0x7f090042;
-        public static final int groupname=0x7f090041;
+        public static final int groupmember=0x7f090041;
+        public static final int groupname=0x7f090042;
         public static final int home=0x7f090000;
         public static final int homeAsUp=0x7f09000a;
         public static final int icon=0x7f09002a;
@@ -1284,6 +1286,7 @@ containing a value of this type.
         public static final int erstellt_von=0x7f0a001b;
         public static final int finish=0x7f0a0011;
         public static final int geteilt_mit_=0x7f0a001c;
+        public static final int gruppe_erstellen=0x7f0a002c;
         public static final int hello_world=0x7f0a000e;
         public static final int hinzufuegen=0x7f0a0017;
         public static final int loeschen=0x7f0a001e;

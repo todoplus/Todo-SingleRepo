@@ -11,7 +11,7 @@ import android.util.Log;
 public class DataHandler {
 
 	// URL Params
-	private static String STANURL = "https://new-todoplus.c9.io/api";
+	private static String STANURL = "http://192.168.178.162:8080/api";
 	private static String url = STANURL;
 	private static String ssid = UserHandler.getSsid();
 	private static boolean response;
@@ -50,6 +50,8 @@ public class DataHandler {
 		ListHandler.addToParamList(new BasicNameValuePair("ssid", ssid));
 		ListHandler.addToParamList(new BasicNameValuePair("text", name));
 		ListHandler.addToParamList(new BasicNameValuePair("shared", shared));
+		ListHandler.addToParamList(new BasicNameValuePair("prio", "1"));
+		ListHandler.addToParamList(new BasicNameValuePair("groups", ""));
 		
 		setUrl(url);
 		MainActivity.setUrl(url);
@@ -130,9 +132,12 @@ public class DataHandler {
 		url = STANURL;
 		url += "/group";
 		ListHandler.clearParamList();
-		ListHandler.addToParamList(new BasicNameValuePair("name",groupName));
-		ListHandler.addToParamList(new BasicNameValuePair("member",groupMember));
-		CreateGroupActivity.uploadGroup(url);
+		ListHandler.addToParamList(new BasicNameValuePair("ssid",ssid));
+		ListHandler.addToParamList(new BasicNameValuePair("groupname",groupName));
+		ListHandler.addToParamList(new BasicNameValuePair("members",groupMember));
+		MainActivity.setMethod(2);
+		MainActivity.setUrl(url);
+		
 	}
 
 	
