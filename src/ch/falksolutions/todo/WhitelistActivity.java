@@ -93,11 +93,15 @@ public class WhitelistActivity extends Activity {
 	}
 	private void updateWhitelist() {
 		String newEdit = inputUser.getText().toString();
-		if (whitelistString != null) {
-			whitelistString += newEdit + ";";
-		} else {
-			whitelistString = newEdit + ";";
+		Log.d("WhitelistAC","input: " + newEdit);
+		if (newEdit != null && newEdit.equals("") != true) {
+			if (whitelistString != null) {
+				whitelistString += newEdit + ";";
+			} else {
+				whitelistString = newEdit + ";";
+			}
 		}
+		
 		DataHandler.updateWhitelist(whitelistString);
 		
 		

@@ -34,7 +34,6 @@ public class AddEventActivity extends Activity {
 	// Eingabefelder
 	private static EditText inputName;
 	private static EditText inputSharedWith;
-	private static EditText inputGroups;
 
 	// Unterscheidung neu/update
 	private static boolean update = false;
@@ -52,6 +51,7 @@ public class AddEventActivity extends Activity {
 	private static final String TAG_GROUPNAME = "groupname";
 	
 	private static ListView lv;
+	private static BaseAdapter adapter;
 
 	public static void setInputName(EditText pInputName) {
 		inputName = pInputName;
@@ -70,7 +70,6 @@ public class AddEventActivity extends Activity {
 
 		inputName = (EditText) findViewById(R.id.editText1);
 		inputSharedWith = (EditText) findViewById(R.id.editText2);
-		inputGroups = (EditText) findViewById(R.id.editText3);
 
 		Intent in = getIntent();
 		update = in.getBooleanExtra("update", false);
@@ -97,7 +96,10 @@ public class AddEventActivity extends Activity {
 				} else {
 					groupSharing = singleGroup + ";";
 				}
-				inputGroups.setText(groupSharing);
+				makeToast("Gruppe " + singleGroup + " hinzugefügt");
+				GroupHandler.deleteFromGroupList((int) id);
+				adapter.notifyDataSetChanged();
+				
 				
 			}
 			
@@ -155,7 +157,6 @@ public class AddEventActivity extends Activity {
 
 		String todo = inputName.getText().toString();
 		String shared = inputSharedWith.getText().toString();
-		String groups = inputGroups.getText().toString();
 		
 
 		MainActivity.setAutoSync(true);
@@ -164,7 +165,7 @@ public class AddEventActivity extends Activity {
 			if (shared.equals("") == false) {
 				shared = shared + ';';
 			}
-			DataHandler.postData(todo, shared, groups);
+			DataHandler.postData(todo, shared, groupSharing);
 			makeToast("ToDo: '" + inputName.getText().toString()
 					+ "' wird hochgeladen!");
 
@@ -223,7 +224,7 @@ public class AddEventActivity extends Activity {
 		protected void onPostExecute(Void result) {
 			
 			
-			BaseAdapter adapter = new SimpleAdapter(AddEventActivity.this, GroupHandler.getGroupList(),
+			adapter = new SimpleAdapter(AddEventActivity.this, GroupHandler.getGroupList(),
 					R.layout.grouplist_item,
 					new String[] { TAG_GROUPNAME, }, new int[] {
 							R.id.name, });

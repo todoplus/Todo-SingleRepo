@@ -18,8 +18,7 @@ public class GroupHandler {
 		groupList.add(group);
 	}
 	
-	public static void deleteFromGroupList(HashMap<String, String> group) {
-		int groupIndex = groupList.indexOf(group);
+	public static void deleteFromGroupList(int groupIndex) {
 		groupList.remove(groupIndex);
 	}
 	
