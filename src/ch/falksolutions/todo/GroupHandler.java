@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 public class GroupHandler {
 	
+	private static final String TAG_GROUPNAME = "groupname";
+	
 	private static ArrayList<HashMap<String, String>> groupList = new ArrayList<HashMap<String, String>>();
 	private static ArrayList<HashMap<String, String>> groupCompareList = new ArrayList<HashMap<String, String>>();
 	
@@ -27,6 +29,16 @@ public class GroupHandler {
 	
 	public static void clearGroupCompareList() {
 		groupCompareList.clear();
+	}
+	
+	public static String getItemFromGroupList(long id) {
+		HashMap<String, String> group = groupList.get((int) id);
+		String groupName = group.get(TAG_GROUPNAME);
+		
+		return groupName;
+	}
+	public static void clearGroupList() {
+		groupList.clear();
 	}
 
 }

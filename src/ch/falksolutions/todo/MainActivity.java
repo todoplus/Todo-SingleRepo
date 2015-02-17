@@ -328,6 +328,9 @@ public class MainActivity extends ListActivity {
 			error = true;
 		} else if (analyze.equals("005") == true) {
 			error = true;
+		} else if (analyze.equals("008") == true) {
+			error = true;
+			errorCode = 8;
 		}
 		return error;
 	}
@@ -350,6 +353,8 @@ public class MainActivity extends ListActivity {
 				toastText = "Automatische Synchronisation pausiert";
 			} else if (errorCode == 997) {
 				toastText = "Automatische Synchronisation aktiviert";
+			} else if (errorCode == 8) {
+				toastText = "Gruppe wurde erstellt";
 			}
 			if (toastText.equals(" ") != true) {
 				Context context = getApplicationContext();

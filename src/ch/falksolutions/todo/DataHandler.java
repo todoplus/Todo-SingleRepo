@@ -11,7 +11,7 @@ import android.util.Log;
 public class DataHandler {
 
 	// URL Params
-	private static String STANURL = "http://192.168.178.162:8080/api";
+	private static String STANURL = "http://192.168.1.33:8080/api";
 	private static String url = STANURL;
 	private static String ssid = UserHandler.getSsid();
 	private static boolean response;
@@ -43,7 +43,7 @@ public class DataHandler {
 
 
 	// Parameter für POST Request
-	public static void postData(String name, String shared) {
+	public static void postData(String name, String shared, String groups) {
 		url = STANURL;
 		ListHandler.clearParamList();
 		MainActivity.setMethod(2);
@@ -51,7 +51,8 @@ public class DataHandler {
 		ListHandler.addToParamList(new BasicNameValuePair("text", name));
 		ListHandler.addToParamList(new BasicNameValuePair("shared", shared));
 		ListHandler.addToParamList(new BasicNameValuePair("prio", "1"));
-		ListHandler.addToParamList(new BasicNameValuePair("groups", ""));
+		ListHandler.addToParamList(new BasicNameValuePair("groups", groups));
+		
 		
 		setUrl(url);
 		MainActivity.setUrl(url);
@@ -138,6 +139,12 @@ public class DataHandler {
 		MainActivity.setMethod(2);
 		MainActivity.setUrl(url);
 		
+	}
+	public static String getGroups() {
+		url = STANURL;
+		url += "/group?ssid=" + ssid;
+		
+		return url;
 	}
 
 	

@@ -62,10 +62,10 @@ public class LogInActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
-		/*case R.id.action_seturl:
+		case R.id.action_seturl:
 			Intent setUrl = new Intent(LogInActivity.this,
 					ServerUrlSet_Debug.class);
-			startActivity(setUrl);*/
+			startActivity(setUrl);
 
 		default:
 			return super.onOptionsItemSelected(item);

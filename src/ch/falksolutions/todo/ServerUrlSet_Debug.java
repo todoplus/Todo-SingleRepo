@@ -14,7 +14,7 @@ public class ServerUrlSet_Debug extends Activity {
 		setContentView(R.layout.activity_seturl);
 		
 		inputURL = (EditText) findViewById(R.id.editText1);
-		inputURL.setText("https://new-todoplus.c9.io/");
+		inputURL.setText("https://new-todoplus.c9.io/api");
 		
 	}
 	

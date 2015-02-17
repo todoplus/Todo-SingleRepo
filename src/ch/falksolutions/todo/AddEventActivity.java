@@ -6,23 +6,35 @@ package ch.falksolutions.todo;
 
 import java.util.HashMap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class AddEventActivity extends Activity {
 
 	// Eingabefelder
 	private static EditText inputName;
 	private static EditText inputSharedWith;
+	private static EditText inputGroups;
 
 	// Unterscheidung neu/update
 	private static boolean update = false;
@@ -31,11 +43,15 @@ public class AddEventActivity extends Activity {
 	private static String updateID;
 	private static String updateContent;
 	private static String sharedWith;
+	private static String groupSharing;
 
 	// Object name keys
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_NAME = "name";
 	private static final String TAG_ID = "_id";
+	private static final String TAG_GROUPNAME = "groupname";
+	
+	private static ListView lv;
 
 	public static void setInputName(EditText pInputName) {
 		inputName = pInputName;
@@ -46,9 +62,15 @@ public class AddEventActivity extends Activity {
 		Log.d("AddEvent Activity", "Started");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_addevent);
+		groupSharing = null;
+		
+		lv = (ListView) findViewById(R.id.groupListView);
+		new GetGroups().execute();
+		
 
 		inputName = (EditText) findViewById(R.id.editText1);
 		inputSharedWith = (EditText) findViewById(R.id.editText2);
+		inputGroups = (EditText) findViewById(R.id.editText3);
 
 		Intent in = getIntent();
 		update = in.getBooleanExtra("update", false);
@@ -64,6 +86,22 @@ public class AddEventActivity extends Activity {
 			inputName.setText(updateContent);
 			inputSharedWith.setText(sharedWith);
 		}
+	lv.setOnItemClickListener(new OnItemClickListener() { 
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String singleGroup = GroupHandler.getItemFromGroupList(id);
+				if (groupSharing != null) {
+					groupSharing += singleGroup + ";";
+				} else {
+					groupSharing = singleGroup + ";";
+				}
+				inputGroups.setText(groupSharing);
+				
+			}
+			
+		});
 
 	}
 
@@ -117,6 +155,7 @@ public class AddEventActivity extends Activity {
 
 		String todo = inputName.getText().toString();
 		String shared = inputSharedWith.getText().toString();
+		
 
 		MainActivity.setAutoSync(true);
 
@@ -124,7 +163,7 @@ public class AddEventActivity extends Activity {
 			if (shared.equals("") == false) {
 				shared = shared + ';';
 			}
-			DataHandler.postData(todo, shared);
+			DataHandler.postData(todo, shared, groupSharing);
 			makeToast("ToDo: '" + inputName.getText().toString()
 					+ "' wird hochgeladen!");
 
@@ -146,6 +185,52 @@ public class AddEventActivity extends Activity {
 		
 		startActivity(goToMainActivity);
 		finish();
+	}
+	
+	public class GetGroups extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			GroupHandler.clearGroupList();
+			ServiceHandler sh = new ServiceHandler();
+			String jsonStr = sh.makeServiceCall(DataHandler.getGroups(), ServiceHandler.GET);
+			
+			if (jsonStr != null) {
+				try {
+					JSONArray content = new JSONArray(jsonStr);
+
+					// looping through content
+					for (int i = 0; i < content.length(); i++) {
+						JSONObject c = content.getJSONObject(i);
+
+						String groupName = c.getString(TAG_GROUPNAME);
+						
+						HashMap<String, String> singleGroup = new HashMap<String, String>();
+						singleGroup.put(TAG_GROUPNAME, groupName);
+						GroupHandler.addToGroupList(singleGroup);
+					}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} else {
+					Log.e("ServiceHandler", "Couldn't get any data from the url");
+				}
+				return null;		
+			}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+			
+			BaseAdapter adapter = new SimpleAdapter(AddEventActivity.this, GroupHandler.getGroupList(),
+					R.layout.grouplist_item,
+					new String[] { TAG_GROUPNAME, }, new int[] {
+							R.id.name, });
+			lv.setAdapter(adapter);
+			
+			super.onPostExecute(result);
+		}
+		
 	}
 
 }
