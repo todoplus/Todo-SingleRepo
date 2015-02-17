@@ -27,6 +27,11 @@
         app:showAsAction="never" />
     
     <item
+        android:id="@+id/action_whitelist"
+        android:title="@string/whitelist"
+        app:showAsAction="never" />
+    
+    <item
         android:id="@+id/action_logOut"
         android:title="@string/logout"
         app:showAsAction="never" />

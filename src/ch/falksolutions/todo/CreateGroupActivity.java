@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 public class CreateGroupActivity extends Activity {
 	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -18,6 +19,7 @@ public class CreateGroupActivity extends Activity {
 		
 		ActionBar actionBar = getActionBar();
 		actionBar.setTitle("Gruppe erstellen");
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override

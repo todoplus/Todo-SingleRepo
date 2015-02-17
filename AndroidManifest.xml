@@ -41,6 +41,7 @@
         <activity android:name="ServerUrlSet_Debug" >
         </activity>
         <activity android:name="CreateGroupActivity"></activity>
+        <activity android:name="WhitelistActivity"></activity>
     </application>
 
 </manifest>

@@ -146,6 +146,22 @@ public class DataHandler {
 		
 		return url;
 	}
+	
+	public static void updateWhitelist(String whitelist) {
+		url = STANURL;
+		url += "/white/" + ssid;
+		ListHandler.clearParamList();
+		ListHandler.addToParamList(new BasicNameValuePair("whitelist",whitelist));
+		MainActivity.setMethod(3);
+		MainActivity.setUrl(url);
+	}
+	
+	public static String getWhitelist() {
+		url = STANURL;
+		url += "/white/?ssid=" + ssid;
+		
+		return url;
+	}
 
 	
 	// Temporäres Speichern des Index eines Objekt's

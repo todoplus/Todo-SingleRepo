@@ -155,6 +155,7 @@ public class AddEventActivity extends Activity {
 
 		String todo = inputName.getText().toString();
 		String shared = inputSharedWith.getText().toString();
+		String groups = inputGroups.getText().toString();
 		
 
 		MainActivity.setAutoSync(true);
@@ -163,7 +164,7 @@ public class AddEventActivity extends Activity {
 			if (shared.equals("") == false) {
 				shared = shared + ';';
 			}
-			DataHandler.postData(todo, shared, groupSharing);
+			DataHandler.postData(todo, shared, groups);
 			makeToast("ToDo: '" + inputName.getText().toString()
 					+ "' wird hochgeladen!");
 

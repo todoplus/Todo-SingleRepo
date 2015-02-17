@@ -1091,16 +1091,17 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f090023;
         public static final int action_bar_title=0x7f090022;
         public static final int action_context_bar=0x7f09001d;
-        public static final int action_creategroup=0x7f090057;
-        public static final int action_finish=0x7f09005a;
-        public static final int action_hinzufuegen=0x7f090056;
-        public static final int action_logOut=0x7f090058;
+        public static final int action_creategroup=0x7f090058;
+        public static final int action_finish=0x7f09005c;
+        public static final int action_hinzufuegen=0x7f090057;
+        public static final int action_logOut=0x7f09005a;
         public static final int action_menu_divider=0x7f090002;
         public static final int action_menu_presenter=0x7f090003;
         public static final int action_mode_close_button=0x7f090024;
-        public static final int action_settings=0x7f090054;
-        public static final int action_seturl=0x7f090059;
-        public static final int action_synchronisieren=0x7f090055;
+        public static final int action_settings=0x7f090055;
+        public static final int action_seturl=0x7f09005b;
+        public static final int action_synchronisieren=0x7f090056;
+        public static final int action_whitelist=0x7f090059;
         public static final int activity_chooser_view_content=0x7f090025;
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f090016;
@@ -1110,7 +1111,7 @@ containing a value of this type.
         public static final int checkbox=0x7f09002d;
         public static final int collapseActionView=0x7f090010;
         public static final int createdbyview=0x7f09004b;
-        public static final int date=0x7f090051;
+        public static final int date=0x7f090052;
         public static final int date_label=0x7f09004c;
         public static final int default_activity_button=0x7f090028;
         public static final int dialog=0x7f090014;
@@ -1132,9 +1133,10 @@ containing a value of this type.
         public static final int ifRoom=0x7f090011;
         public static final int image=0x7f090027;
         public static final int listMode=0x7f090006;
+        public static final int listWhitelist=0x7f090050;
         public static final int list_item=0x7f090029;
         public static final int middle=0x7f090018;
-        public static final int name=0x7f090050;
+        public static final int name=0x7f090051;
         public static final int name_label=0x7f090049;
         public static final int never=0x7f090012;
         public static final int none=0x7f090019;
@@ -1170,8 +1172,8 @@ containing a value of this type.
         public static final int top_action_bar=0x7f090020;
         public static final int up=0x7f090021;
         public static final int useLogo=0x7f09000e;
-        public static final int user=0x7f090053;
-        public static final int userText=0x7f090052;
+        public static final int user=0x7f090054;
+        public static final int userText=0x7f090053;
         public static final int user_label=0x7f09004a;
         public static final int withText=0x7f090013;
     }
@@ -1231,15 +1233,17 @@ containing a value of this type.
         public static final int activity_main=0x7f03001b;
         public static final int activity_seturl=0x7f03001c;
         public static final int activity_single_event=0x7f03001d;
-        public static final int grouplist_item=0x7f03001e;
-        public static final int list_item=0x7f03001f;
-        public static final int support_simple_spinner_dropdown_item=0x7f030020;
+        public static final int activity_whitelist=0x7f03001e;
+        public static final int grouplist_item=0x7f03001f;
+        public static final int list_item=0x7f030020;
+        public static final int support_simple_spinner_dropdown_item=0x7f030021;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
         public static final int menu_addevent=0x7f0c0001;
         public static final int menu_creategroup=0x7f0c0002;
         public static final int menu_login=0x7f0c0003;
+        public static final int menu_whitelist=0x7f0c0004;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1314,6 +1318,7 @@ containing a value of this type.
         public static final int synchronisieren=0x7f0a0016;
         public static final int todohinzufuegen=0x7f0a0019;
         public static final int user=0x7f0a0026;
+        public static final int whitelist=0x7f0a002d;
     }
     public static final class style {
         /** 

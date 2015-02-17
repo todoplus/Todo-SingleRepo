@@ -33,5 +33,6 @@
     <string name="mehrere_user_trennen">Mehrere User mittels ; trennen.</string>
     <string name="autosync_pausieren">AutoSync pausieren</string>
     <string name="gruppe_erstellen">Gruppe erstellen</string>
+    <string name="whitelist">Whitelist</string>
 
 </resources>

@@ -231,6 +231,12 @@ public class MainActivity extends ListActivity {
 			startActivity(createGroup);
 			
 			return true;
+			
+		case R.id.action_whitelist:
+			Intent whitelist = new Intent(MainActivity.this,WhitelistActivity.class);
+			startActivity(whitelist);
+			
+			return true;
 
 		case R.id.action_logOut:
 			Log.d("MainAC","logout");
