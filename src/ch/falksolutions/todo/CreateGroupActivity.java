@@ -18,6 +18,7 @@ public class CreateGroupActivity extends Activity {
 		setContentView(R.layout.activity_creategroup);
 		
 		ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle("Gruppe erstellen");
 		super.onCreate(savedInstanceState);
 	}

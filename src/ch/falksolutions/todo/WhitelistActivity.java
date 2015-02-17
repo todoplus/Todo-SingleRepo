@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,25 +15,56 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class WhitelistActivity extends Activity {
 	
 	private static final String TAG_WHITELISTUSER = "white";
 	
 	private static ListView lv;
+	private static BaseAdapter adapter;
+	private static String whitelistString;
+	private static EditText inputUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_whitelist);
+		
+		ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+	    actionBar.setTitle("Whitelist");
+		
 		lv = (ListView) findViewById(R.id.listWhitelist);
+		inputUser = (EditText) findViewById(R.id.addWhitelistEdit);
 		
 		new GetWhitelist().execute();
 		
+		
+		lv.setOnItemClickListener(new OnItemClickListener() { 
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String singleUser = WhitelistHandler.getItemFromWhitelist(id);
+				whitelistString = whitelistString.replace(singleUser + ";", "");
+				WhitelistHandler.deleteFromWhitelist((int) id); 
+				adapter.notifyDataSetChanged();
+				
+				
+			}
+			
+		});
+
 		super.onCreate(savedInstanceState);
+	
 	}
+
 		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,6 +92,15 @@ public class WhitelistActivity extends Activity {
 		}
 	}
 	private void updateWhitelist() {
+		String newEdit = inputUser.getText().toString();
+		if (whitelistString != null) {
+			whitelistString += newEdit + ";";
+		} else {
+			whitelistString = newEdit + ";";
+		}
+		DataHandler.updateWhitelist(whitelistString);
+		
+		
 		
 	}
 	
@@ -70,6 +111,8 @@ public class WhitelistActivity extends Activity {
 			WhitelistHandler.clearWhitelist();
 			ServiceHandler sh = new ServiceHandler();
 			String jsonStr = sh.makeServiceCall(DataHandler.getWhitelist(), ServiceHandler.GET);
+			Log.d("WhitelistAC","Response > " + jsonStr);
+			
 			
 			if (jsonStr != null) {
 				try {
@@ -98,11 +141,19 @@ public class WhitelistActivity extends Activity {
 		protected void onPostExecute(Void result) {
 			
 			
-			BaseAdapter adapter = new SimpleAdapter(WhitelistActivity.this, WhitelistHandler.getWhitelist(),
+			adapter = new SimpleAdapter(WhitelistActivity.this, WhitelistHandler.getWhitelist(),
 					R.layout.grouplist_item,
 					new String[] { TAG_WHITELISTUSER, }, new int[] {
 							R.id.name, });
 			lv.setAdapter(adapter);
+			
+			for (int i=0; i<WhitelistHandler.getWhitelistSize(); i++) {
+				if (whitelistString != null) {
+					whitelistString += WhitelistHandler.getItemFromWhitelist(i) + ";";
+				} else {
+					whitelistString = WhitelistHandler.getItemFromWhitelist(i) + ";";
+				}
+			}
 			
 			super.onPostExecute(result);
 		}

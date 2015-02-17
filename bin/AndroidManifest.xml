@@ -40,8 +40,18 @@
         </activity>
         <activity android:name="ServerUrlSet_Debug" >
         </activity>
-        <activity android:name="CreateGroupActivity"></activity>
-        <activity android:name="WhitelistActivity"></activity>
+        <activity android:name="CreateGroupActivity"
+            android:parentActivityName="ch.falksolutions.todo.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.falksolutions.todo.MainActivity" />
+        </activity>
+        <activity android:name="WhitelistActivity"
+            android:parentActivityName="ch.falksolutions.todo.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.falksolutions.todo.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

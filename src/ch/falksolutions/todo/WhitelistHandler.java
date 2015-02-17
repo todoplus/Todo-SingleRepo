@@ -17,12 +17,11 @@ private static final String TAG_WHITELISTUSER = "groupname";
 		whitelist.add(whitelistMember);
 	}
 	
-	public static void deleteFromWhitelist(HashMap<String, String> whitelistMember) {
-		int groupIndex = whitelist.indexOf(whitelistMember);
-		whitelist.remove(groupIndex);
+	public static void deleteFromWhitelist(int id) {
+		whitelist.remove(id);
 	}
 	
-	public static String getItemFromwhitelist(long id) {
+	public static String getItemFromWhitelist(long id) {
 		HashMap<String, String> group = whitelist.get((int) id);
 		String groupName = group.get(TAG_WHITELISTUSER);
 		
@@ -30,5 +29,8 @@ private static final String TAG_WHITELISTUSER = "groupname";
 	}
 	public static void clearWhitelist() {
 		whitelist.clear();
+	}
+	public static int getWhitelistSize() {
+		return whitelist.size();
 	}
 }
