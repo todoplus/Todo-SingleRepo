@@ -94,14 +94,14 @@ public class WhitelistActivity extends Activity {
 	private void updateWhitelist() {
 		String newEdit = inputUser.getText().toString();
 		Log.d("WhitelistAC","input: " + newEdit);
-		if (newEdit != null && newEdit.equals("") != true) {
+		if (newEdit.equals("") != true) {
 			if (whitelistString != null) {
 				whitelistString += newEdit + ";";
 			} else {
 				whitelistString = newEdit + ";";
 			}
 		}
-		
+		whitelistString = whitelistString.replace("null;", "");
 		DataHandler.updateWhitelist(whitelistString);
 		
 		
@@ -158,6 +158,7 @@ public class WhitelistActivity extends Activity {
 					whitelistString = WhitelistHandler.getItemFromWhitelist(i) + ";";
 				}
 			}
+			Log.d("WhitelistAC","whString: " + whitelistString);
 			
 			super.onPostExecute(result);
 		}

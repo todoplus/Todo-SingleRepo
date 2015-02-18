@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
-	android:focusableInTouchMode="true" >
+    android:focusableInTouchMode="true" >
 
     <EditText
         android:id="@+id/editText1"
@@ -32,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView5" >
-       
     </ListView>
 
     <TextView
@@ -54,24 +53,56 @@
         android:layout_below="@+id/textView3"
         android:ems="10"
         android:inputType="text" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText2"
-        android:layout_below="@+id/textView4"
-        android:layout_marginTop="15dp"
-        android:text="In einer Gruppe freigeben:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/editText1"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="46dp"
         android:text="@string/sharewith"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RadioButton
+        android:id="@+id/mediumPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText1"
+        android:layout_centerHorizontal="true"
+        android:onClick="onRadioButtonClicked"
+        android:text="2" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_below="@+id/textView4"
+        android:layout_marginTop="15dp"
+        android:text="In einer Gruppe freigeben:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RadioButton
+        android:id="@+id/lowPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mediumPriority"
+        android:layout_alignBottom="@+id/mediumPriority"
+        android:layout_alignLeft="@+id/textView4"
+        android:onClick="onRadioButtonClicked"
+        android:text="1" />
+
+    <RadioButton
+        android:id="@+id/highPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mediumPriority"
+        android:layout_alignBottom="@+id/mediumPriority"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="25dp"
+        android:onClick="onRadioButtonClicked"
+        android:text="3" />
 
 </RelativeLayout>

@@ -22,12 +22,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class AddEventActivity extends Activity {
 
@@ -52,6 +53,11 @@ public class AddEventActivity extends Activity {
 	
 	private static ListView lv;
 	private static BaseAdapter adapter;
+	private static String priority = "2"; //Standardpriorität
+	
+	RadioButton rBLow;
+	RadioButton rBMedium;
+	RadioButton rBHigh;
 
 	public static void setInputName(EditText pInputName) {
 		inputName = pInputName;
@@ -66,6 +72,12 @@ public class AddEventActivity extends Activity {
 		
 		lv = (ListView) findViewById(R.id.groupListView);
 		new GetGroups().execute();
+		
+		rBMedium = (RadioButton) findViewById(R.id.mediumPriority);
+		rBMedium.setChecked(true);
+		
+		rBLow = (RadioButton) findViewById(R.id.lowPriority);
+		rBHigh = (RadioButton) findViewById(R.id.highPriority);
 		
 
 		inputName = (EditText) findViewById(R.id.editText1);
@@ -142,6 +154,37 @@ public class AddEventActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	public void onRadioButtonClicked(View view) {
+	    // Is the button now checked?
+	    boolean checked = ((RadioButton) view).isChecked();
+	    
+	    // Check which radio button was clicked
+	    switch(view.getId()) {
+	        case R.id.lowPriority:
+	            if (checked) {
+	            	priority = "1";
+	            	rBMedium.setChecked(false);
+	            	rBHigh.setChecked(false);
+	            }
+	            break;
+	        case R.id.mediumPriority:
+	            if (checked) {
+	            	priority = "2";
+	            	rBLow.setChecked(false);
+	            	rBHigh.setChecked(false);
+	            }
+	              
+	            break;
+	        case R.id.highPriority:
+	        	if (checked) {
+	        		priority = "3";
+	        		rBMedium.setChecked(false);
+	            	rBLow.setChecked(false);
+	        	}
+	        		break;
+	    }
+	}
 
 	public void makeToast(String toastText) {
 
@@ -165,7 +208,8 @@ public class AddEventActivity extends Activity {
 			if (shared.equals("") == false) {
 				shared = shared + ';';
 			}
-			DataHandler.postData(todo, shared, groupSharing);
+			
+			DataHandler.postData(todo, shared, groupSharing, priority);
 			makeToast("ToDo: '" + inputName.getText().toString()
 					+ "' wird hochgeladen!");
 
