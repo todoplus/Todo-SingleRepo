@@ -50,7 +50,16 @@
         android:textColor="#5d5d5d"
         android:textStyle="bold" />
 
-
-    	
+    <TextView
+        android:id="@+id/priorityItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/date"
+        android:layout_alignBottom="@+id/date"
+        android:layout_alignRight="@+id/name"
+        android:layout_marginRight="22dp"
+        android:text="3"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

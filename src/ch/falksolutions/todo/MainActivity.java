@@ -50,8 +50,9 @@ public class MainActivity extends ListActivity {
 	private static int method; // POST = 2, PUT = 3, DELETE = 4, vgl.
 								// ServiceHandler
 	private static boolean pSync = false; // periodische Synchronisation ein/aus
-	private static boolean idEqual = false; //ID gleich bei Überprüfung (update)
-	private static boolean error; //Fehler bei Synchronisation
+	private static boolean idEqual = false; // ID gleich bei Überprüfung
+											// (update)
+	private static boolean error; // Fehler bei Synchronisation
 	private static int errorCode; // Fehlercode
 
 	// JSON Node names
@@ -60,6 +61,7 @@ public class MainActivity extends ListActivity {
 	private static final String TAG_NAME = "name";
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_USER = "user";
+	private static final String TAG_PRIORITY = "prio";
 
 	// content Array, ListView, adapter
 	JSONArray content = null;
@@ -69,7 +71,6 @@ public class MainActivity extends ListActivity {
 	// Hashmap fuer ListView
 	static ArrayList<HashMap<String, String>> eventList;
 	static ArrayList<HashMap<String, String>> compareList;
-	
 
 	// Timer
 	final Handler handler = new Handler();
@@ -92,10 +93,10 @@ public class MainActivity extends ListActivity {
 		MainActivity.pSync = sync;
 	}
 
-
 	public static boolean getError() {
 		return error;
 	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,7 +104,7 @@ public class MainActivity extends ListActivity {
 
 		eventList = ListHandler.getEventList();
 		compareList = ListHandler.getCompareList();
-		
+
 		ActionBar actionBar = getActionBar();
 		actionBar.setTitle("");
 
@@ -126,60 +127,65 @@ public class MainActivity extends ListActivity {
 				}
 				DataHandler.setSsid(UserHandler.getSsid());
 				setPeriodicSync(true);
-				callAsyncTask();
+				//callAsyncTask();
 			}
 			firstStart = false;
 		}
-		
+
 		if (newLogin == true) {
 			DataHandler.setSsid(UserHandler.getSsid());
 			DataHandler.getData();
 			new GetContent().execute();
 			newLogin = false;
 		}
-		
+
 		// Initialisieren eines Adapters für die Anzeige
-		adapter = new SimpleAdapter(MainActivity.this, ListHandler.getEventList(),
+		adapter = new SimpleAdapter(
+				MainActivity.this,
+				ListHandler.getEventList(),
 				R.layout.list_item,
-				new String[] { TAG_NAME, TAG_DATE, TAG_USER }, new int[] {
-						R.id.name, R.id.date, R.id.user });
+				new String[] { TAG_NAME, TAG_DATE, TAG_USER, TAG_PRIORITY },
+				new int[] { R.id.name, R.id.date, R.id.user, R.id.priorityItem });
 
 		setListAdapter(adapter);
 		lv = getListView();
-							
-	   lv.setOnItemLongClickListener(new OnItemLongClickListener() { //LongClick -> direkt bearbeiten
+
+		lv.setOnItemLongClickListener(new OnItemLongClickListener() { // LongClick
+																		// ->
+																		// direkt
+																		// bearbeiten
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				DataHandler.saveListID(id);
-				
-				Intent directEdit = new Intent(getApplicationContext(), AddEventActivity.class);
+
+				Intent directEdit = new Intent(getApplicationContext(),
+						AddEventActivity.class);
 				directEdit.putExtra("update", true);
 				startActivity(directEdit);
-				
+
 				return true;
 			}
-			
+
 		});
-		
-		lv.setOnItemClickListener(new OnItemClickListener() { 
+
+		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Log.d("MAIN AC", "ListID" + id);
 				DataHandler.saveListID(id);
-							
+
 				// Starting single event activity
 				Intent in = new Intent(getApplicationContext(),
 						SingleEventActivity.class);
 				startActivity(in);
-				
+
 			}
-			
+
 		});
-		
 
 	}
 
@@ -224,27 +230,28 @@ public class MainActivity extends ListActivity {
 			startActivity(in);
 
 			return true;
-			
+
 		case R.id.action_creategroup:
-			Log.d("MainAC","createGroup");
-			Intent createGroup = new Intent(MainActivity.this,CreateGroupActivity.class);
+			Log.d("MainAC", "createGroup");
+			Intent createGroup = new Intent(MainActivity.this,
+					CreateGroupActivity.class);
 			startActivity(createGroup);
-			
+
 			return true;
-			
+
 		case R.id.action_whitelist:
-			Intent whitelist = new Intent(MainActivity.this,WhitelistActivity.class);
+			Intent whitelist = new Intent(MainActivity.this,
+					WhitelistActivity.class);
 			startActivity(whitelist);
-			
+
 			return true;
 
 		case R.id.action_logOut:
-			Log.d("MainAC","logout");
+			Log.d("MainAC", "logout");
 			setPeriodicSync(false);
 			newLogin = true;
 			new GetContent().cancel(true);
 
-			
 			ListHandler.clearSavedList(getApplicationContext());
 			ListHandler.clearEventList();
 			UserHandler uH = new UserHandler(getApplicationContext());
@@ -285,7 +292,7 @@ public class MainActivity extends ListActivity {
 
 	@Override
 	protected void onResume() {
-		
+
 		if (autoSync != true) {
 			if (checkUser() == true) {
 				setPeriodicSync(true);
@@ -343,32 +350,32 @@ public class MainActivity extends ListActivity {
 
 	public void makeToast(int errorCode) { // Errorcodespezifische Ausgabe
 		String toastText = " ";
-		
-			if (errorCode == 001) {
-				toastText = "Fehler: Bitte logge dich erneut ein!";
-			} else if (errorCode == 002) {
-				toastText = "Fehler: Bitte logge dich erneut ein!";
-			} else if (errorCode == 003) {
-				toastText = "ToDo wurde gelöscht";
-				ListHandler.deleteFromEventList(DataHandler.getListID());
-			} else if (errorCode == 004) {
-				toastText = "Fehler: Bitte versuche es erneut!";
-			} else if (errorCode == 999) {
-				toastText = "Verbindung zum Server nicht möglich!";
-			} else if (errorCode == 998) {
-				toastText = "Automatische Synchronisation pausiert";
-			} else if (errorCode == 997) {
-				toastText = "Automatische Synchronisation aktiviert";
-			} else if (errorCode == 8) {
-				toastText = "Gruppe wurde erstellt";
-			}
-			if (toastText.equals(" ") != true) {
-				Context context = getApplicationContext();
-				CharSequence text = toastText;
-				int duration = Toast.LENGTH_SHORT;
-				Toast toast = Toast.makeText(context, text, duration);
-				toast.show();
-			
+
+		if (errorCode == 001) {
+			toastText = "Fehler: Bitte logge dich erneut ein!";
+		} else if (errorCode == 002) {
+			toastText = "Fehler: Bitte logge dich erneut ein!";
+		} else if (errorCode == 003) {
+			toastText = "ToDo wurde gelöscht";
+			ListHandler.deleteFromEventList(DataHandler.getListID());
+		} else if (errorCode == 004) {
+			toastText = "Fehler: Bitte versuche es erneut!";
+		} else if (errorCode == 999) {
+			toastText = "Verbindung zum Server nicht möglich!";
+		} else if (errorCode == 998) {
+			toastText = "Automatische Synchronisation pausiert";
+		} else if (errorCode == 997) {
+			toastText = "Automatische Synchronisation aktiviert";
+		} else if (errorCode == 8) {
+			toastText = "Gruppe wurde erstellt";
+		}
+		if (toastText.equals(" ") != true) {
+			Context context = getApplicationContext();
+			CharSequence text = toastText;
+			int duration = Toast.LENGTH_SHORT;
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+
 			Log.d("MainAC", "toast: " + toastText);
 		}
 
@@ -459,6 +466,7 @@ public class MainActivity extends ListActivity {
 						String date = c.getString(TAG_DATE);
 						String shared = c.getString(TAG_SHARED);
 						String createdbyUser = c.getString(TAG_USER);
+						String priority = c.getString(TAG_PRIORITY);
 
 						date = cutDate(date);
 						shared = shared.replace(';', ' ');
@@ -471,6 +479,7 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_DATE, date);
 						singleEvent.put(TAG_SHARED, shared);
 						singleEvent.put(TAG_USER, createdbyUser);
+						singleEvent.put(TAG_PRIORITY, priority);
 
 						// Objekt zu Liste hinzufügen
 						ListHandler.addToCompareList(singleEvent);
@@ -511,7 +520,8 @@ public class MainActivity extends ListActivity {
 						.getObjFromCompareList(k);
 				if (eventList.contains(singleEvent) == true) {
 					// Objekt schon in Liste
-					Log.d("MainAC","eventList already contains: " + singleEvent);
+					Log.d("MainAC", "eventList already contains: "
+							+ singleEvent);
 				} else if (eventList.contains(singleEvent) != true) {
 					String testID = singleEvent.get(TAG_ID);
 					for (int y = 0; y < ListHandler.getEventListSize(); y++) {
@@ -519,7 +529,8 @@ public class MainActivity extends ListActivity {
 						if (compareID.equals(testID) == true) {
 							// Wenn ID übereinstimmt einsetzten an richtiger
 							// Stelle (update)
-							Log.d("MainAC","update detected, ID: " + singleEvent.get(TAG_ID));
+							Log.d("MainAC", "update detected, ID: "
+									+ singleEvent.get(TAG_ID));
 							Log.d("MainAC", "updated ToDo: " + singleEvent);
 							ListHandler.updateObjEventList(y, singleEvent);
 							idEqual = true;
@@ -527,9 +538,26 @@ public class MainActivity extends ListActivity {
 						}
 					}
 					if (idEqual == false) {
-						// Einsetzen an letzter Stelle
-						ListHandler.addToEventList(singleEvent);
-						Log.d("MainAC","new Event: " + singleEvent);
+						//Neues ToDo an richtiger Stelle einfügen (Priorität)
+						int newEventPriority = Integer
+								.parseInt(singleEvent.get(TAG_PRIORITY));
+						if (newEventPriority == 1) {
+							ListHandler.addToEventList(singleEvent);
+						} else {
+							for (int y = 0; y < ListHandler
+									.getEventListSize(); y++) {
+								int comparePriority = Integer.parseInt(ListHandler.getPriority(y));
+													
+								if (comparePriority < newEventPriority == true) {
+									Log.d("MainAC","priorityMatch at " + k);
+									ListHandler.addToEventListAtPosition(singleEvent, y);
+									break;
+									
+								}
+
+							}
+						}
+						Log.d("MainAC", "new Event: " + singleEvent);
 					} else if (idEqual == true) {
 						idEqual = false;
 					}
@@ -541,7 +569,8 @@ public class MainActivity extends ListActivity {
 				if (eventList.isEmpty() == false) {
 					for (int i = 0; i < ListHandler.getEventListSize(); i++) {
 						if (compareList.contains(eventList.get(i)) != true) {
-							Log.d("MainAC", "found already removed ToDo: " + eventList.get(i));
+							Log.d("MainAC", "found already removed ToDo: "
+									+ eventList.get(i));
 							ListHandler.deleteFromEventList(i);
 						}
 					}
@@ -598,6 +627,7 @@ public class MainActivity extends ListActivity {
 						String date = sC.getString(TAG_DATE);
 						String user = sC.getString(TAG_USER);
 						String shared = sC.getString(TAG_SHARED);
+						String priority = sC.getString(TAG_PRIORITY);
 
 						date = cutDate(date);
 						shared = shared.replace(';', ' ');
@@ -611,6 +641,7 @@ public class MainActivity extends ListActivity {
 						singleEvent.put(TAG_DATE, date);
 						singleEvent.put(TAG_USER, user);
 						singleEvent.put(TAG_SHARED, shared);
+						singleEvent.put(TAG_PRIORITY, priority);
 
 						if (eventList.contains(singleEvent) == true) {
 							Log.d("MainAC", "eventList contains: "
@@ -621,8 +652,27 @@ public class MainActivity extends ListActivity {
 								ListHandler.updateObjEventList(
 										(int) DataHandler.getListID(),
 										singleEvent);
+							//Priorität überprüfen	
 							} else {
-								ListHandler.addToEventList(singleEvent);
+								int newEventPriority = Integer
+										.parseInt(priority);
+								if (newEventPriority == 1) {
+									ListHandler.addToEventList(singleEvent);
+								} else {
+									for (int k = 0; k < ListHandler
+											.getEventListSize(); k++) {
+										int comparePriority = Integer.parseInt(ListHandler.getPriority(k));
+															
+										if (comparePriority < newEventPriority == true) {
+											Log.d("MainAC","priorityMatch at " + k);
+											ListHandler.addToEventListAtPosition(singleEvent, k);
+											break;
+											
+										}
+
+									}
+								}
+
 							}
 						}
 					}
@@ -644,7 +694,7 @@ public class MainActivity extends ListActivity {
 
 			// Information an ListView (geänderter Inhalt)
 			contentChanged();
-			
+
 			if (firstStart != true && newLogin != true) {
 				setPeriodicSync(true);
 				Log.d("MainAC", "PutContent call Async");

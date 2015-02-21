@@ -68,8 +68,11 @@ public class AddEventActivity extends Activity {
 		Log.d("AddEvent Activity", "Started");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_addevent);
+		//Standardwerte setzten
 		groupSharing = null;
+		priority = "2";
 		
+		//Initalisieren ListView + benötigte Buttons
 		lv = (ListView) findViewById(R.id.groupListView);
 		new GetGroups().execute();
 		
@@ -83,6 +86,7 @@ public class AddEventActivity extends Activity {
 		inputName = (EditText) findViewById(R.id.editText1);
 		inputSharedWith = (EditText) findViewById(R.id.editText2);
 
+		//Überprüfung Update
 		Intent in = getIntent();
 		update = in.getBooleanExtra("update", false);
 
@@ -97,6 +101,7 @@ public class AddEventActivity extends Activity {
 			inputName.setText(updateContent);
 			inputSharedWith.setText(sharedWith);
 		}
+	//ClickListener um Gruppen hinzuzufügen
 	lv.setOnItemClickListener(new OnItemClickListener() { 
 
 			@Override
@@ -154,7 +159,7 @@ public class AddEventActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+	//Priorität setzen
 	public void onRadioButtonClicked(View view) {
 	    // Is the button now checked?
 	    boolean checked = ((RadioButton) view).isChecked();
@@ -185,7 +190,7 @@ public class AddEventActivity extends Activity {
 	        		break;
 	    }
 	}
-
+	//Toast asugeben
 	public void makeToast(String toastText) {
 
 		Context context = getApplicationContext();
@@ -195,7 +200,7 @@ public class AddEventActivity extends Activity {
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
 	}
-
+	//ToDo mit den erforderlichen Parametern an DataHandler übergeben
 	public void uploadToDo() {
 
 		String todo = inputName.getText().toString();
@@ -232,7 +237,7 @@ public class AddEventActivity extends Activity {
 		startActivity(goToMainActivity);
 		finish();
 	}
-	
+	//AsyncTask um Gruppenliste abzurufen
 	public class GetGroups extends AsyncTask<Void, Void, Void> {
 
 		@Override

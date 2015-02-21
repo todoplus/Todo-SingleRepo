@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/centerShim"
-        android:layout_below="@+id/share_label"
+        android:layout_below="@+id/priority"
         android:layout_marginTop="15dp"
         android:onClick="onDelete"
         android:text="@string/loeschen" />
@@ -86,7 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/centerShim"
-        android:layout_below="@+id/share_label"
+        android:layout_below="@+id/priority"
         android:layout_marginTop="15dp"
         android:onClick="onUpdate"
         android:text="@string/bearbeiten" />
@@ -98,5 +98,24 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_below="@+id/sharedwithview"
+        android:layout_marginTop="14dp"
+        android:text="Priorität:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/priority_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/priority"
+        android:layout_toRightOf="@+id/sharedwithview"
+        android:text="samplePriority"
+        android:textStyle="bold" />
 
 </RelativeLayout>

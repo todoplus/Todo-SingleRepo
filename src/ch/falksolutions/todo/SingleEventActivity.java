@@ -21,6 +21,7 @@ public class SingleEventActivity  extends Activity {
 	private static final String TAG_DATE = "Date";
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_USER = "user";
+	private static final String TAG_PRIORITY = "prio";
 	
 	// Vom Objekt ausgelesene Variablen
 	private static String name;
@@ -28,6 +29,7 @@ public class SingleEventActivity  extends Activity {
 	private static String shared;
 	private static String id;
 	private static String user;
+	private static String priority;
 	
 	
 	@Override
@@ -45,17 +47,20 @@ public class SingleEventActivity  extends Activity {
         date = eventObj.get(TAG_DATE);
         shared = eventObj.get(TAG_SHARED);
         user = eventObj.get(TAG_USER);
+        priority = eventObj.get(TAG_PRIORITY);
         
         // Displaying all values on the screen
         TextView lblName = (TextView) findViewById(R.id.name_label);
         TextView lblUser = (TextView) findViewById(R.id.user_label);
         TextView lblDate = (TextView) findViewById(R.id.date_label);
         TextView lblShared = (TextView) findViewById(R.id.share_label);
+        TextView lblPrio = (TextView) findViewById(R.id.priority_label);
         
         lblName.setText(name);
         lblUser.setText(user);
         lblDate.setText(date);
         lblShared.setText(shared);
+        lblPrio.setText(priority);
         
         
     }

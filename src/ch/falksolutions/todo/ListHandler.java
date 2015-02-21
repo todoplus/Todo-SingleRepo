@@ -29,6 +29,7 @@ public class ListHandler{
 	private static final String TAG_NAME = "name";
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_USER = "user";
+	private static final String TAG_PRIORITY = "prio";
 	
 	// Lokale Liste für die Anzeige
 	private static ArrayList<HashMap<String, String>> eventList = new ArrayList<HashMap<String, String>>();
@@ -59,6 +60,7 @@ public class ListHandler{
 			String date = c.getString(TAG_DATE);
 			String shared = c.getString(TAG_SHARED);
 			String createdbyUser = c.getString(TAG_USER);
+			String priority = c.getString(TAG_PRIORITY);
 
 			HashMap<String, String> singleEvent = new HashMap<String, String>();
 
@@ -68,6 +70,7 @@ public class ListHandler{
 			singleEvent.put(TAG_DATE, date);
 			singleEvent.put(TAG_SHARED, shared);
 			singleEvent.put(TAG_USER, createdbyUser);
+			singleEvent.put(TAG_PRIORITY, priority);
 
 			// Objekt zu Liste hinzufügen
 			addToEventList(singleEvent);
@@ -93,7 +96,12 @@ public class ListHandler{
 		eventList.add(singleEvent);
 	}
 	
-	// Objekt an bestimmter Stelle einfügen
+	//Objekt an bestimmter Stelle hinzufügen
+	public static void addToEventListAtPosition(HashMap<String, String> singleEvent, int index) {
+		eventList.add(index, singleEvent);
+	}
+	
+	// Objekt an bestimmter Stelle modifizieren
 	public static void updateObjEventList(int listID, HashMap<String, String> singleEvent) {
 		eventList.set(listID, singleEvent);
 		
@@ -104,6 +112,13 @@ public class ListHandler{
 		int intID = (int) id;
 		eventList.remove(intID);
 		Log.d("ListHandler", "eventList removed id" + id);
+	}
+	
+	//Priorität überprüfen
+	public static String getPriority(int counter) {
+		final String TAG_PRIORITY = "prio";
+		HashMap<String, String> singleEvent = eventList.get(counter);
+		return singleEvent.get(TAG_PRIORITY);
 	}
 	
 	// Gibt das Objekt zurück, dessen Index in der Methode DataHandler.saveListID temporär gespeichert wird
