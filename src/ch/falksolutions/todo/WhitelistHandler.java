@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class WhitelistHandler {
-private static final String TAG_WHITELISTUSER = "groupname";
+private static final String TAG_WHITELISTUSER = "white";
 	
 	private static ArrayList<HashMap<String, String>> whitelist = new ArrayList<HashMap<String, String>>();
 

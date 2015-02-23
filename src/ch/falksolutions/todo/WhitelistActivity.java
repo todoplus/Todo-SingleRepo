@@ -52,7 +52,9 @@ public class WhitelistActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				String singleUser = WhitelistHandler.getItemFromWhitelist(id);
+				Log.d("WhitelistAC","userToRemove: " + singleUser);
 				whitelistString = whitelistString.replace(singleUser + ";", "");
+				Log.d("WhitelistAC","newWhString: " + whitelistString);
 				WhitelistHandler.deleteFromWhitelist((int) id); 
 				adapter.notifyDataSetChanged();
 				
@@ -126,11 +128,8 @@ public class WhitelistActivity extends Activity {
 					for (int i = 0; i < content.length(); i++) {
 						JSONObject c = content.getJSONObject(i);
 
-						String whitelistMember = c.getString(TAG_WHITELISTUSER);
+						whitelistString = c.getString(TAG_WHITELISTUSER);
 						
-						HashMap<String, String> member = new HashMap<String, String>();
-						member.put(TAG_WHITELISTUSER, whitelistMember);
-						WhitelistHandler.addToWhitelist(member);
 					}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -144,6 +143,13 @@ public class WhitelistActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			
+			String[] whitelistItems = whitelistString.split(";");
+			
+			for (int k=0; k<whitelistItems.length; k++) {
+				HashMap<String, String> member = new HashMap<String, String>();
+				member.put(TAG_WHITELISTUSER, whitelistItems[k]);
+				WhitelistHandler.addToWhitelist(member);
+			}
 			
 			adapter = new SimpleAdapter(WhitelistActivity.this, WhitelistHandler.getWhitelist(),
 					R.layout.grouplist_item,
@@ -151,14 +157,6 @@ public class WhitelistActivity extends Activity {
 							R.id.name, });
 			lv.setAdapter(adapter);
 			
-			for (int i=0; i<WhitelistHandler.getWhitelistSize(); i++) {
-				if (whitelistString != null) {
-					whitelistString += WhitelistHandler.getItemFromWhitelist(i) + ";";
-				} else {
-					whitelistString = WhitelistHandler.getItemFromWhitelist(i) + ";";
-				}
-			}
-			Log.d("WhitelistAC","whString: " + whitelistString);
 			
 			super.onPostExecute(result);
 		}

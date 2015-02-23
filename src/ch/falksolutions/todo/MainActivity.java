@@ -341,7 +341,11 @@ public class MainActivity extends ListActivity {
 			error = true;
 		} else if (analyze.equals("005") == true) {
 			error = true;
-		} else if (analyze.equals("008") == true) {
+		} else if (analyze.equals("007") == true) {
+			error = true;
+			errorCode = 007;
+		}
+		else if (analyze.equals("008") == true) {
 			error = true;
 			errorCode = 8;
 		}
@@ -366,6 +370,8 @@ public class MainActivity extends ListActivity {
 			toastText = "Automatische Synchronisation pausiert";
 		} else if (errorCode == 997) {
 			toastText = "Automatische Synchronisation aktiviert";
+		} else if (errorCode == 007) {
+			toastText = "Gruppenname schon vergeben";
 		} else if (errorCode == 8) {
 			toastText = "Gruppe wurde erstellt";
 		}
@@ -657,6 +663,8 @@ public class MainActivity extends ListActivity {
 								int newEventPriority = Integer
 										.parseInt(priority);
 								if (newEventPriority == 1) {
+									ListHandler.addToEventList(singleEvent);
+								} else if (ListHandler.getEventListSize() == 0) {
 									ListHandler.addToEventList(singleEvent);
 								} else {
 									for (int k = 0; k < ListHandler
