@@ -1304,11 +1304,14 @@ containing a value of this type.
         public static final int gruppe_erstellen=0x7f0a002c;
         public static final int hello_world=0x7f0a000e;
         public static final int hinzufuegen=0x7f0a0017;
+        public static final int hoch=0x7f0a002e;
+        public static final int in_einer_gruppe_freigeben_=0x7f0a0031;
         public static final int loeschen=0x7f0a001e;
         public static final int login=0x7f0a0015;
         public static final int logout=0x7f0a0018;
         public static final int mehrere_user_trennen=0x7f0a002a;
         public static final int name=0x7f0a0013;
+        public static final int normal=0x7f0a0030;
         public static final int oder=0x7f0a0028;
         public static final int passwort=0x7f0a0029;
         public static final int plus=0x7f0a0010;
@@ -1322,6 +1325,7 @@ containing a value of this type.
         public static final int setURL=0x7f0a001a;
         public static final int sharewith=0x7f0a0014;
         public static final int synchronisieren=0x7f0a0016;
+        public static final int tief=0x7f0a002f;
         public static final int todohinzufuegen=0x7f0a0019;
         public static final int user=0x7f0a0026;
         public static final int whitelist=0x7f0a002d;

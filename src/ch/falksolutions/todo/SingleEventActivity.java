@@ -49,6 +49,14 @@ public class SingleEventActivity  extends Activity {
         user = eventObj.get(TAG_USER);
         priority = eventObj.get(TAG_PRIORITY);
         
+        if (priority.equals("2")) {
+        	priority = "normal";
+        } else if (priority.equals("1")) {
+        	priority = "hoch";
+        } else if (priority.equals("3")) {
+        	priority = "tief";
+        }
+        
         // Displaying all values on the screen
         TextView lblName = (TextView) findViewById(R.id.name_label);
         TextView lblUser = (TextView) findViewById(R.id.user_label);

@@ -72,7 +72,7 @@
         android:layout_below="@+id/editText1"
         android:layout_centerHorizontal="true"
         android:onClick="onRadioButtonClicked"
-        android:text="2" />
+        android:text="@string/normal" />
 
     <TextView
         android:id="@+id/textView5"
@@ -81,7 +81,7 @@
         android:layout_alignRight="@+id/textView3"
         android:layout_below="@+id/textView4"
         android:layout_marginTop="15dp"
-        android:text="In einer Gruppe freigeben:"
+        android:text="@string/in_einer_gruppe_freigeben_"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <RadioButton
@@ -92,7 +92,7 @@
         android:layout_alignBottom="@+id/mediumPriority"
         android:layout_alignLeft="@+id/textView4"
         android:onClick="onRadioButtonClicked"
-        android:text="1" />
+        android:text="@string/tief" />
 
     <RadioButton
         android:id="@+id/highPriority"
@@ -103,6 +103,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="25dp"
         android:onClick="onRadioButtonClicked"
-        android:text="3" />
+        android:text="@string/hoch" />
 
 </RelativeLayout>

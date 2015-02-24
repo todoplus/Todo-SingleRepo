@@ -168,7 +168,7 @@ public class AddEventActivity extends Activity {
 	    switch(view.getId()) {
 	        case R.id.lowPriority:
 	            if (checked) {
-	            	priority = "1";
+	            	priority = "3";
 	            	rBMedium.setChecked(false);
 	            	rBHigh.setChecked(false);
 	            }
@@ -183,7 +183,7 @@ public class AddEventActivity extends Activity {
 	            break;
 	        case R.id.highPriority:
 	        	if (checked) {
-	        		priority = "3";
+	        		priority = "1";
 	        		rBMedium.setChecked(false);
 	            	rBLow.setChecked(false);
 	        	}

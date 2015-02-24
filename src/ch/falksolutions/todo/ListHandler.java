@@ -30,6 +30,7 @@ public class ListHandler{
 	private static final String TAG_SHARED = "sharedw";
 	private static final String TAG_USER = "user";
 	private static final String TAG_PRIORITY = "prio";
+	private static final String TAG_PRIORITY_TEXT = "priorityText";
 	
 	// Lokale Liste für die Anzeige
 	private static ArrayList<HashMap<String, String>> eventList = new ArrayList<HashMap<String, String>>();
@@ -61,6 +62,7 @@ public class ListHandler{
 			String shared = c.getString(TAG_SHARED);
 			String createdbyUser = c.getString(TAG_USER);
 			String priority = c.getString(TAG_PRIORITY);
+			String priorityText = c.getString(TAG_PRIORITY_TEXT);
 
 			HashMap<String, String> singleEvent = new HashMap<String, String>();
 
@@ -71,6 +73,7 @@ public class ListHandler{
 			singleEvent.put(TAG_SHARED, shared);
 			singleEvent.put(TAG_USER, createdbyUser);
 			singleEvent.put(TAG_PRIORITY, priority);
+			singleEvent.put(TAG_PRIORITY_TEXT, priorityText);
 
 			// Objekt zu Liste hinzufügen
 			addToEventList(singleEvent);

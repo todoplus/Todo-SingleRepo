@@ -402,11 +402,14 @@ int string geteilt_mit_ 0x7f0a001c
 int string gruppe_erstellen 0x7f0a002c
 int string hello_world 0x7f0a000e
 int string hinzufuegen 0x7f0a0017
+int string hoch 0x7f0a002e
+int string in_einer_gruppe_freigeben_ 0x7f0a0031
 int string loeschen 0x7f0a001e
 int string login 0x7f0a0015
 int string logout 0x7f0a0018
 int string mehrere_user_trennen 0x7f0a002a
 int string name 0x7f0a0013
+int string normal 0x7f0a0030
 int string oder 0x7f0a0028
 int string passwort 0x7f0a0029
 int string plus 0x7f0a0010
@@ -420,6 +423,7 @@ int string sampleuserlabel 0x7f0a0021
 int string setURL 0x7f0a001a
 int string sharewith 0x7f0a0014
 int string synchronisieren 0x7f0a0016
+int string tief 0x7f0a002f
 int string todohinzufuegen 0x7f0a0019
 int string user 0x7f0a0026
 int string whitelist 0x7f0a002d

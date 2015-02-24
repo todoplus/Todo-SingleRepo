@@ -34,5 +34,9 @@
     <string name="autosync_pausieren">AutoSync pausieren</string>
     <string name="gruppe_erstellen">Gruppe erstellen</string>
     <string name="whitelist">Whitelist</string>
+    <string name="hoch">hoch</string>
+    <string name="tief">tief</string>
+    <string name="normal">normal</string>
+    <string name="in_einer_gruppe_freigeben_">In einer Gruppe freigeben:</string>
 
 </resources>
