@@ -1106,14 +1106,14 @@ containing a value of this type.
         public static final int addWhitelistEdit=0x7f090054;
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f090016;
-        public static final int button1=0x7f090048;
-        public static final int button2=0x7f090049;
-        public static final int centerShim=0x7f090050;
+        public static final int button1=0x7f090049;
+        public static final int button2=0x7f09004a;
+        public static final int centerShim=0x7f090051;
         public static final int checkbox=0x7f09002d;
         public static final int collapseActionView=0x7f090010;
-        public static final int createdbyview=0x7f09004c;
+        public static final int createdbyview=0x7f09004d;
         public static final int date=0x7f090057;
-        public static final int date_label=0x7f09004d;
+        public static final int date_label=0x7f09004e;
         public static final int default_activity_button=0x7f090028;
         public static final int dialog=0x7f090014;
         public static final int disableHome=0x7f090009;
@@ -1125,8 +1125,8 @@ containing a value of this type.
         public static final int expand_activities_button=0x7f090026;
         public static final int expanded_menu=0x7f09002c;
         public static final int groupListView=0x7f090040;
-        public static final int groupmember=0x7f090046;
-        public static final int groupname=0x7f090047;
+        public static final int groupmember=0x7f090047;
+        public static final int groupname=0x7f090046;
         public static final int highPriority=0x7f090045;
         public static final int home=0x7f090000;
         public static final int homeAsUp=0x7f09000a;
@@ -1140,13 +1140,13 @@ containing a value of this type.
         public static final int mediumPriority=0x7f090043;
         public static final int middle=0x7f090018;
         public static final int name=0x7f090056;
-        public static final int name_label=0x7f09004a;
+        public static final int name_label=0x7f09004b;
         public static final int never=0x7f090012;
         public static final int none=0x7f090019;
         public static final int normal=0x7f090007;
-        public static final int priority=0x7f090051;
+        public static final int priority=0x7f090052;
         public static final int priorityItem=0x7f09005a;
-        public static final int priority_label=0x7f090052;
+        public static final int priority_label=0x7f090053;
         public static final int progress_circular=0x7f090004;
         public static final int progress_horizontal=0x7f090005;
         public static final int radio=0x7f09002f;
@@ -1160,8 +1160,8 @@ containing a value of this type.
         public static final int search_plate=0x7f090036;
         public static final int search_src_text=0x7f090037;
         public static final int search_voice_btn=0x7f09003b;
-        public static final int share_label=0x7f09004e;
-        public static final int sharedwithview=0x7f09004f;
+        public static final int share_label=0x7f09004f;
+        public static final int sharedwithview=0x7f090050;
         public static final int shortcut=0x7f09002e;
         public static final int showCustom=0x7f09000b;
         public static final int showHome=0x7f09000c;
@@ -1169,7 +1169,7 @@ containing a value of this type.
         public static final int split_action_bar=0x7f09001e;
         public static final int submit_area=0x7f090039;
         public static final int tabMode=0x7f090008;
-        public static final int textView1=0x7f090053;
+        public static final int textView1=0x7f090048;
         public static final int textView2=0x7f09003d;
         public static final int textView3=0x7f090042;
         public static final int textView4=0x7f09003e;
@@ -1180,7 +1180,7 @@ containing a value of this type.
         public static final int useLogo=0x7f09000e;
         public static final int user=0x7f090059;
         public static final int userText=0x7f090058;
-        public static final int user_label=0x7f09004b;
+        public static final int user_label=0x7f09004c;
         public static final int withText=0x7f090013;
     }
     public static final class integer {

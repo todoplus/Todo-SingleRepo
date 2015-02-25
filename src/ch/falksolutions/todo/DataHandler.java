@@ -147,6 +147,13 @@ public class DataHandler {
 		return url;
 	}
 	
+	public static String deleteGroup(String groupName) {
+		url = STANURL;
+		url += "/group/" + groupName + "/" + ssid;
+		
+		return url;
+	}
+	
 	public static void updateWhitelist(String whitelist) {
 		url = STANURL;
 		url += "/white/" + ssid;
